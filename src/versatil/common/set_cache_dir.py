@@ -8,6 +8,7 @@ DEFAULT_CACHE_DIR = Path.home() / ".cache" / "versatil"
 
 def resolve_cache_directory() -> Path:
     """Return the model cache root from ``VERSATIL_CACHE_DIR`` or the default."""
+    
     return Path(os.environ.get("VERSATIL_CACHE_DIR", str(DEFAULT_CACHE_DIR)))
 
 

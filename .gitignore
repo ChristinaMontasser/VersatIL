@@ -162,3 +162,11 @@ nips_final/
 src/versatil/hydra_configs/end_to_end_training_runs/multimodal_peg_transfer/
 src/versatil/hydra_configs/task/dataset_schema/multimodal_peg_transfer.yaml
 src/versatil/hydra_configs/task/dataset_schema/zarr_meta/multimodal_peg_transfer.yaml
+
+
+logs/
+checkpoints/
+cache/
+slurm/
+pymp-*/
+slurm-*

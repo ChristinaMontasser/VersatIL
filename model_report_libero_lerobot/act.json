@@ -1,0 +1,3022 @@
+{
+    "": {
+        "type": "Policy",
+        "parameters": 109792575,
+        "size_MB": 418.82543563842773
+    },
+    "encoding_pipeline": {
+        "type": "EncodingPipeline",
+        "parameters": 30552760,
+        "size_MB": 116.54953002929688
+    },
+    "encoding_pipeline.encoders": {
+        "type": "ModuleDict",
+        "parameters": 30552760,
+        "size_MB": 116.54953002929688
+    },
+    "encoding_pipeline.encoders.left": {
+        "type": "SpatialRGBEncoder",
+        "parameters": 3555932,
+        "size_MB": 13.564804077148438
+    },
+    "encoding_pipeline.encoders.left.backbone": {
+        "type": "EfficientNetFeatures",
+        "parameters": 3555932,
+        "size_MB": 13.564804077148438
+    },
+    "encoding_pipeline.encoders.left.backbone.conv_stem": {
+        "type": "Conv2d",
+        "parameters": 864,
+        "size_MB": 0.0032958984375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks": {
+        "type": "Sequential",
+        "parameters": 3555068,
+        "size_MB": 13.561508178710938
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.0": {
+        "type": "Sequential",
+        "parameters": 1352,
+        "size_MB": 0.005157470703125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.0.0": {
+        "type": "DepthwiseSeparableConv",
+        "parameters": 1352,
+        "size_MB": 0.005157470703125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.0.0.conv_dw": {
+        "type": "Conv2d",
+        "parameters": 288,
+        "size_MB": 0.0010986328125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.0.0.se": {
+        "type": "SqueezeExcite",
+        "parameters": 552,
+        "size_MB": 0.002105712890625
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.0.0.se.conv_reduce": {
+        "type": "Conv2d",
+        "parameters": 264,
+        "size_MB": 0.001007080078125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.0.0.se.conv_expand": {
+        "type": "Conv2d",
+        "parameters": 288,
+        "size_MB": 0.0010986328125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.0.0.conv_pw": {
+        "type": "Conv2d",
+        "parameters": 512,
+        "size_MB": 0.001953125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.1": {
+        "type": "Sequential",
+        "parameters": 15658,
+        "size_MB": 0.05973052978515625
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.1.0": {
+        "type": "InvertedResidual",
+        "parameters": 5572,
+        "size_MB": 0.0212554931640625
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.1.0.conv_pw": {
+        "type": "Conv2d",
+        "parameters": 1536,
+        "size_MB": 0.005859375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.1.0.conv_dw": {
+        "type": "Conv2d",
+        "parameters": 864,
+        "size_MB": 0.0032958984375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.1.0.se": {
+        "type": "SqueezeExcite",
+        "parameters": 868,
+        "size_MB": 0.0033111572265625
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.1.0.se.conv_reduce": {
+        "type": "Conv2d",
+        "parameters": 388,
+        "size_MB": 0.0014801025390625
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.1.0.se.conv_expand": {
+        "type": "Conv2d",
+        "parameters": 480,
+        "size_MB": 0.0018310546875
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.1.0.conv_pwl": {
+        "type": "Conv2d",
+        "parameters": 2304,
+        "size_MB": 0.0087890625
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.1.1": {
+        "type": "InvertedResidual",
+        "parameters": 10086,
+        "size_MB": 0.03847503662109375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.1.1.conv_pw": {
+        "type": "Conv2d",
+        "parameters": 3456,
+        "size_MB": 0.01318359375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.1.1.conv_dw": {
+        "type": "Conv2d",
+        "parameters": 1296,
+        "size_MB": 0.00494384765625
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.1.1.se": {
+        "type": "SqueezeExcite",
+        "parameters": 1878,
+        "size_MB": 0.00716400146484375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.1.1.se.conv_reduce": {
+        "type": "Conv2d",
+        "parameters": 870,
+        "size_MB": 0.00331878662109375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.1.1.se.conv_expand": {
+        "type": "Conv2d",
+        "parameters": 1008,
+        "size_MB": 0.00384521484375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.1.1.conv_pwl": {
+        "type": "Conv2d",
+        "parameters": 3456,
+        "size_MB": 0.01318359375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2": {
+        "type": "Sequential",
+        "parameters": 44944,
+        "size_MB": 0.17144775390625
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.0": {
+        "type": "InvertedResidual",
+        "parameters": 14694,
+        "size_MB": 0.05605316162109375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.0.conv_pw": {
+        "type": "Conv2d",
+        "parameters": 3456,
+        "size_MB": 0.01318359375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.0.conv_dw": {
+        "type": "Conv2d",
+        "parameters": 3600,
+        "size_MB": 0.01373291015625
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.0.se": {
+        "type": "SqueezeExcite",
+        "parameters": 1878,
+        "size_MB": 0.00716400146484375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.0.se.conv_reduce": {
+        "type": "Conv2d",
+        "parameters": 870,
+        "size_MB": 0.00331878662109375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.0.se.conv_expand": {
+        "type": "Conv2d",
+        "parameters": 1008,
+        "size_MB": 0.00384521484375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.0.conv_pwl": {
+        "type": "Conv2d",
+        "parameters": 5760,
+        "size_MB": 0.02197265625
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.1": {
+        "type": "InvertedResidual",
+        "parameters": 30250,
+        "size_MB": 0.11539459228515625
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.1.conv_pw": {
+        "type": "Conv2d",
+        "parameters": 9600,
+        "size_MB": 0.03662109375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.1.conv_dw": {
+        "type": "Conv2d",
+        "parameters": 6000,
+        "size_MB": 0.02288818359375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.1.se": {
+        "type": "SqueezeExcite",
+        "parameters": 5050,
+        "size_MB": 0.01926422119140625
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.1.se.conv_reduce": {
+        "type": "Conv2d",
+        "parameters": 2410,
+        "size_MB": 0.00919342041015625
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.1.se.conv_expand": {
+        "type": "Conv2d",
+        "parameters": 2640,
+        "size_MB": 0.01007080078125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.1.conv_pwl": {
+        "type": "Conv2d",
+        "parameters": 9600,
+        "size_MB": 0.03662109375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3": {
+        "type": "Sequential",
+        "parameters": 237650,
+        "size_MB": 0.9065628051757812
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.0": {
+        "type": "InvertedResidual",
+        "parameters": 36010,
+        "size_MB": 0.13736724853515625
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.0.conv_pw": {
+        "type": "Conv2d",
+        "parameters": 9600,
+        "size_MB": 0.03662109375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.0.conv_dw": {
+        "type": "Conv2d",
+        "parameters": 2160,
+        "size_MB": 0.00823974609375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.0.se": {
+        "type": "SqueezeExcite",
+        "parameters": 5050,
+        "size_MB": 0.01926422119140625
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.0.se.conv_reduce": {
+        "type": "Conv2d",
+        "parameters": 2410,
+        "size_MB": 0.00919342041015625
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.0.se.conv_expand": {
+        "type": "Conv2d",
+        "parameters": 2640,
+        "size_MB": 0.01007080078125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.0.conv_pwl": {
+        "type": "Conv2d",
+        "parameters": 19200,
+        "size_MB": 0.0732421875
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.1": {
+        "type": "InvertedResidual",
+        "parameters": 100820,
+        "size_MB": 0.3845977783203125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.1.conv_pw": {
+        "type": "Conv2d",
+        "parameters": 38400,
+        "size_MB": 0.146484375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.1.conv_dw": {
+        "type": "Conv2d",
+        "parameters": 4320,
+        "size_MB": 0.0164794921875
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.1.se": {
+        "type": "SqueezeExcite",
+        "parameters": 19700,
+        "size_MB": 0.0751495361328125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.1.se.conv_reduce": {
+        "type": "Conv2d",
+        "parameters": 9620,
+        "size_MB": 0.0366973876953125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.1.se.conv_expand": {
+        "type": "Conv2d",
+        "parameters": 10080,
+        "size_MB": 0.0384521484375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.1.conv_pwl": {
+        "type": "Conv2d",
+        "parameters": 38400,
+        "size_MB": 0.146484375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.2": {
+        "type": "InvertedResidual",
+        "parameters": 100820,
+        "size_MB": 0.3845977783203125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.2.conv_pw": {
+        "type": "Conv2d",
+        "parameters": 38400,
+        "size_MB": 0.146484375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.2.conv_dw": {
+        "type": "Conv2d",
+        "parameters": 4320,
+        "size_MB": 0.0164794921875
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.2.se": {
+        "type": "SqueezeExcite",
+        "parameters": 19700,
+        "size_MB": 0.0751495361328125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.2.se.conv_reduce": {
+        "type": "Conv2d",
+        "parameters": 9620,
+        "size_MB": 0.0366973876953125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.2.se.conv_expand": {
+        "type": "Conv2d",
+        "parameters": 10080,
+        "size_MB": 0.0384521484375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.2.conv_pwl": {
+        "type": "Conv2d",
+        "parameters": 38400,
+        "size_MB": 0.146484375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.4": {
+        "type": "Sequential",
+        "parameters": 535180,
+        "size_MB": 2.0415496826171875
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.4.0": {
+        "type": "InvertedResidual",
+        "parameters": 123860,
+        "size_MB": 0.4724884033203125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.4.0.conv_pw": {
+        "type": "Conv2d",
+        "parameters": 38400,
+        "size_MB": 0.146484375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.4.0.conv_dw": {
+        "type": "Conv2d",
+        "parameters": 12000,
+        "size_MB": 0.0457763671875
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.4.0.se": {
+        "type": "SqueezeExcite",
+        "parameters": 19700,
+        "size_MB": 0.0751495361328125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.4.0.se.conv_reduce": {
+        "type": "Conv2d",
+        "parameters": 9620,
+        "size_MB": 0.0366973876953125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.4.0.se.conv_expand": {
+        "type": "Conv2d",
+        "parameters": 10080,
+        "size_MB": 0.0384521484375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.4.0.conv_pwl": {
+        "type": "Conv2d",
+        "parameters": 53760,
+        "size_MB": 0.205078125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.4.1": {
+        "type": "InvertedResidual",
+        "parameters": 205660,
+        "size_MB": 0.7845306396484375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.4.1.conv_pw": {
+        "type": "Conv2d",
+        "parameters": 75264,
+        "size_MB": 0.287109375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.4.1.conv_dw": {
+        "type": "Conv2d",
+        "parameters": 16800,
+        "size_MB": 0.0640869140625
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.4.1.se": {
+        "type": "SqueezeExcite",
+        "parameters": 38332,
+        "size_MB": 0.1462249755859375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.4.1.se.conv_reduce": {
+        "type": "Conv2d",
+        "parameters": 18844,
+        "size_MB": 0.0718841552734375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.4.1.se.conv_expand": {
+        "type": "Conv2d",
+        "parameters": 19488,
+        "size_MB": 0.0743408203125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.4.1.conv_pwl": {
+        "type": "Conv2d",
+        "parameters": 75264,
+        "size_MB": 0.287109375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.4.2": {
+        "type": "InvertedResidual",
+        "parameters": 205660,
+        "size_MB": 0.7845306396484375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.4.2.conv_pw": {
+        "type": "Conv2d",
+        "parameters": 75264,
+        "size_MB": 0.287109375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.4.2.conv_dw": {
+        "type": "Conv2d",
+        "parameters": 16800,
+        "size_MB": 0.0640869140625
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.4.2.se": {
+        "type": "SqueezeExcite",
+        "parameters": 38332,
+        "size_MB": 0.1462249755859375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.4.2.se.conv_reduce": {
+        "type": "Conv2d",
+        "parameters": 18844,
+        "size_MB": 0.0718841552734375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.4.2.se.conv_expand": {
+        "type": "Conv2d",
+        "parameters": 19488,
+        "size_MB": 0.0743408203125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.4.2.conv_pwl": {
+        "type": "Conv2d",
+        "parameters": 75264,
+        "size_MB": 0.287109375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.5": {
+        "type": "Sequential",
+        "parameters": 2008300,
+        "size_MB": 7.6610565185546875
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.5.0": {
+        "type": "InvertedResidual",
+        "parameters": 259420,
+        "size_MB": 0.9896087646484375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.5.0.conv_pw": {
+        "type": "Conv2d",
+        "parameters": 75264,
+        "size_MB": 0.287109375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.5.0.conv_dw": {
+        "type": "Conv2d",
+        "parameters": 16800,
+        "size_MB": 0.0640869140625
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.5.0.se": {
+        "type": "SqueezeExcite",
+        "parameters": 38332,
+        "size_MB": 0.1462249755859375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.5.0.se.conv_reduce": {
+        "type": "Conv2d",
+        "parameters": 18844,
+        "size_MB": 0.0718841552734375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.5.0.se.conv_expand": {
+        "type": "Conv2d",
+        "parameters": 19488,
+        "size_MB": 0.0743408203125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.5.0.conv_pwl": {
+        "type": "Conv2d",
+        "parameters": 129024,
+        "size_MB": 0.4921875
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.5.1": {
+        "type": "InvertedResidual",
+        "parameters": 582960,
+        "size_MB": 2.22381591796875
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.5.1.conv_pw": {
+        "type": "Conv2d",
+        "parameters": 221184,
+        "size_MB": 0.84375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.5.1.conv_dw": {
+        "type": "Conv2d",
+        "parameters": 28800,
+        "size_MB": 0.10986328125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.5.1.se": {
+        "type": "SqueezeExcite",
+        "parameters": 111792,
+        "size_MB": 0.42645263671875
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.5.1.se.conv_reduce": {
+        "type": "Conv2d",
+        "parameters": 55344,
+        "size_MB": 0.21112060546875
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.5.1.se.conv_expand": {
+        "type": "Conv2d",
+        "parameters": 56448,
+        "size_MB": 0.21533203125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.5.1.conv_pwl": {
+        "type": "Conv2d",
+        "parameters": 221184,
+        "size_MB": 0.84375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.5.2": {
+        "type": "InvertedResidual",
+        "parameters": 582960,
+        "size_MB": 2.22381591796875
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.5.2.conv_pw": {
+        "type": "Conv2d",
+        "parameters": 221184,
+        "size_MB": 0.84375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.5.2.conv_dw": {
+        "type": "Conv2d",
+        "parameters": 28800,
+        "size_MB": 0.10986328125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.5.2.se": {
+        "type": "SqueezeExcite",
+        "parameters": 111792,
+        "size_MB": 0.42645263671875
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.5.2.se.conv_reduce": {
+        "type": "Conv2d",
+        "parameters": 55344,
+        "size_MB": 0.21112060546875
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.5.2.se.conv_expand": {
+        "type": "Conv2d",
+        "parameters": 56448,
+        "size_MB": 0.21533203125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.5.2.conv_pwl": {
+        "type": "Conv2d",
+        "parameters": 221184,
+        "size_MB": 0.84375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.5.3": {
+        "type": "InvertedResidual",
+        "parameters": 582960,
+        "size_MB": 2.22381591796875
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.5.3.conv_pw": {
+        "type": "Conv2d",
+        "parameters": 221184,
+        "size_MB": 0.84375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.5.3.conv_dw": {
+        "type": "Conv2d",
+        "parameters": 28800,
+        "size_MB": 0.10986328125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.5.3.se": {
+        "type": "SqueezeExcite",
+        "parameters": 111792,
+        "size_MB": 0.42645263671875
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.5.3.se.conv_reduce": {
+        "type": "Conv2d",
+        "parameters": 55344,
+        "size_MB": 0.21112060546875
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.5.3.se.conv_expand": {
+        "type": "Conv2d",
+        "parameters": 56448,
+        "size_MB": 0.21533203125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.5.3.conv_pwl": {
+        "type": "Conv2d",
+        "parameters": 221184,
+        "size_MB": 0.84375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.6": {
+        "type": "Sequential",
+        "parameters": 711984,
+        "size_MB": 2.71600341796875
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.6.0": {
+        "type": "InvertedResidual",
+        "parameters": 711984,
+        "size_MB": 2.71600341796875
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.6.0.conv_pw": {
+        "type": "Conv2d",
+        "parameters": 221184,
+        "size_MB": 0.84375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.6.0.conv_dw": {
+        "type": "Conv2d",
+        "parameters": 10368,
+        "size_MB": 0.03955078125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.6.0.se": {
+        "type": "SqueezeExcite",
+        "parameters": 111792,
+        "size_MB": 0.42645263671875
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.6.0.se.conv_reduce": {
+        "type": "Conv2d",
+        "parameters": 55344,
+        "size_MB": 0.21112060546875
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.6.0.se.conv_expand": {
+        "type": "Conv2d",
+        "parameters": 56448,
+        "size_MB": 0.21533203125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.6.0.conv_pwl": {
+        "type": "Conv2d",
+        "parameters": 368640,
+        "size_MB": 1.40625
+    },
+    "encoding_pipeline.encoders.right": {
+        "type": "SpatialRGBEncoder",
+        "parameters": 3555932,
+        "size_MB": 13.564804077148438
+    },
+    "encoding_pipeline.encoders.right.backbone": {
+        "type": "EfficientNetFeatures",
+        "parameters": 3555932,
+        "size_MB": 13.564804077148438
+    },
+    "encoding_pipeline.encoders.right.backbone.conv_stem": {
+        "type": "Conv2d",
+        "parameters": 864,
+        "size_MB": 0.0032958984375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks": {
+        "type": "Sequential",
+        "parameters": 3555068,
+        "size_MB": 13.561508178710938
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.0": {
+        "type": "Sequential",
+        "parameters": 1352,
+        "size_MB": 0.005157470703125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.0.0": {
+        "type": "DepthwiseSeparableConv",
+        "parameters": 1352,
+        "size_MB": 0.005157470703125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.0.0.conv_dw": {
+        "type": "Conv2d",
+        "parameters": 288,
+        "size_MB": 0.0010986328125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.0.0.se": {
+        "type": "SqueezeExcite",
+        "parameters": 552,
+        "size_MB": 0.002105712890625
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.0.0.se.conv_reduce": {
+        "type": "Conv2d",
+        "parameters": 264,
+        "size_MB": 0.001007080078125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.0.0.se.conv_expand": {
+        "type": "Conv2d",
+        "parameters": 288,
+        "size_MB": 0.0010986328125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.0.0.conv_pw": {
+        "type": "Conv2d",
+        "parameters": 512,
+        "size_MB": 0.001953125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.1": {
+        "type": "Sequential",
+        "parameters": 15658,
+        "size_MB": 0.05973052978515625
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.1.0": {
+        "type": "InvertedResidual",
+        "parameters": 5572,
+        "size_MB": 0.0212554931640625
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.1.0.conv_pw": {
+        "type": "Conv2d",
+        "parameters": 1536,
+        "size_MB": 0.005859375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.1.0.conv_dw": {
+        "type": "Conv2d",
+        "parameters": 864,
+        "size_MB": 0.0032958984375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.1.0.se": {
+        "type": "SqueezeExcite",
+        "parameters": 868,
+        "size_MB": 0.0033111572265625
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.1.0.se.conv_reduce": {
+        "type": "Conv2d",
+        "parameters": 388,
+        "size_MB": 0.0014801025390625
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.1.0.se.conv_expand": {
+        "type": "Conv2d",
+        "parameters": 480,
+        "size_MB": 0.0018310546875
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.1.0.conv_pwl": {
+        "type": "Conv2d",
+        "parameters": 2304,
+        "size_MB": 0.0087890625
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.1.1": {
+        "type": "InvertedResidual",
+        "parameters": 10086,
+        "size_MB": 0.03847503662109375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.1.1.conv_pw": {
+        "type": "Conv2d",
+        "parameters": 3456,
+        "size_MB": 0.01318359375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.1.1.conv_dw": {
+        "type": "Conv2d",
+        "parameters": 1296,
+        "size_MB": 0.00494384765625
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.1.1.se": {
+        "type": "SqueezeExcite",
+        "parameters": 1878,
+        "size_MB": 0.00716400146484375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.1.1.se.conv_reduce": {
+        "type": "Conv2d",
+        "parameters": 870,
+        "size_MB": 0.00331878662109375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.1.1.se.conv_expand": {
+        "type": "Conv2d",
+        "parameters": 1008,
+        "size_MB": 0.00384521484375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.1.1.conv_pwl": {
+        "type": "Conv2d",
+        "parameters": 3456,
+        "size_MB": 0.01318359375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2": {
+        "type": "Sequential",
+        "parameters": 44944,
+        "size_MB": 0.17144775390625
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.0": {
+        "type": "InvertedResidual",
+        "parameters": 14694,
+        "size_MB": 0.05605316162109375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.0.conv_pw": {
+        "type": "Conv2d",
+        "parameters": 3456,
+        "size_MB": 0.01318359375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.0.conv_dw": {
+        "type": "Conv2d",
+        "parameters": 3600,
+        "size_MB": 0.01373291015625
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.0.se": {
+        "type": "SqueezeExcite",
+        "parameters": 1878,
+        "size_MB": 0.00716400146484375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.0.se.conv_reduce": {
+        "type": "Conv2d",
+        "parameters": 870,
+        "size_MB": 0.00331878662109375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.0.se.conv_expand": {
+        "type": "Conv2d",
+        "parameters": 1008,
+        "size_MB": 0.00384521484375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.0.conv_pwl": {
+        "type": "Conv2d",
+        "parameters": 5760,
+        "size_MB": 0.02197265625
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.1": {
+        "type": "InvertedResidual",
+        "parameters": 30250,
+        "size_MB": 0.11539459228515625
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.1.conv_pw": {
+        "type": "Conv2d",
+        "parameters": 9600,
+        "size_MB": 0.03662109375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.1.conv_dw": {
+        "type": "Conv2d",
+        "parameters": 6000,
+        "size_MB": 0.02288818359375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.1.se": {
+        "type": "SqueezeExcite",
+        "parameters": 5050,
+        "size_MB": 0.01926422119140625
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.1.se.conv_reduce": {
+        "type": "Conv2d",
+        "parameters": 2410,
+        "size_MB": 0.00919342041015625
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.1.se.conv_expand": {
+        "type": "Conv2d",
+        "parameters": 2640,
+        "size_MB": 0.01007080078125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.1.conv_pwl": {
+        "type": "Conv2d",
+        "parameters": 9600,
+        "size_MB": 0.03662109375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3": {
+        "type": "Sequential",
+        "parameters": 237650,
+        "size_MB": 0.9065628051757812
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.0": {
+        "type": "InvertedResidual",
+        "parameters": 36010,
+        "size_MB": 0.13736724853515625
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.0.conv_pw": {
+        "type": "Conv2d",
+        "parameters": 9600,
+        "size_MB": 0.03662109375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.0.conv_dw": {
+        "type": "Conv2d",
+        "parameters": 2160,
+        "size_MB": 0.00823974609375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.0.se": {
+        "type": "SqueezeExcite",
+        "parameters": 5050,
+        "size_MB": 0.01926422119140625
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.0.se.conv_reduce": {
+        "type": "Conv2d",
+        "parameters": 2410,
+        "size_MB": 0.00919342041015625
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.0.se.conv_expand": {
+        "type": "Conv2d",
+        "parameters": 2640,
+        "size_MB": 0.01007080078125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.0.conv_pwl": {
+        "type": "Conv2d",
+        "parameters": 19200,
+        "size_MB": 0.0732421875
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.1": {
+        "type": "InvertedResidual",
+        "parameters": 100820,
+        "size_MB": 0.3845977783203125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.1.conv_pw": {
+        "type": "Conv2d",
+        "parameters": 38400,
+        "size_MB": 0.146484375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.1.conv_dw": {
+        "type": "Conv2d",
+        "parameters": 4320,
+        "size_MB": 0.0164794921875
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.1.se": {
+        "type": "SqueezeExcite",
+        "parameters": 19700,
+        "size_MB": 0.0751495361328125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.1.se.conv_reduce": {
+        "type": "Conv2d",
+        "parameters": 9620,
+        "size_MB": 0.0366973876953125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.1.se.conv_expand": {
+        "type": "Conv2d",
+        "parameters": 10080,
+        "size_MB": 0.0384521484375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.1.conv_pwl": {
+        "type": "Conv2d",
+        "parameters": 38400,
+        "size_MB": 0.146484375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.2": {
+        "type": "InvertedResidual",
+        "parameters": 100820,
+        "size_MB": 0.3845977783203125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.2.conv_pw": {
+        "type": "Conv2d",
+        "parameters": 38400,
+        "size_MB": 0.146484375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.2.conv_dw": {
+        "type": "Conv2d",
+        "parameters": 4320,
+        "size_MB": 0.0164794921875
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.2.se": {
+        "type": "SqueezeExcite",
+        "parameters": 19700,
+        "size_MB": 0.0751495361328125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.2.se.conv_reduce": {
+        "type": "Conv2d",
+        "parameters": 9620,
+        "size_MB": 0.0366973876953125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.2.se.conv_expand": {
+        "type": "Conv2d",
+        "parameters": 10080,
+        "size_MB": 0.0384521484375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.2.conv_pwl": {
+        "type": "Conv2d",
+        "parameters": 38400,
+        "size_MB": 0.146484375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.4": {
+        "type": "Sequential",
+        "parameters": 535180,
+        "size_MB": 2.0415496826171875
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.4.0": {
+        "type": "InvertedResidual",
+        "parameters": 123860,
+        "size_MB": 0.4724884033203125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.4.0.conv_pw": {
+        "type": "Conv2d",
+        "parameters": 38400,
+        "size_MB": 0.146484375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.4.0.conv_dw": {
+        "type": "Conv2d",
+        "parameters": 12000,
+        "size_MB": 0.0457763671875
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.4.0.se": {
+        "type": "SqueezeExcite",
+        "parameters": 19700,
+        "size_MB": 0.0751495361328125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.4.0.se.conv_reduce": {
+        "type": "Conv2d",
+        "parameters": 9620,
+        "size_MB": 0.0366973876953125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.4.0.se.conv_expand": {
+        "type": "Conv2d",
+        "parameters": 10080,
+        "size_MB": 0.0384521484375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.4.0.conv_pwl": {
+        "type": "Conv2d",
+        "parameters": 53760,
+        "size_MB": 0.205078125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.4.1": {
+        "type": "InvertedResidual",
+        "parameters": 205660,
+        "size_MB": 0.7845306396484375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.4.1.conv_pw": {
+        "type": "Conv2d",
+        "parameters": 75264,
+        "size_MB": 0.287109375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.4.1.conv_dw": {
+        "type": "Conv2d",
+        "parameters": 16800,
+        "size_MB": 0.0640869140625
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.4.1.se": {
+        "type": "SqueezeExcite",
+        "parameters": 38332,
+        "size_MB": 0.1462249755859375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.4.1.se.conv_reduce": {
+        "type": "Conv2d",
+        "parameters": 18844,
+        "size_MB": 0.0718841552734375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.4.1.se.conv_expand": {
+        "type": "Conv2d",
+        "parameters": 19488,
+        "size_MB": 0.0743408203125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.4.1.conv_pwl": {
+        "type": "Conv2d",
+        "parameters": 75264,
+        "size_MB": 0.287109375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.4.2": {
+        "type": "InvertedResidual",
+        "parameters": 205660,
+        "size_MB": 0.7845306396484375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.4.2.conv_pw": {
+        "type": "Conv2d",
+        "parameters": 75264,
+        "size_MB": 0.287109375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.4.2.conv_dw": {
+        "type": "Conv2d",
+        "parameters": 16800,
+        "size_MB": 0.0640869140625
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.4.2.se": {
+        "type": "SqueezeExcite",
+        "parameters": 38332,
+        "size_MB": 0.1462249755859375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.4.2.se.conv_reduce": {
+        "type": "Conv2d",
+        "parameters": 18844,
+        "size_MB": 0.0718841552734375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.4.2.se.conv_expand": {
+        "type": "Conv2d",
+        "parameters": 19488,
+        "size_MB": 0.0743408203125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.4.2.conv_pwl": {
+        "type": "Conv2d",
+        "parameters": 75264,
+        "size_MB": 0.287109375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.5": {
+        "type": "Sequential",
+        "parameters": 2008300,
+        "size_MB": 7.6610565185546875
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.5.0": {
+        "type": "InvertedResidual",
+        "parameters": 259420,
+        "size_MB": 0.9896087646484375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.5.0.conv_pw": {
+        "type": "Conv2d",
+        "parameters": 75264,
+        "size_MB": 0.287109375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.5.0.conv_dw": {
+        "type": "Conv2d",
+        "parameters": 16800,
+        "size_MB": 0.0640869140625
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.5.0.se": {
+        "type": "SqueezeExcite",
+        "parameters": 38332,
+        "size_MB": 0.1462249755859375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.5.0.se.conv_reduce": {
+        "type": "Conv2d",
+        "parameters": 18844,
+        "size_MB": 0.0718841552734375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.5.0.se.conv_expand": {
+        "type": "Conv2d",
+        "parameters": 19488,
+        "size_MB": 0.0743408203125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.5.0.conv_pwl": {
+        "type": "Conv2d",
+        "parameters": 129024,
+        "size_MB": 0.4921875
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.5.1": {
+        "type": "InvertedResidual",
+        "parameters": 582960,
+        "size_MB": 2.22381591796875
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.5.1.conv_pw": {
+        "type": "Conv2d",
+        "parameters": 221184,
+        "size_MB": 0.84375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.5.1.conv_dw": {
+        "type": "Conv2d",
+        "parameters": 28800,
+        "size_MB": 0.10986328125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.5.1.se": {
+        "type": "SqueezeExcite",
+        "parameters": 111792,
+        "size_MB": 0.42645263671875
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.5.1.se.conv_reduce": {
+        "type": "Conv2d",
+        "parameters": 55344,
+        "size_MB": 0.21112060546875
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.5.1.se.conv_expand": {
+        "type": "Conv2d",
+        "parameters": 56448,
+        "size_MB": 0.21533203125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.5.1.conv_pwl": {
+        "type": "Conv2d",
+        "parameters": 221184,
+        "size_MB": 0.84375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.5.2": {
+        "type": "InvertedResidual",
+        "parameters": 582960,
+        "size_MB": 2.22381591796875
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.5.2.conv_pw": {
+        "type": "Conv2d",
+        "parameters": 221184,
+        "size_MB": 0.84375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.5.2.conv_dw": {
+        "type": "Conv2d",
+        "parameters": 28800,
+        "size_MB": 0.10986328125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.5.2.se": {
+        "type": "SqueezeExcite",
+        "parameters": 111792,
+        "size_MB": 0.42645263671875
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.5.2.se.conv_reduce": {
+        "type": "Conv2d",
+        "parameters": 55344,
+        "size_MB": 0.21112060546875
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.5.2.se.conv_expand": {
+        "type": "Conv2d",
+        "parameters": 56448,
+        "size_MB": 0.21533203125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.5.2.conv_pwl": {
+        "type": "Conv2d",
+        "parameters": 221184,
+        "size_MB": 0.84375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.5.3": {
+        "type": "InvertedResidual",
+        "parameters": 582960,
+        "size_MB": 2.22381591796875
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.5.3.conv_pw": {
+        "type": "Conv2d",
+        "parameters": 221184,
+        "size_MB": 0.84375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.5.3.conv_dw": {
+        "type": "Conv2d",
+        "parameters": 28800,
+        "size_MB": 0.10986328125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.5.3.se": {
+        "type": "SqueezeExcite",
+        "parameters": 111792,
+        "size_MB": 0.42645263671875
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.5.3.se.conv_reduce": {
+        "type": "Conv2d",
+        "parameters": 55344,
+        "size_MB": 0.21112060546875
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.5.3.se.conv_expand": {
+        "type": "Conv2d",
+        "parameters": 56448,
+        "size_MB": 0.21533203125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.5.3.conv_pwl": {
+        "type": "Conv2d",
+        "parameters": 221184,
+        "size_MB": 0.84375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.6": {
+        "type": "Sequential",
+        "parameters": 711984,
+        "size_MB": 2.71600341796875
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.6.0": {
+        "type": "InvertedResidual",
+        "parameters": 711984,
+        "size_MB": 2.71600341796875
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.6.0.conv_pw": {
+        "type": "Conv2d",
+        "parameters": 221184,
+        "size_MB": 0.84375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.6.0.conv_dw": {
+        "type": "Conv2d",
+        "parameters": 10368,
+        "size_MB": 0.03955078125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.6.0.se": {
+        "type": "SqueezeExcite",
+        "parameters": 111792,
+        "size_MB": 0.42645263671875
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.6.0.se.conv_reduce": {
+        "type": "Conv2d",
+        "parameters": 55344,
+        "size_MB": 0.21112060546875
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.6.0.se.conv_expand": {
+        "type": "Conv2d",
+        "parameters": 56448,
+        "size_MB": 0.21533203125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.6.0.conv_pwl": {
+        "type": "Conv2d",
+        "parameters": 368640,
+        "size_MB": 1.40625
+    },
+    "encoding_pipeline.encoders.instruction": {
+        "type": "LanguageEncoder",
+        "parameters": 23440896,
+        "size_MB": 89.419921875
+    },
+    "encoding_pipeline.encoders.instruction.encoder": {
+        "type": "Embedding",
+        "parameters": 23440896,
+        "size_MB": 89.419921875
+    },
+    "algorithm": {
+        "type": "VariationalAlgorithm",
+        "parameters": 21150464,
+        "size_MB": 80.6826171875
+    },
+    "algorithm.posterior_encoder": {
+        "type": "VAETransformerEncoder",
+        "parameters": 10575232,
+        "size_MB": 40.34130859375
+    },
+    "algorithm.posterior_encoder.transformer_encoder": {
+        "type": "TransformerEncoder",
+        "parameters": 10508800,
+        "size_MB": 40.087890625
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers": {
+        "type": "ModuleList",
+        "parameters": 10508288,
+        "size_MB": 40.0859375
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.0": {
+        "type": "TransformerEncoderLayer",
+        "parameters": 2627072,
+        "size_MB": 10.021484375
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.0.self_attention_block": {
+        "type": "SelfAttentionBlock",
+        "parameters": 1051136,
+        "size_MB": 4.009765625
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.0.self_attention_block.normalization": {
+        "type": "UnconditionedNorm",
+        "parameters": 512,
+        "size_MB": 0.001953125
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.0.self_attention_block.normalization.norm": {
+        "type": "RMSNorm",
+        "parameters": 512,
+        "size_MB": 0.001953125
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.0.self_attention_block.attention": {
+        "type": "CachedAttention",
+        "parameters": 1050624,
+        "size_MB": 4.0078125
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.0.self_attention_block.attention.query_projection": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.0.self_attention_block.attention.key_projection": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.0.self_attention_block.attention.value_projection": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.0.self_attention_block.attention.output_projection": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.0.feedforward_block": {
+        "type": "FeedforwardBlock",
+        "parameters": 1575936,
+        "size_MB": 6.01171875
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.0.feedforward_block.normalization": {
+        "type": "UnconditionedNorm",
+        "parameters": 512,
+        "size_MB": 0.001953125
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.0.feedforward_block.normalization.norm": {
+        "type": "RMSNorm",
+        "parameters": 512,
+        "size_MB": 0.001953125
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.0.feedforward_block.feedforward": {
+        "type": "Sequential",
+        "parameters": 1575424,
+        "size_MB": 6.009765625
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.0.feedforward_block.feedforward.0": {
+        "type": "SwiGLU",
+        "parameters": 1050624,
+        "size_MB": 4.0078125
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.0.feedforward_block.feedforward.0.gate_proj": {
+        "type": "Linear",
+        "parameters": 525312,
+        "size_MB": 2.00390625
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.0.feedforward_block.feedforward.0.value_proj": {
+        "type": "Linear",
+        "parameters": 525312,
+        "size_MB": 2.00390625
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.0.feedforward_block.feedforward.2": {
+        "type": "Linear",
+        "parameters": 524800,
+        "size_MB": 2.001953125
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.1": {
+        "type": "TransformerEncoderLayer",
+        "parameters": 2627072,
+        "size_MB": 10.021484375
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.1.self_attention_block": {
+        "type": "SelfAttentionBlock",
+        "parameters": 1051136,
+        "size_MB": 4.009765625
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.1.self_attention_block.normalization": {
+        "type": "UnconditionedNorm",
+        "parameters": 512,
+        "size_MB": 0.001953125
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.1.self_attention_block.normalization.norm": {
+        "type": "RMSNorm",
+        "parameters": 512,
+        "size_MB": 0.001953125
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.1.self_attention_block.attention": {
+        "type": "CachedAttention",
+        "parameters": 1050624,
+        "size_MB": 4.0078125
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.1.self_attention_block.attention.query_projection": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.1.self_attention_block.attention.key_projection": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.1.self_attention_block.attention.value_projection": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.1.self_attention_block.attention.output_projection": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.1.feedforward_block": {
+        "type": "FeedforwardBlock",
+        "parameters": 1575936,
+        "size_MB": 6.01171875
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.1.feedforward_block.normalization": {
+        "type": "UnconditionedNorm",
+        "parameters": 512,
+        "size_MB": 0.001953125
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.1.feedforward_block.normalization.norm": {
+        "type": "RMSNorm",
+        "parameters": 512,
+        "size_MB": 0.001953125
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.1.feedforward_block.feedforward": {
+        "type": "Sequential",
+        "parameters": 1575424,
+        "size_MB": 6.009765625
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.1.feedforward_block.feedforward.0": {
+        "type": "SwiGLU",
+        "parameters": 1050624,
+        "size_MB": 4.0078125
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.1.feedforward_block.feedforward.0.gate_proj": {
+        "type": "Linear",
+        "parameters": 525312,
+        "size_MB": 2.00390625
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.1.feedforward_block.feedforward.0.value_proj": {
+        "type": "Linear",
+        "parameters": 525312,
+        "size_MB": 2.00390625
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.1.feedforward_block.feedforward.2": {
+        "type": "Linear",
+        "parameters": 524800,
+        "size_MB": 2.001953125
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.2": {
+        "type": "TransformerEncoderLayer",
+        "parameters": 2627072,
+        "size_MB": 10.021484375
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.2.self_attention_block": {
+        "type": "SelfAttentionBlock",
+        "parameters": 1051136,
+        "size_MB": 4.009765625
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.2.self_attention_block.normalization": {
+        "type": "UnconditionedNorm",
+        "parameters": 512,
+        "size_MB": 0.001953125
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.2.self_attention_block.normalization.norm": {
+        "type": "RMSNorm",
+        "parameters": 512,
+        "size_MB": 0.001953125
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.2.self_attention_block.attention": {
+        "type": "CachedAttention",
+        "parameters": 1050624,
+        "size_MB": 4.0078125
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.2.self_attention_block.attention.query_projection": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.2.self_attention_block.attention.key_projection": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.2.self_attention_block.attention.value_projection": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.2.self_attention_block.attention.output_projection": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.2.feedforward_block": {
+        "type": "FeedforwardBlock",
+        "parameters": 1575936,
+        "size_MB": 6.01171875
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.2.feedforward_block.normalization": {
+        "type": "UnconditionedNorm",
+        "parameters": 512,
+        "size_MB": 0.001953125
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.2.feedforward_block.normalization.norm": {
+        "type": "RMSNorm",
+        "parameters": 512,
+        "size_MB": 0.001953125
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.2.feedforward_block.feedforward": {
+        "type": "Sequential",
+        "parameters": 1575424,
+        "size_MB": 6.009765625
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.2.feedforward_block.feedforward.0": {
+        "type": "SwiGLU",
+        "parameters": 1050624,
+        "size_MB": 4.0078125
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.2.feedforward_block.feedforward.0.gate_proj": {
+        "type": "Linear",
+        "parameters": 525312,
+        "size_MB": 2.00390625
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.2.feedforward_block.feedforward.0.value_proj": {
+        "type": "Linear",
+        "parameters": 525312,
+        "size_MB": 2.00390625
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.2.feedforward_block.feedforward.2": {
+        "type": "Linear",
+        "parameters": 524800,
+        "size_MB": 2.001953125
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.3": {
+        "type": "TransformerEncoderLayer",
+        "parameters": 2627072,
+        "size_MB": 10.021484375
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.3.self_attention_block": {
+        "type": "SelfAttentionBlock",
+        "parameters": 1051136,
+        "size_MB": 4.009765625
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.3.self_attention_block.normalization": {
+        "type": "UnconditionedNorm",
+        "parameters": 512,
+        "size_MB": 0.001953125
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.3.self_attention_block.normalization.norm": {
+        "type": "RMSNorm",
+        "parameters": 512,
+        "size_MB": 0.001953125
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.3.self_attention_block.attention": {
+        "type": "CachedAttention",
+        "parameters": 1050624,
+        "size_MB": 4.0078125
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.3.self_attention_block.attention.query_projection": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.3.self_attention_block.attention.key_projection": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.3.self_attention_block.attention.value_projection": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.3.self_attention_block.attention.output_projection": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.3.feedforward_block": {
+        "type": "FeedforwardBlock",
+        "parameters": 1575936,
+        "size_MB": 6.01171875
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.3.feedforward_block.normalization": {
+        "type": "UnconditionedNorm",
+        "parameters": 512,
+        "size_MB": 0.001953125
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.3.feedforward_block.normalization.norm": {
+        "type": "RMSNorm",
+        "parameters": 512,
+        "size_MB": 0.001953125
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.3.feedforward_block.feedforward": {
+        "type": "Sequential",
+        "parameters": 1575424,
+        "size_MB": 6.009765625
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.3.feedforward_block.feedforward.0": {
+        "type": "SwiGLU",
+        "parameters": 1050624,
+        "size_MB": 4.0078125
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.3.feedforward_block.feedforward.0.gate_proj": {
+        "type": "Linear",
+        "parameters": 525312,
+        "size_MB": 2.00390625
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.3.feedforward_block.feedforward.0.value_proj": {
+        "type": "Linear",
+        "parameters": 525312,
+        "size_MB": 2.00390625
+    },
+    "algorithm.posterior_encoder.transformer_encoder.layers.3.feedforward_block.feedforward.2": {
+        "type": "Linear",
+        "parameters": 524800,
+        "size_MB": 2.001953125
+    },
+    "algorithm.posterior_encoder.transformer_encoder.final_normalization": {
+        "type": "RMSNorm",
+        "parameters": 512,
+        "size_MB": 0.001953125
+    },
+    "algorithm.posterior_encoder.input_sequence_builder": {
+        "type": "TransformerInputBuilder",
+        "parameters": 256,
+        "size_MB": 0.0009765625
+    },
+    "algorithm.posterior_encoder.input_sequence_builder.flat_positional_encoding_layer": {
+        "type": "SinusoidalPositionalEncoding1D",
+        "parameters": 256,
+        "size_MB": 0.0009765625
+    },
+    "algorithm.posterior_encoder.cls_token": {
+        "type": "Embedding",
+        "parameters": 512,
+        "size_MB": 0.001953125
+    },
+    "algorithm.posterior_encoder.latent_projection": {
+        "type": "Linear",
+        "parameters": 65664,
+        "size_MB": 0.25048828125
+    },
+    "algorithm.prior": {
+        "type": "PriorTransformerEncoder",
+        "parameters": 10575232,
+        "size_MB": 40.34130859375
+    },
+    "algorithm.prior.encoder": {
+        "type": "TransformerEncoder",
+        "parameters": 10508800,
+        "size_MB": 40.087890625
+    },
+    "algorithm.prior.encoder.layers": {
+        "type": "ModuleList",
+        "parameters": 10508288,
+        "size_MB": 40.0859375
+    },
+    "algorithm.prior.encoder.layers.0": {
+        "type": "TransformerEncoderLayer",
+        "parameters": 2627072,
+        "size_MB": 10.021484375
+    },
+    "algorithm.prior.encoder.layers.0.self_attention_block": {
+        "type": "SelfAttentionBlock",
+        "parameters": 1051136,
+        "size_MB": 4.009765625
+    },
+    "algorithm.prior.encoder.layers.0.self_attention_block.normalization": {
+        "type": "UnconditionedNorm",
+        "parameters": 512,
+        "size_MB": 0.001953125
+    },
+    "algorithm.prior.encoder.layers.0.self_attention_block.normalization.norm": {
+        "type": "RMSNorm",
+        "parameters": 512,
+        "size_MB": 0.001953125
+    },
+    "algorithm.prior.encoder.layers.0.self_attention_block.attention": {
+        "type": "CachedAttention",
+        "parameters": 1050624,
+        "size_MB": 4.0078125
+    },
+    "algorithm.prior.encoder.layers.0.self_attention_block.attention.query_projection": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "algorithm.prior.encoder.layers.0.self_attention_block.attention.key_projection": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "algorithm.prior.encoder.layers.0.self_attention_block.attention.value_projection": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "algorithm.prior.encoder.layers.0.self_attention_block.attention.output_projection": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "algorithm.prior.encoder.layers.0.feedforward_block": {
+        "type": "FeedforwardBlock",
+        "parameters": 1575936,
+        "size_MB": 6.01171875
+    },
+    "algorithm.prior.encoder.layers.0.feedforward_block.normalization": {
+        "type": "UnconditionedNorm",
+        "parameters": 512,
+        "size_MB": 0.001953125
+    },
+    "algorithm.prior.encoder.layers.0.feedforward_block.normalization.norm": {
+        "type": "RMSNorm",
+        "parameters": 512,
+        "size_MB": 0.001953125
+    },
+    "algorithm.prior.encoder.layers.0.feedforward_block.feedforward": {
+        "type": "Sequential",
+        "parameters": 1575424,
+        "size_MB": 6.009765625
+    },
+    "algorithm.prior.encoder.layers.0.feedforward_block.feedforward.0": {
+        "type": "SwiGLU",
+        "parameters": 1050624,
+        "size_MB": 4.0078125
+    },
+    "algorithm.prior.encoder.layers.0.feedforward_block.feedforward.0.gate_proj": {
+        "type": "Linear",
+        "parameters": 525312,
+        "size_MB": 2.00390625
+    },
+    "algorithm.prior.encoder.layers.0.feedforward_block.feedforward.0.value_proj": {
+        "type": "Linear",
+        "parameters": 525312,
+        "size_MB": 2.00390625
+    },
+    "algorithm.prior.encoder.layers.0.feedforward_block.feedforward.2": {
+        "type": "Linear",
+        "parameters": 524800,
+        "size_MB": 2.001953125
+    },
+    "algorithm.prior.encoder.layers.1": {
+        "type": "TransformerEncoderLayer",
+        "parameters": 2627072,
+        "size_MB": 10.021484375
+    },
+    "algorithm.prior.encoder.layers.1.self_attention_block": {
+        "type": "SelfAttentionBlock",
+        "parameters": 1051136,
+        "size_MB": 4.009765625
+    },
+    "algorithm.prior.encoder.layers.1.self_attention_block.normalization": {
+        "type": "UnconditionedNorm",
+        "parameters": 512,
+        "size_MB": 0.001953125
+    },
+    "algorithm.prior.encoder.layers.1.self_attention_block.normalization.norm": {
+        "type": "RMSNorm",
+        "parameters": 512,
+        "size_MB": 0.001953125
+    },
+    "algorithm.prior.encoder.layers.1.self_attention_block.attention": {
+        "type": "CachedAttention",
+        "parameters": 1050624,
+        "size_MB": 4.0078125
+    },
+    "algorithm.prior.encoder.layers.1.self_attention_block.attention.query_projection": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "algorithm.prior.encoder.layers.1.self_attention_block.attention.key_projection": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "algorithm.prior.encoder.layers.1.self_attention_block.attention.value_projection": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "algorithm.prior.encoder.layers.1.self_attention_block.attention.output_projection": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "algorithm.prior.encoder.layers.1.feedforward_block": {
+        "type": "FeedforwardBlock",
+        "parameters": 1575936,
+        "size_MB": 6.01171875
+    },
+    "algorithm.prior.encoder.layers.1.feedforward_block.normalization": {
+        "type": "UnconditionedNorm",
+        "parameters": 512,
+        "size_MB": 0.001953125
+    },
+    "algorithm.prior.encoder.layers.1.feedforward_block.normalization.norm": {
+        "type": "RMSNorm",
+        "parameters": 512,
+        "size_MB": 0.001953125
+    },
+    "algorithm.prior.encoder.layers.1.feedforward_block.feedforward": {
+        "type": "Sequential",
+        "parameters": 1575424,
+        "size_MB": 6.009765625
+    },
+    "algorithm.prior.encoder.layers.1.feedforward_block.feedforward.0": {
+        "type": "SwiGLU",
+        "parameters": 1050624,
+        "size_MB": 4.0078125
+    },
+    "algorithm.prior.encoder.layers.1.feedforward_block.feedforward.0.gate_proj": {
+        "type": "Linear",
+        "parameters": 525312,
+        "size_MB": 2.00390625
+    },
+    "algorithm.prior.encoder.layers.1.feedforward_block.feedforward.0.value_proj": {
+        "type": "Linear",
+        "parameters": 525312,
+        "size_MB": 2.00390625
+    },
+    "algorithm.prior.encoder.layers.1.feedforward_block.feedforward.2": {
+        "type": "Linear",
+        "parameters": 524800,
+        "size_MB": 2.001953125
+    },
+    "algorithm.prior.encoder.layers.2": {
+        "type": "TransformerEncoderLayer",
+        "parameters": 2627072,
+        "size_MB": 10.021484375
+    },
+    "algorithm.prior.encoder.layers.2.self_attention_block": {
+        "type": "SelfAttentionBlock",
+        "parameters": 1051136,
+        "size_MB": 4.009765625
+    },
+    "algorithm.prior.encoder.layers.2.self_attention_block.normalization": {
+        "type": "UnconditionedNorm",
+        "parameters": 512,
+        "size_MB": 0.001953125
+    },
+    "algorithm.prior.encoder.layers.2.self_attention_block.normalization.norm": {
+        "type": "RMSNorm",
+        "parameters": 512,
+        "size_MB": 0.001953125
+    },
+    "algorithm.prior.encoder.layers.2.self_attention_block.attention": {
+        "type": "CachedAttention",
+        "parameters": 1050624,
+        "size_MB": 4.0078125
+    },
+    "algorithm.prior.encoder.layers.2.self_attention_block.attention.query_projection": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "algorithm.prior.encoder.layers.2.self_attention_block.attention.key_projection": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "algorithm.prior.encoder.layers.2.self_attention_block.attention.value_projection": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "algorithm.prior.encoder.layers.2.self_attention_block.attention.output_projection": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "algorithm.prior.encoder.layers.2.feedforward_block": {
+        "type": "FeedforwardBlock",
+        "parameters": 1575936,
+        "size_MB": 6.01171875
+    },
+    "algorithm.prior.encoder.layers.2.feedforward_block.normalization": {
+        "type": "UnconditionedNorm",
+        "parameters": 512,
+        "size_MB": 0.001953125
+    },
+    "algorithm.prior.encoder.layers.2.feedforward_block.normalization.norm": {
+        "type": "RMSNorm",
+        "parameters": 512,
+        "size_MB": 0.001953125
+    },
+    "algorithm.prior.encoder.layers.2.feedforward_block.feedforward": {
+        "type": "Sequential",
+        "parameters": 1575424,
+        "size_MB": 6.009765625
+    },
+    "algorithm.prior.encoder.layers.2.feedforward_block.feedforward.0": {
+        "type": "SwiGLU",
+        "parameters": 1050624,
+        "size_MB": 4.0078125
+    },
+    "algorithm.prior.encoder.layers.2.feedforward_block.feedforward.0.gate_proj": {
+        "type": "Linear",
+        "parameters": 525312,
+        "size_MB": 2.00390625
+    },
+    "algorithm.prior.encoder.layers.2.feedforward_block.feedforward.0.value_proj": {
+        "type": "Linear",
+        "parameters": 525312,
+        "size_MB": 2.00390625
+    },
+    "algorithm.prior.encoder.layers.2.feedforward_block.feedforward.2": {
+        "type": "Linear",
+        "parameters": 524800,
+        "size_MB": 2.001953125
+    },
+    "algorithm.prior.encoder.layers.3": {
+        "type": "TransformerEncoderLayer",
+        "parameters": 2627072,
+        "size_MB": 10.021484375
+    },
+    "algorithm.prior.encoder.layers.3.self_attention_block": {
+        "type": "SelfAttentionBlock",
+        "parameters": 1051136,
+        "size_MB": 4.009765625
+    },
+    "algorithm.prior.encoder.layers.3.self_attention_block.normalization": {
+        "type": "UnconditionedNorm",
+        "parameters": 512,
+        "size_MB": 0.001953125
+    },
+    "algorithm.prior.encoder.layers.3.self_attention_block.normalization.norm": {
+        "type": "RMSNorm",
+        "parameters": 512,
+        "size_MB": 0.001953125
+    },
+    "algorithm.prior.encoder.layers.3.self_attention_block.attention": {
+        "type": "CachedAttention",
+        "parameters": 1050624,
+        "size_MB": 4.0078125
+    },
+    "algorithm.prior.encoder.layers.3.self_attention_block.attention.query_projection": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "algorithm.prior.encoder.layers.3.self_attention_block.attention.key_projection": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "algorithm.prior.encoder.layers.3.self_attention_block.attention.value_projection": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "algorithm.prior.encoder.layers.3.self_attention_block.attention.output_projection": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "algorithm.prior.encoder.layers.3.feedforward_block": {
+        "type": "FeedforwardBlock",
+        "parameters": 1575936,
+        "size_MB": 6.01171875
+    },
+    "algorithm.prior.encoder.layers.3.feedforward_block.normalization": {
+        "type": "UnconditionedNorm",
+        "parameters": 512,
+        "size_MB": 0.001953125
+    },
+    "algorithm.prior.encoder.layers.3.feedforward_block.normalization.norm": {
+        "type": "RMSNorm",
+        "parameters": 512,
+        "size_MB": 0.001953125
+    },
+    "algorithm.prior.encoder.layers.3.feedforward_block.feedforward": {
+        "type": "Sequential",
+        "parameters": 1575424,
+        "size_MB": 6.009765625
+    },
+    "algorithm.prior.encoder.layers.3.feedforward_block.feedforward.0": {
+        "type": "SwiGLU",
+        "parameters": 1050624,
+        "size_MB": 4.0078125
+    },
+    "algorithm.prior.encoder.layers.3.feedforward_block.feedforward.0.gate_proj": {
+        "type": "Linear",
+        "parameters": 525312,
+        "size_MB": 2.00390625
+    },
+    "algorithm.prior.encoder.layers.3.feedforward_block.feedforward.0.value_proj": {
+        "type": "Linear",
+        "parameters": 525312,
+        "size_MB": 2.00390625
+    },
+    "algorithm.prior.encoder.layers.3.feedforward_block.feedforward.2": {
+        "type": "Linear",
+        "parameters": 524800,
+        "size_MB": 2.001953125
+    },
+    "algorithm.prior.encoder.final_normalization": {
+        "type": "RMSNorm",
+        "parameters": 512,
+        "size_MB": 0.001953125
+    },
+    "algorithm.prior.input_sequence_builder": {
+        "type": "TransformerInputBuilder",
+        "parameters": 256,
+        "size_MB": 0.0009765625
+    },
+    "algorithm.prior.input_sequence_builder.flat_positional_encoding_layer": {
+        "type": "SinusoidalPositionalEncoding1D",
+        "parameters": 256,
+        "size_MB": 0.0009765625
+    },
+    "algorithm.prior.cls_token": {
+        "type": "Embedding",
+        "parameters": 512,
+        "size_MB": 0.001953125
+    },
+    "algorithm.prior.latent_projection": {
+        "type": "Linear",
+        "parameters": 65664,
+        "size_MB": 0.25048828125
+    },
+    "decoder": {
+        "type": "ACT",
+        "parameters": 58089351,
+        "size_MB": 221.59328842163086
+    },
+    "decoder.action_heads": {
+        "type": "ModuleDict",
+        "parameters": 496647,
+        "size_MB": 1.8945579528808594
+    },
+    "decoder.action_heads.ee_pos_action": {
+        "type": "ActionHead",
+        "parameters": 165635,
+        "size_MB": 0.6318473815917969
+    },
+    "decoder.action_heads.ee_pos_action.blocks": {
+        "type": "ModuleList",
+        "parameters": 165248,
+        "size_MB": 0.63037109375
+    },
+    "decoder.action_heads.ee_pos_action.blocks.0": {
+        "type": "MLPBlock",
+        "parameters": 165248,
+        "size_MB": 0.63037109375
+    },
+    "decoder.action_heads.ee_pos_action.blocks.0.norm": {
+        "type": "LayerNorm",
+        "parameters": 1024,
+        "size_MB": 0.00390625
+    },
+    "decoder.action_heads.ee_pos_action.blocks.0.mlp": {
+        "type": "MLP",
+        "parameters": 164224,
+        "size_MB": 0.62646484375
+    },
+    "decoder.action_heads.ee_pos_action.blocks.0.mlp.layers": {
+        "type": "Sequential",
+        "parameters": 164224,
+        "size_MB": 0.62646484375
+    },
+    "decoder.action_heads.ee_pos_action.blocks.0.mlp.layers.0": {
+        "type": "Linear",
+        "parameters": 131328,
+        "size_MB": 0.5009765625
+    },
+    "decoder.action_heads.ee_pos_action.blocks.0.mlp.layers.3": {
+        "type": "Linear",
+        "parameters": 32896,
+        "size_MB": 0.12548828125
+    },
+    "decoder.action_heads.ee_pos_action.output_proj": {
+        "type": "Linear",
+        "parameters": 387,
+        "size_MB": 0.001476287841796875
+    },
+    "decoder.action_heads.ee_ori_action": {
+        "type": "ActionHead",
+        "parameters": 165635,
+        "size_MB": 0.6318473815917969
+    },
+    "decoder.action_heads.ee_ori_action.blocks": {
+        "type": "ModuleList",
+        "parameters": 165248,
+        "size_MB": 0.63037109375
+    },
+    "decoder.action_heads.ee_ori_action.blocks.0": {
+        "type": "MLPBlock",
+        "parameters": 165248,
+        "size_MB": 0.63037109375
+    },
+    "decoder.action_heads.ee_ori_action.blocks.0.norm": {
+        "type": "LayerNorm",
+        "parameters": 1024,
+        "size_MB": 0.00390625
+    },
+    "decoder.action_heads.ee_ori_action.blocks.0.mlp": {
+        "type": "MLP",
+        "parameters": 164224,
+        "size_MB": 0.62646484375
+    },
+    "decoder.action_heads.ee_ori_action.blocks.0.mlp.layers": {
+        "type": "Sequential",
+        "parameters": 164224,
+        "size_MB": 0.62646484375
+    },
+    "decoder.action_heads.ee_ori_action.blocks.0.mlp.layers.0": {
+        "type": "Linear",
+        "parameters": 131328,
+        "size_MB": 0.5009765625
+    },
+    "decoder.action_heads.ee_ori_action.blocks.0.mlp.layers.3": {
+        "type": "Linear",
+        "parameters": 32896,
+        "size_MB": 0.12548828125
+    },
+    "decoder.action_heads.ee_ori_action.output_proj": {
+        "type": "Linear",
+        "parameters": 387,
+        "size_MB": 0.001476287841796875
+    },
+    "decoder.action_heads.gripper_state_action": {
+        "type": "ActionHead",
+        "parameters": 165377,
+        "size_MB": 0.6308631896972656
+    },
+    "decoder.action_heads.gripper_state_action.blocks": {
+        "type": "ModuleList",
+        "parameters": 165248,
+        "size_MB": 0.63037109375
+    },
+    "decoder.action_heads.gripper_state_action.blocks.0": {
+        "type": "MLPBlock",
+        "parameters": 165248,
+        "size_MB": 0.63037109375
+    },
+    "decoder.action_heads.gripper_state_action.blocks.0.norm": {
+        "type": "LayerNorm",
+        "parameters": 1024,
+        "size_MB": 0.00390625
+    },
+    "decoder.action_heads.gripper_state_action.blocks.0.mlp": {
+        "type": "MLP",
+        "parameters": 164224,
+        "size_MB": 0.62646484375
+    },
+    "decoder.action_heads.gripper_state_action.blocks.0.mlp.layers": {
+        "type": "Sequential",
+        "parameters": 164224,
+        "size_MB": 0.62646484375
+    },
+    "decoder.action_heads.gripper_state_action.blocks.0.mlp.layers.0": {
+        "type": "Linear",
+        "parameters": 131328,
+        "size_MB": 0.5009765625
+    },
+    "decoder.action_heads.gripper_state_action.blocks.0.mlp.layers.3": {
+        "type": "Linear",
+        "parameters": 32896,
+        "size_MB": 0.12548828125
+    },
+    "decoder.action_heads.gripper_state_action.output_proj": {
+        "type": "Linear",
+        "parameters": 129,
+        "size_MB": 0.000492095947265625
+    },
+    "decoder.input_sequence_builder": {
+        "type": "TransformerInputBuilder",
+        "parameters": 2560000,
+        "size_MB": 9.765625
+    },
+    "decoder.input_sequence_builder.flat_positional_encoding_layer": {
+        "type": "LearnedPositionalEncoding1D",
+        "parameters": 2560000,
+        "size_MB": 9.765625
+    },
+    "decoder.input_sequence_builder.flat_positional_encoding_layer.learned_encoding": {
+        "type": "Embedding",
+        "parameters": 2560000,
+        "size_MB": 9.765625
+    },
+    "decoder.action_decoder": {
+        "type": "Transformer",
+        "parameters": 55027584,
+        "size_MB": 209.91357421875
+    },
+    "decoder.action_decoder.encoder": {
+        "type": "TransformerEncoder",
+        "parameters": 17332736,
+        "size_MB": 66.119140625
+    },
+    "decoder.action_decoder.encoder.layers": {
+        "type": "ModuleList",
+        "parameters": 17332736,
+        "size_MB": 66.119140625
+    },
+    "decoder.action_decoder.encoder.layers.0": {
+        "type": "TransformerEncoderLayer",
+        "parameters": 4333184,
+        "size_MB": 16.52978515625
+    },
+    "decoder.action_decoder.encoder.layers.0.self_attention": {
+        "type": "FlashAttention",
+        "parameters": 1050624,
+        "size_MB": 4.0078125
+    },
+    "decoder.action_decoder.encoder.layers.0.self_attention.q_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.encoder.layers.0.self_attention.k_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.encoder.layers.0.self_attention.v_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.encoder.layers.0.self_attention.out_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.encoder.layers.0.feedforward_linear2": {
+        "type": "Linear",
+        "parameters": 1638912,
+        "size_MB": 6.251953125
+    },
+    "decoder.action_decoder.encoder.layers.0.normalization1": {
+        "type": "LayerNorm",
+        "parameters": 1024,
+        "size_MB": 0.00390625
+    },
+    "decoder.action_decoder.encoder.layers.0.normalization2": {
+        "type": "LayerNorm",
+        "parameters": 1024,
+        "size_MB": 0.00390625
+    },
+    "decoder.action_decoder.encoder.layers.0.feedforward_linear1": {
+        "type": "Linear",
+        "parameters": 1641600,
+        "size_MB": 6.26220703125
+    },
+    "decoder.action_decoder.encoder.layers.0.feedforward_network": {
+        "type": "Sequential",
+        "parameters": 3280512,
+        "size_MB": 12.51416015625
+    },
+    "decoder.action_decoder.encoder.layers.1": {
+        "type": "TransformerEncoderLayer",
+        "parameters": 4333184,
+        "size_MB": 16.52978515625
+    },
+    "decoder.action_decoder.encoder.layers.1.self_attention": {
+        "type": "FlashAttention",
+        "parameters": 1050624,
+        "size_MB": 4.0078125
+    },
+    "decoder.action_decoder.encoder.layers.1.self_attention.q_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.encoder.layers.1.self_attention.k_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.encoder.layers.1.self_attention.v_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.encoder.layers.1.self_attention.out_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.encoder.layers.1.feedforward_linear2": {
+        "type": "Linear",
+        "parameters": 1638912,
+        "size_MB": 6.251953125
+    },
+    "decoder.action_decoder.encoder.layers.1.normalization1": {
+        "type": "LayerNorm",
+        "parameters": 1024,
+        "size_MB": 0.00390625
+    },
+    "decoder.action_decoder.encoder.layers.1.normalization2": {
+        "type": "LayerNorm",
+        "parameters": 1024,
+        "size_MB": 0.00390625
+    },
+    "decoder.action_decoder.encoder.layers.1.feedforward_linear1": {
+        "type": "Linear",
+        "parameters": 1641600,
+        "size_MB": 6.26220703125
+    },
+    "decoder.action_decoder.encoder.layers.1.feedforward_network": {
+        "type": "Sequential",
+        "parameters": 3280512,
+        "size_MB": 12.51416015625
+    },
+    "decoder.action_decoder.encoder.layers.2": {
+        "type": "TransformerEncoderLayer",
+        "parameters": 4333184,
+        "size_MB": 16.52978515625
+    },
+    "decoder.action_decoder.encoder.layers.2.self_attention": {
+        "type": "FlashAttention",
+        "parameters": 1050624,
+        "size_MB": 4.0078125
+    },
+    "decoder.action_decoder.encoder.layers.2.self_attention.q_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.encoder.layers.2.self_attention.k_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.encoder.layers.2.self_attention.v_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.encoder.layers.2.self_attention.out_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.encoder.layers.2.feedforward_linear2": {
+        "type": "Linear",
+        "parameters": 1638912,
+        "size_MB": 6.251953125
+    },
+    "decoder.action_decoder.encoder.layers.2.normalization1": {
+        "type": "LayerNorm",
+        "parameters": 1024,
+        "size_MB": 0.00390625
+    },
+    "decoder.action_decoder.encoder.layers.2.normalization2": {
+        "type": "LayerNorm",
+        "parameters": 1024,
+        "size_MB": 0.00390625
+    },
+    "decoder.action_decoder.encoder.layers.2.feedforward_linear1": {
+        "type": "Linear",
+        "parameters": 1641600,
+        "size_MB": 6.26220703125
+    },
+    "decoder.action_decoder.encoder.layers.2.feedforward_network": {
+        "type": "Sequential",
+        "parameters": 3280512,
+        "size_MB": 12.51416015625
+    },
+    "decoder.action_decoder.encoder.layers.3": {
+        "type": "TransformerEncoderLayer",
+        "parameters": 4333184,
+        "size_MB": 16.52978515625
+    },
+    "decoder.action_decoder.encoder.layers.3.self_attention": {
+        "type": "FlashAttention",
+        "parameters": 1050624,
+        "size_MB": 4.0078125
+    },
+    "decoder.action_decoder.encoder.layers.3.self_attention.q_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.encoder.layers.3.self_attention.k_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.encoder.layers.3.self_attention.v_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.encoder.layers.3.self_attention.out_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.encoder.layers.3.feedforward_linear2": {
+        "type": "Linear",
+        "parameters": 1638912,
+        "size_MB": 6.251953125
+    },
+    "decoder.action_decoder.encoder.layers.3.normalization1": {
+        "type": "LayerNorm",
+        "parameters": 1024,
+        "size_MB": 0.00390625
+    },
+    "decoder.action_decoder.encoder.layers.3.normalization2": {
+        "type": "LayerNorm",
+        "parameters": 1024,
+        "size_MB": 0.00390625
+    },
+    "decoder.action_decoder.encoder.layers.3.feedforward_linear1": {
+        "type": "Linear",
+        "parameters": 1641600,
+        "size_MB": 6.26220703125
+    },
+    "decoder.action_decoder.encoder.layers.3.feedforward_network": {
+        "type": "Sequential",
+        "parameters": 3280512,
+        "size_MB": 12.51416015625
+    },
+    "decoder.action_decoder.decoder": {
+        "type": "TransformerDecoder",
+        "parameters": 37694848,
+        "size_MB": 143.79443359375
+    },
+    "decoder.action_decoder.decoder.layers": {
+        "type": "ModuleList",
+        "parameters": 37693824,
+        "size_MB": 143.79052734375
+    },
+    "decoder.action_decoder.decoder.layers.0": {
+        "type": "TransformerDecoderLayer",
+        "parameters": 5384832,
+        "size_MB": 20.54150390625
+    },
+    "decoder.action_decoder.decoder.layers.0.self_attention": {
+        "type": "FlashAttention",
+        "parameters": 1050624,
+        "size_MB": 4.0078125
+    },
+    "decoder.action_decoder.decoder.layers.0.self_attention.q_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.decoder.layers.0.self_attention.k_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.decoder.layers.0.self_attention.v_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.decoder.layers.0.self_attention.out_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.decoder.layers.0.cross_attention": {
+        "type": "FlashAttention",
+        "parameters": 1050624,
+        "size_MB": 4.0078125
+    },
+    "decoder.action_decoder.decoder.layers.0.cross_attention.q_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.decoder.layers.0.cross_attention.k_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.decoder.layers.0.cross_attention.v_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.decoder.layers.0.cross_attention.out_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.decoder.layers.0.feedforward_linear2": {
+        "type": "Linear",
+        "parameters": 1638912,
+        "size_MB": 6.251953125
+    },
+    "decoder.action_decoder.decoder.layers.0.normalization1": {
+        "type": "LayerNorm",
+        "parameters": 1024,
+        "size_MB": 0.00390625
+    },
+    "decoder.action_decoder.decoder.layers.0.normalization2": {
+        "type": "LayerNorm",
+        "parameters": 1024,
+        "size_MB": 0.00390625
+    },
+    "decoder.action_decoder.decoder.layers.0.normalization3": {
+        "type": "LayerNorm",
+        "parameters": 1024,
+        "size_MB": 0.00390625
+    },
+    "decoder.action_decoder.decoder.layers.0.feedforward_linear1": {
+        "type": "Linear",
+        "parameters": 1641600,
+        "size_MB": 6.26220703125
+    },
+    "decoder.action_decoder.decoder.layers.0.feedforward_network": {
+        "type": "Sequential",
+        "parameters": 3280512,
+        "size_MB": 12.51416015625
+    },
+    "decoder.action_decoder.decoder.layers.1": {
+        "type": "TransformerDecoderLayer",
+        "parameters": 5384832,
+        "size_MB": 20.54150390625
+    },
+    "decoder.action_decoder.decoder.layers.1.self_attention": {
+        "type": "FlashAttention",
+        "parameters": 1050624,
+        "size_MB": 4.0078125
+    },
+    "decoder.action_decoder.decoder.layers.1.self_attention.q_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.decoder.layers.1.self_attention.k_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.decoder.layers.1.self_attention.v_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.decoder.layers.1.self_attention.out_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.decoder.layers.1.cross_attention": {
+        "type": "FlashAttention",
+        "parameters": 1050624,
+        "size_MB": 4.0078125
+    },
+    "decoder.action_decoder.decoder.layers.1.cross_attention.q_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.decoder.layers.1.cross_attention.k_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.decoder.layers.1.cross_attention.v_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.decoder.layers.1.cross_attention.out_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.decoder.layers.1.feedforward_linear2": {
+        "type": "Linear",
+        "parameters": 1638912,
+        "size_MB": 6.251953125
+    },
+    "decoder.action_decoder.decoder.layers.1.normalization1": {
+        "type": "LayerNorm",
+        "parameters": 1024,
+        "size_MB": 0.00390625
+    },
+    "decoder.action_decoder.decoder.layers.1.normalization2": {
+        "type": "LayerNorm",
+        "parameters": 1024,
+        "size_MB": 0.00390625
+    },
+    "decoder.action_decoder.decoder.layers.1.normalization3": {
+        "type": "LayerNorm",
+        "parameters": 1024,
+        "size_MB": 0.00390625
+    },
+    "decoder.action_decoder.decoder.layers.1.feedforward_linear1": {
+        "type": "Linear",
+        "parameters": 1641600,
+        "size_MB": 6.26220703125
+    },
+    "decoder.action_decoder.decoder.layers.1.feedforward_network": {
+        "type": "Sequential",
+        "parameters": 3280512,
+        "size_MB": 12.51416015625
+    },
+    "decoder.action_decoder.decoder.layers.2": {
+        "type": "TransformerDecoderLayer",
+        "parameters": 5384832,
+        "size_MB": 20.54150390625
+    },
+    "decoder.action_decoder.decoder.layers.2.self_attention": {
+        "type": "FlashAttention",
+        "parameters": 1050624,
+        "size_MB": 4.0078125
+    },
+    "decoder.action_decoder.decoder.layers.2.self_attention.q_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.decoder.layers.2.self_attention.k_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.decoder.layers.2.self_attention.v_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.decoder.layers.2.self_attention.out_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.decoder.layers.2.cross_attention": {
+        "type": "FlashAttention",
+        "parameters": 1050624,
+        "size_MB": 4.0078125
+    },
+    "decoder.action_decoder.decoder.layers.2.cross_attention.q_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.decoder.layers.2.cross_attention.k_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.decoder.layers.2.cross_attention.v_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.decoder.layers.2.cross_attention.out_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.decoder.layers.2.feedforward_linear2": {
+        "type": "Linear",
+        "parameters": 1638912,
+        "size_MB": 6.251953125
+    },
+    "decoder.action_decoder.decoder.layers.2.normalization1": {
+        "type": "LayerNorm",
+        "parameters": 1024,
+        "size_MB": 0.00390625
+    },
+    "decoder.action_decoder.decoder.layers.2.normalization2": {
+        "type": "LayerNorm",
+        "parameters": 1024,
+        "size_MB": 0.00390625
+    },
+    "decoder.action_decoder.decoder.layers.2.normalization3": {
+        "type": "LayerNorm",
+        "parameters": 1024,
+        "size_MB": 0.00390625
+    },
+    "decoder.action_decoder.decoder.layers.2.feedforward_linear1": {
+        "type": "Linear",
+        "parameters": 1641600,
+        "size_MB": 6.26220703125
+    },
+    "decoder.action_decoder.decoder.layers.2.feedforward_network": {
+        "type": "Sequential",
+        "parameters": 3280512,
+        "size_MB": 12.51416015625
+    },
+    "decoder.action_decoder.decoder.layers.3": {
+        "type": "TransformerDecoderLayer",
+        "parameters": 5384832,
+        "size_MB": 20.54150390625
+    },
+    "decoder.action_decoder.decoder.layers.3.self_attention": {
+        "type": "FlashAttention",
+        "parameters": 1050624,
+        "size_MB": 4.0078125
+    },
+    "decoder.action_decoder.decoder.layers.3.self_attention.q_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.decoder.layers.3.self_attention.k_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.decoder.layers.3.self_attention.v_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.decoder.layers.3.self_attention.out_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.decoder.layers.3.cross_attention": {
+        "type": "FlashAttention",
+        "parameters": 1050624,
+        "size_MB": 4.0078125
+    },
+    "decoder.action_decoder.decoder.layers.3.cross_attention.q_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.decoder.layers.3.cross_attention.k_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.decoder.layers.3.cross_attention.v_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.decoder.layers.3.cross_attention.out_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.decoder.layers.3.feedforward_linear2": {
+        "type": "Linear",
+        "parameters": 1638912,
+        "size_MB": 6.251953125
+    },
+    "decoder.action_decoder.decoder.layers.3.normalization1": {
+        "type": "LayerNorm",
+        "parameters": 1024,
+        "size_MB": 0.00390625
+    },
+    "decoder.action_decoder.decoder.layers.3.normalization2": {
+        "type": "LayerNorm",
+        "parameters": 1024,
+        "size_MB": 0.00390625
+    },
+    "decoder.action_decoder.decoder.layers.3.normalization3": {
+        "type": "LayerNorm",
+        "parameters": 1024,
+        "size_MB": 0.00390625
+    },
+    "decoder.action_decoder.decoder.layers.3.feedforward_linear1": {
+        "type": "Linear",
+        "parameters": 1641600,
+        "size_MB": 6.26220703125
+    },
+    "decoder.action_decoder.decoder.layers.3.feedforward_network": {
+        "type": "Sequential",
+        "parameters": 3280512,
+        "size_MB": 12.51416015625
+    },
+    "decoder.action_decoder.decoder.layers.4": {
+        "type": "TransformerDecoderLayer",
+        "parameters": 5384832,
+        "size_MB": 20.54150390625
+    },
+    "decoder.action_decoder.decoder.layers.4.self_attention": {
+        "type": "FlashAttention",
+        "parameters": 1050624,
+        "size_MB": 4.0078125
+    },
+    "decoder.action_decoder.decoder.layers.4.self_attention.q_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.decoder.layers.4.self_attention.k_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.decoder.layers.4.self_attention.v_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.decoder.layers.4.self_attention.out_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.decoder.layers.4.cross_attention": {
+        "type": "FlashAttention",
+        "parameters": 1050624,
+        "size_MB": 4.0078125
+    },
+    "decoder.action_decoder.decoder.layers.4.cross_attention.q_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.decoder.layers.4.cross_attention.k_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.decoder.layers.4.cross_attention.v_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.decoder.layers.4.cross_attention.out_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.decoder.layers.4.feedforward_linear2": {
+        "type": "Linear",
+        "parameters": 1638912,
+        "size_MB": 6.251953125
+    },
+    "decoder.action_decoder.decoder.layers.4.normalization1": {
+        "type": "LayerNorm",
+        "parameters": 1024,
+        "size_MB": 0.00390625
+    },
+    "decoder.action_decoder.decoder.layers.4.normalization2": {
+        "type": "LayerNorm",
+        "parameters": 1024,
+        "size_MB": 0.00390625
+    },
+    "decoder.action_decoder.decoder.layers.4.normalization3": {
+        "type": "LayerNorm",
+        "parameters": 1024,
+        "size_MB": 0.00390625
+    },
+    "decoder.action_decoder.decoder.layers.4.feedforward_linear1": {
+        "type": "Linear",
+        "parameters": 1641600,
+        "size_MB": 6.26220703125
+    },
+    "decoder.action_decoder.decoder.layers.4.feedforward_network": {
+        "type": "Sequential",
+        "parameters": 3280512,
+        "size_MB": 12.51416015625
+    },
+    "decoder.action_decoder.decoder.layers.5": {
+        "type": "TransformerDecoderLayer",
+        "parameters": 5384832,
+        "size_MB": 20.54150390625
+    },
+    "decoder.action_decoder.decoder.layers.5.self_attention": {
+        "type": "FlashAttention",
+        "parameters": 1050624,
+        "size_MB": 4.0078125
+    },
+    "decoder.action_decoder.decoder.layers.5.self_attention.q_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.decoder.layers.5.self_attention.k_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.decoder.layers.5.self_attention.v_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.decoder.layers.5.self_attention.out_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.decoder.layers.5.cross_attention": {
+        "type": "FlashAttention",
+        "parameters": 1050624,
+        "size_MB": 4.0078125
+    },
+    "decoder.action_decoder.decoder.layers.5.cross_attention.q_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.decoder.layers.5.cross_attention.k_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.decoder.layers.5.cross_attention.v_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.decoder.layers.5.cross_attention.out_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.decoder.layers.5.feedforward_linear2": {
+        "type": "Linear",
+        "parameters": 1638912,
+        "size_MB": 6.251953125
+    },
+    "decoder.action_decoder.decoder.layers.5.normalization1": {
+        "type": "LayerNorm",
+        "parameters": 1024,
+        "size_MB": 0.00390625
+    },
+    "decoder.action_decoder.decoder.layers.5.normalization2": {
+        "type": "LayerNorm",
+        "parameters": 1024,
+        "size_MB": 0.00390625
+    },
+    "decoder.action_decoder.decoder.layers.5.normalization3": {
+        "type": "LayerNorm",
+        "parameters": 1024,
+        "size_MB": 0.00390625
+    },
+    "decoder.action_decoder.decoder.layers.5.feedforward_linear1": {
+        "type": "Linear",
+        "parameters": 1641600,
+        "size_MB": 6.26220703125
+    },
+    "decoder.action_decoder.decoder.layers.5.feedforward_network": {
+        "type": "Sequential",
+        "parameters": 3280512,
+        "size_MB": 12.51416015625
+    },
+    "decoder.action_decoder.decoder.layers.6": {
+        "type": "TransformerDecoderLayer",
+        "parameters": 5384832,
+        "size_MB": 20.54150390625
+    },
+    "decoder.action_decoder.decoder.layers.6.self_attention": {
+        "type": "FlashAttention",
+        "parameters": 1050624,
+        "size_MB": 4.0078125
+    },
+    "decoder.action_decoder.decoder.layers.6.self_attention.q_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.decoder.layers.6.self_attention.k_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.decoder.layers.6.self_attention.v_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.decoder.layers.6.self_attention.out_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.decoder.layers.6.cross_attention": {
+        "type": "FlashAttention",
+        "parameters": 1050624,
+        "size_MB": 4.0078125
+    },
+    "decoder.action_decoder.decoder.layers.6.cross_attention.q_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.decoder.layers.6.cross_attention.k_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.decoder.layers.6.cross_attention.v_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.decoder.layers.6.cross_attention.out_proj": {
+        "type": "Linear",
+        "parameters": 262656,
+        "size_MB": 1.001953125
+    },
+    "decoder.action_decoder.decoder.layers.6.feedforward_linear2": {
+        "type": "Linear",
+        "parameters": 1638912,
+        "size_MB": 6.251953125
+    },
+    "decoder.action_decoder.decoder.layers.6.normalization1": {
+        "type": "LayerNorm",
+        "parameters": 1024,
+        "size_MB": 0.00390625
+    },
+    "decoder.action_decoder.decoder.layers.6.normalization2": {
+        "type": "LayerNorm",
+        "parameters": 1024,
+        "size_MB": 0.00390625
+    },
+    "decoder.action_decoder.decoder.layers.6.normalization3": {
+        "type": "LayerNorm",
+        "parameters": 1024,
+        "size_MB": 0.00390625
+    },
+    "decoder.action_decoder.decoder.layers.6.feedforward_linear1": {
+        "type": "Linear",
+        "parameters": 1641600,
+        "size_MB": 6.26220703125
+    },
+    "decoder.action_decoder.decoder.layers.6.feedforward_network": {
+        "type": "Sequential",
+        "parameters": 3280512,
+        "size_MB": 12.51416015625
+    },
+    "decoder.action_decoder.decoder.normalization": {
+        "type": "LayerNorm",
+        "parameters": 1024,
+        "size_MB": 0.00390625
+    },
+    "decoder.learnable_query": {
+        "type": "Embedding",
+        "parameters": 5120,
+        "size_MB": 0.01953125
+    }
+}

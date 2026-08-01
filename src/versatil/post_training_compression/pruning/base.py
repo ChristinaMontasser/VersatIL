@@ -10,7 +10,7 @@ class BasePruner(abc.ABC):
     """Base interface for all pruning strategies."""
 
     @abc.abstractmethod
-    def prune(self, module: nn.Module) -> tuple[int, int]:
+    def prune(self, module: nn.Module, calibration_loader: DataLoader | None = None, policy: Policy | None = None) -> tuple[int, int]:
         """Apply pruning to module.
 
         Args:

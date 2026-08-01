@@ -1,0 +1,27 @@
+# @package _global_
+defaults:
+  - /post_training_compression
+  - _self_
+
+checkpoint_path: ???
+checkpoint_name: last.ckpt
+output_directory: null
+
+pruning:
+  # - _target_: versatil.post_training_compression.pruning.StructuredPruner
+  #   amount: 0.1
+  - _target_: versatil.post_training_compression.pruning.UnstructuredPruner
+    amount: 0.3
+preparation: 
+  replace_frozen_batchnorm: false
+  fuse_conv_batchnorm: false
+quantization: null
+modules:
+  - module_path: encoding_pipeline.encoders.left
+    pruning: ${pruning}
+    preparation: ${preparation}
+    
+  - module_path: encoding_pipeline.encoders.right
+    pruning: ${pruning}
+    preparation: ${preparation}
+   

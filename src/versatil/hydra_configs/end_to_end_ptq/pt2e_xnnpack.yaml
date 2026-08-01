@@ -21,6 +21,7 @@ quantization:
         is_dynamic: false
         is_qat: false
         is_per_channel: true
-deployment_backend:
+deployment_backend: #deployment_backend is only required when you need a non-default runtime export. 
+                    #If you leave it out, the config will still work with the default Torch Inductor backend.
   _target_: versatil.post_training_compression.deployment_backends.executorch_xnnpack.ExecutorchXNNPACKBackend
   max_batch_size: 32

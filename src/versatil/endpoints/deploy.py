@@ -92,18 +92,20 @@ def main(config: DictConfig) -> None:
         checkpoint_name=config.checkpoint_name,
         compile_model=config.compile_model,
     )
-
+    logging.info("Policy runtime is done")
     observation_transport = SocketObservationTransport(
         server_address=config.client.model_server_address,
         server_port=config.client.model_server_port,
         request_timeout_seconds=config.client.request_timeout_seconds,
     )
+    logging.info("Observation transport is done ")
+
     action_transport = SocketActionTransport(
         server_address=config.client.model_server_address,
         server_port=config.client.model_server_port,
         request_timeout_seconds=config.client.request_timeout_seconds,
     )
-
+    logging.info("action transport is done ")
     client = InferenceClient(
         policy_runtime=policy_runtime,
         observation_transport=observation_transport,
@@ -115,6 +117,7 @@ def main(config: DictConfig) -> None:
         timing_log=config.client.timing_log,
         update_rate_hz=config.client.update_rate_hz,
     )
+    logging.info("client is ready ")
 
     try:
         client.run_episode(max_steps=config.max_steps)

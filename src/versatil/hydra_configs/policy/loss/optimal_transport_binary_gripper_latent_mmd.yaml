@@ -3,7 +3,7 @@ defaults:
   - gripper@loss_modules.gripper_loss
   - mmd@loss_modules.maximum_mean_discrepancy
   - _self_
-
+#https://arxiv.org/pdf/2410.14069
 _target_: versatil.metrics.losses.composite.CompositeLoss
 loss_modules:
     ot_loss:

@@ -10,7 +10,7 @@ defaults:
   - /task/action_space: libero_precomputed_lerobot
   - /task/observation_space: libero_rgb_lerobot
   - /training: default
-  - /policy/decoder: openvla_oft
+  - /policy/decoder: openvla_oft #continous, predict the full action chunk at a time 
   - /policy/algorithm: behavioral_cloning
   - /policy/loss: regression_gripper_l1
   - _self_

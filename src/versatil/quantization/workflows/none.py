@@ -16,6 +16,10 @@ from versatil.quantization.workflows.base import (
     QuantizedContext,
 )
 
+from versatil.quantization.calibration import CalibrationDataProvider
+from versatil.data.episodic_dataset import EpisodicDataset
+from versatil.models.exportable_policy import ExportablePolicy
+from torch.utils.data import DataLoader
 
 class NoQuantizationWorkflow(BaseQuantizationWorkflow):
     """Export the float policy without applying quantization."""
@@ -57,6 +61,61 @@ class NoQuantizationWorkflow(BaseQuantizationWorkflow):
             checkpoint_name=checkpoint_name,
         )
 
+    #added by Christy
+    
+    def _build_calibration(
+        self,
+        context: PolicyContext,
+        exportable: ExportablePolicy,
+        #targets: list[PT2EQuantizationModuleTarget],
+        calibration_steps: int,
+    ) -> CalibrationDataProvider | None:
+        """Build calibration data for static PT2E quantization.
+
+        Args:
+            context: Loaded policy context containing the training dataloader
+                config.
+            exportable: Policy wrapper whose observation key order determines
+                calibration batch layout.
+            targets: PT2E targets that determine whether calibration is needed.
+            calibration_steps: Maximum number of calibration batches.
+
+        Returns:
+            Calibration provider for static targets, or ``None`` when all
+            targets are dynamic.
+        """
+
+        if calibration_steps < 1:
+            raise ValueError(
+                "Static PT2E quantization requires calibration_steps >= 1, "
+                f"got {calibration_steps}; converting uncalibrated observers "
+                "produces garbage quantization parameters."
+            )
+        dataset = EpisodicDataset(
+            zarr_path=context.config.task.dataset_schema.zarr_path,
+            action_space=context.config.task.action_space,
+            observation_space=context.observation_space,
+            dataloader_config=context.config.task.dataloader,
+            pred_horizon=context.config.task.prediction_horizon,
+            obs_horizon=context.observation_horizon,
+            train=True,
+            seed=context.config.experiment.seed,
+            augment_images=False,
+        )
+        dataset.set_normalizer(context.policy.normalizer)
+        dataset.set_tokenizer(context.tokenizer)
+        calibration_loader = DataLoader(
+            dataset=dataset,
+            batch_size=context.config.task.dataloader.batch_size,
+            shuffle=False,
+            num_workers=0,
+        )
+      #  logger.info("calibration dataset is prepared ")
+        return CalibrationDataProvider(
+            dataloader=calibration_loader,
+            observation_keys=exportable.observation_keys,
+            num_calibration_steps=calibration_steps,
+        )
     def quantize(
         self,
         context: PolicyContext,
@@ -75,6 +134,7 @@ class NoQuantizationWorkflow(BaseQuantizationWorkflow):
             Quantized context whose float and deployment models are the same
             exported graph.
         """
+
         example_inputs = build_example_inputs(
             exportable=exportable,
             observation_space=context.observation_space,

@@ -29,7 +29,9 @@ from versatil.quantization.constants import PT2EBackendName, QuantizationMode
 from versatil.quantization.workflows.base import BaseQuantizationWorkflow
 from versatil.quantization.workflows.none import NoQuantizationWorkflow
 from versatil.training.constants import CheckpointFilename
+from versatil.quantization.calibration import CalibrationDataProvider
 
+logger = logging.getLogger(__name__)
 
 class PostTrainingCompressor:
     """Post-training compression pipeline for a trained policy.
@@ -106,8 +108,38 @@ class PostTrainingCompressor:
         policy = context.policy
         self.validate(policy=policy, modules=modules)
         quantization_workflow.validate_targets(model=policy)
-        self._prepare_and_prune(policy=policy, modules=modules)
+    
+        # Build an ExportablePolicy early so workflows that can supply
+        # calibration data (e.g. PT2E) can create a CalibrationDataProvider
+        # to be forwarded into pruning steps that perform layer-wise tuning.
         exportable = ExportablePolicy.from_policy(policy)
+        calibration_provider = None
+        build_calib = getattr(quantization_workflow, "_build_calibration", None)
+        import inspect
+
+        logger.info("build_calib=%s", build_calib)
+        logger.info("signature=%s", inspect.signature(build_calib))
+
+        if callable(build_calib):
+            try:
+                logger.info("_build_calibration exists and is used")
+                calibration_provider = build_calib(
+                    context=context,
+                    exportable=exportable,
+                    #targets=quantization_workflow.targets,
+                    calibration_steps=self.calibration_steps,
+                )
+            except Exception as e:
+                calibration_provider = None
+                logger.exception(
+                    "_build_calibration failed with error: %s",
+                    str(e)
+                )
+        else:
+            logger.info("_build_calibration is not callable")
+
+        # Pass optional calibration provider (or None) into preparation/pruning
+        self._prepare_and_prune(policy=policy, modules=modules, calibration_provider=calibration_provider)
         logging.info(f"Input keys: {exportable.observation_keys}")
         logging.info(f"Output keys: {exportable.action_keys}")
         quantized = quantization_workflow.quantize(
@@ -205,6 +237,7 @@ class PostTrainingCompressor:
         self,
         policy: nn.Module,
         modules: list[CompressionTarget],
+        calibration_provider: CalibrationDataProvider | None = None,
     ) -> None:
         """Apply BN preparation, fusion, and pruning per module.
 
@@ -228,7 +261,22 @@ class PostTrainingCompressor:
                     count = fuse_all_conv_batchnorm_pairs(submodule)
                     logging.info(f"Fused {count} Conv+BN pairs in {label}")
             for pruner in module.pruning:
-                total, zeroed = pruner.prune(module=submodule)
+                # If a calibration provider was supplied, forward its
+                # underlying dataloader to pruners that accept it.
+                calib_loader = None
+                
+                if calibration_provider is not None:
+                    try:
+                        calib_loader = getattr(calibration_provider, "_dataloader", None)
+                    except Exception as e:
+                        calib_loader = None
+                        logger.exception(
+                            "calib_loader failed with error: %s",
+                            str(e)
+                        )
+                else: 
+                    logging.info("no dataloade for the calibration")
+                total, zeroed = pruner.prune(module=submodule, calibration_loader=calib_loader, policy=policy)
                 zeroed_percentage = 100.0 * zeroed / total if total > 0 else 0.0
                 logging.info(
                     f"Pruned {label} with {type(pruner).__name__}: "

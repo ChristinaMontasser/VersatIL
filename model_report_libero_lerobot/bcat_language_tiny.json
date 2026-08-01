@@ -1,0 +1,1647 @@
+{
+    "": {
+        "type": "Policy",
+        "parameters": 14013319,
+        "size_MB": 53.45656967163086
+    },
+    "encoding_pipeline": {
+        "type": "EncodingPipeline",
+        "parameters": 12379840,
+        "size_MB": 47.225341796875
+    },
+    "encoding_pipeline.encoders": {
+        "type": "ModuleDict",
+        "parameters": 12379840,
+        "size_MB": 47.225341796875
+    },
+    "encoding_pipeline.encoders.left": {
+        "type": "SpatialRGBEncoder",
+        "parameters": 329696,
+        "size_MB": 1.2576904296875
+    },
+    "encoding_pipeline.encoders.left.backbone": {
+        "type": "MobileNetV3Features",
+        "parameters": 329696,
+        "size_MB": 1.2576904296875
+    },
+    "encoding_pipeline.encoders.left.backbone.conv_stem": {
+        "type": "Conv2d",
+        "parameters": 864,
+        "size_MB": 0.0032958984375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks": {
+        "type": "Sequential",
+        "parameters": 328832,
+        "size_MB": 1.25439453125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.0": {
+        "type": "Sequential",
+        "parameters": 4864,
+        "size_MB": 0.0185546875
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.0.0": {
+        "type": "ConvBnAct",
+        "parameters": 4608,
+        "size_MB": 0.017578125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.0.0.conv": {
+        "type": "Conv2d",
+        "parameters": 4608,
+        "size_MB": 0.017578125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.0.1": {
+        "type": "ConvBnAct",
+        "parameters": 256,
+        "size_MB": 0.0009765625
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.0.1.conv": {
+        "type": "Conv2d",
+        "parameters": 256,
+        "size_MB": 0.0009765625
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.1": {
+        "type": "Sequential",
+        "parameters": 8448,
+        "size_MB": 0.0322265625
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.1.0": {
+        "type": "ConvBnAct",
+        "parameters": 6912,
+        "size_MB": 0.0263671875
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.1.0.conv": {
+        "type": "Conv2d",
+        "parameters": 6912,
+        "size_MB": 0.0263671875
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.1.1": {
+        "type": "ConvBnAct",
+        "parameters": 1536,
+        "size_MB": 0.005859375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.1.1.conv": {
+        "type": "Conv2d",
+        "parameters": 1536,
+        "size_MB": 0.005859375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2": {
+        "type": "Sequential",
+        "parameters": 70064,
+        "size_MB": 0.26727294921875
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.0": {
+        "type": "UniversalInvertedResidual",
+        "parameters": 10880,
+        "size_MB": 0.04150390625
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.0.dw_start": {
+        "type": "ConvNormAct",
+        "parameters": 800,
+        "size_MB": 0.0030517578125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.0.dw_start.conv": {
+        "type": "Conv2d",
+        "parameters": 800,
+        "size_MB": 0.0030517578125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.0.pw_exp": {
+        "type": "ConvNormAct",
+        "parameters": 3072,
+        "size_MB": 0.01171875
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.0.pw_exp.conv": {
+        "type": "Conv2d",
+        "parameters": 3072,
+        "size_MB": 0.01171875
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.0.dw_mid": {
+        "type": "ConvNormAct",
+        "parameters": 2400,
+        "size_MB": 0.0091552734375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.0.dw_mid.conv": {
+        "type": "Conv2d",
+        "parameters": 2400,
+        "size_MB": 0.0091552734375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.0.pw_proj": {
+        "type": "ConvNormAct",
+        "parameters": 4608,
+        "size_MB": 0.017578125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.0.pw_proj.conv": {
+        "type": "Conv2d",
+        "parameters": 4608,
+        "size_MB": 0.017578125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.1": {
+        "type": "UniversalInvertedResidual",
+        "parameters": 10080,
+        "size_MB": 0.0384521484375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.1.pw_exp": {
+        "type": "ConvNormAct",
+        "parameters": 4608,
+        "size_MB": 0.017578125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.1.pw_exp.conv": {
+        "type": "Conv2d",
+        "parameters": 4608,
+        "size_MB": 0.017578125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.1.dw_mid": {
+        "type": "ConvNormAct",
+        "parameters": 864,
+        "size_MB": 0.0032958984375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.1.dw_mid.conv": {
+        "type": "Conv2d",
+        "parameters": 864,
+        "size_MB": 0.0032958984375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.1.pw_proj": {
+        "type": "ConvNormAct",
+        "parameters": 4608,
+        "size_MB": 0.017578125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.1.pw_proj.conv": {
+        "type": "Conv2d",
+        "parameters": 4608,
+        "size_MB": 0.017578125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.2": {
+        "type": "UniversalInvertedResidual",
+        "parameters": 10080,
+        "size_MB": 0.0384521484375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.2.pw_exp": {
+        "type": "ConvNormAct",
+        "parameters": 4608,
+        "size_MB": 0.017578125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.2.pw_exp.conv": {
+        "type": "Conv2d",
+        "parameters": 4608,
+        "size_MB": 0.017578125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.2.dw_mid": {
+        "type": "ConvNormAct",
+        "parameters": 864,
+        "size_MB": 0.0032958984375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.2.dw_mid.conv": {
+        "type": "Conv2d",
+        "parameters": 864,
+        "size_MB": 0.0032958984375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.2.pw_proj": {
+        "type": "ConvNormAct",
+        "parameters": 4608,
+        "size_MB": 0.017578125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.2.pw_proj.conv": {
+        "type": "Conv2d",
+        "parameters": 4608,
+        "size_MB": 0.017578125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.3": {
+        "type": "UniversalInvertedResidual",
+        "parameters": 10080,
+        "size_MB": 0.0384521484375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.3.pw_exp": {
+        "type": "ConvNormAct",
+        "parameters": 4608,
+        "size_MB": 0.017578125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.3.pw_exp.conv": {
+        "type": "Conv2d",
+        "parameters": 4608,
+        "size_MB": 0.017578125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.3.dw_mid": {
+        "type": "ConvNormAct",
+        "parameters": 864,
+        "size_MB": 0.0032958984375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.3.dw_mid.conv": {
+        "type": "Conv2d",
+        "parameters": 864,
+        "size_MB": 0.0032958984375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.3.pw_proj": {
+        "type": "ConvNormAct",
+        "parameters": 4608,
+        "size_MB": 0.017578125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.3.pw_proj.conv": {
+        "type": "Conv2d",
+        "parameters": 4608,
+        "size_MB": 0.017578125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.4": {
+        "type": "UniversalInvertedResidual",
+        "parameters": 10080,
+        "size_MB": 0.0384521484375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.4.pw_exp": {
+        "type": "ConvNormAct",
+        "parameters": 4608,
+        "size_MB": 0.017578125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.4.pw_exp.conv": {
+        "type": "Conv2d",
+        "parameters": 4608,
+        "size_MB": 0.017578125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.4.dw_mid": {
+        "type": "ConvNormAct",
+        "parameters": 864,
+        "size_MB": 0.0032958984375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.4.dw_mid.conv": {
+        "type": "Conv2d",
+        "parameters": 864,
+        "size_MB": 0.0032958984375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.4.pw_proj": {
+        "type": "ConvNormAct",
+        "parameters": 4608,
+        "size_MB": 0.017578125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.4.pw_proj.conv": {
+        "type": "Conv2d",
+        "parameters": 4608,
+        "size_MB": 0.017578125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.5": {
+        "type": "UniversalInvertedResidual",
+        "parameters": 18864,
+        "size_MB": 0.07196044921875
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.5.dw_start": {
+        "type": "ConvNormAct",
+        "parameters": 432,
+        "size_MB": 0.00164794921875
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.5.dw_start.conv": {
+        "type": "Conv2d",
+        "parameters": 432,
+        "size_MB": 0.00164794921875
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.5.pw_exp": {
+        "type": "ConvNormAct",
+        "parameters": 9216,
+        "size_MB": 0.03515625
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.5.pw_exp.conv": {
+        "type": "Conv2d",
+        "parameters": 9216,
+        "size_MB": 0.03515625
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.5.pw_proj": {
+        "type": "ConvNormAct",
+        "parameters": 9216,
+        "size_MB": 0.03515625
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.2.5.pw_proj.conv": {
+        "type": "Conv2d",
+        "parameters": 9216,
+        "size_MB": 0.03515625
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3": {
+        "type": "Sequential",
+        "parameters": 214736,
+        "size_MB": 0.81915283203125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.0": {
+        "type": "UniversalInvertedResidual",
+        "parameters": 35280,
+        "size_MB": 0.13458251953125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.0.dw_start": {
+        "type": "ConvNormAct",
+        "parameters": 432,
+        "size_MB": 0.00164794921875
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.0.dw_start.conv": {
+        "type": "Conv2d",
+        "parameters": 432,
+        "size_MB": 0.00164794921875
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.0.pw_exp": {
+        "type": "ConvNormAct",
+        "parameters": 13824,
+        "size_MB": 0.052734375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.0.pw_exp.conv": {
+        "type": "Conv2d",
+        "parameters": 13824,
+        "size_MB": 0.052734375
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.0.dw_mid": {
+        "type": "ConvNormAct",
+        "parameters": 2592,
+        "size_MB": 0.0098876953125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.0.dw_mid.conv": {
+        "type": "Conv2d",
+        "parameters": 2592,
+        "size_MB": 0.0098876953125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.0.pw_proj": {
+        "type": "ConvNormAct",
+        "parameters": 18432,
+        "size_MB": 0.0703125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.0.pw_proj.conv": {
+        "type": "Conv2d",
+        "parameters": 18432,
+        "size_MB": 0.0703125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.1": {
+        "type": "UniversalInvertedResidual",
+        "parameters": 40768,
+        "size_MB": 0.155517578125
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.1.dw_start": {
+        "type": "ConvNormAct",
+        "parameters": 1600,
+        "size_MB": 0.006103515625
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.1.dw_start.conv": {
+        "type": "Conv2d",
+        "parameters": 1600,
+        "size_MB": 0.006103515625
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.1.pw_exp": {
+        "type": "ConvNormAct",
+        "parameters": 16384,
+        "size_MB": 0.0625
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.1.pw_exp.conv": {
+        "type": "Conv2d",
+        "parameters": 16384,
+        "size_MB": 0.0625
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.1.dw_mid": {
+        "type": "ConvNormAct",
+        "parameters": 6400,
+        "size_MB": 0.0244140625
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.1.dw_mid.conv": {
+        "type": "Conv2d",
+        "parameters": 6400,
+        "size_MB": 0.0244140625
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.1.pw_proj": {
+        "type": "ConvNormAct",
+        "parameters": 16384,
+        "size_MB": 0.0625
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.1.pw_proj.conv": {
+        "type": "Conv2d",
+        "parameters": 16384,
+        "size_MB": 0.0625
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.2": {
+        "type": "UniversalInvertedResidual",
+        "parameters": 39168,
+        "size_MB": 0.1494140625
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.2.pw_exp": {
+        "type": "ConvNormAct",
+        "parameters": 16384,
+        "size_MB": 0.0625
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.2.pw_exp.conv": {
+        "type": "Conv2d",
+        "parameters": 16384,
+        "size_MB": 0.0625
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.2.dw_mid": {
+        "type": "ConvNormAct",
+        "parameters": 6400,
+        "size_MB": 0.0244140625
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.2.dw_mid.conv": {
+        "type": "Conv2d",
+        "parameters": 6400,
+        "size_MB": 0.0244140625
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.2.pw_proj": {
+        "type": "ConvNormAct",
+        "parameters": 16384,
+        "size_MB": 0.0625
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.2.pw_proj.conv": {
+        "type": "Conv2d",
+        "parameters": 16384,
+        "size_MB": 0.0625
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.3": {
+        "type": "UniversalInvertedResidual",
+        "parameters": 29376,
+        "size_MB": 0.112060546875
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.3.pw_exp": {
+        "type": "ConvNormAct",
+        "parameters": 12288,
+        "size_MB": 0.046875
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.3.pw_exp.conv": {
+        "type": "Conv2d",
+        "parameters": 12288,
+        "size_MB": 0.046875
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.3.dw_mid": {
+        "type": "ConvNormAct",
+        "parameters": 4800,
+        "size_MB": 0.018310546875
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.3.dw_mid.conv": {
+        "type": "Conv2d",
+        "parameters": 4800,
+        "size_MB": 0.018310546875
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.3.pw_proj": {
+        "type": "ConvNormAct",
+        "parameters": 12288,
+        "size_MB": 0.046875
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.3.pw_proj.conv": {
+        "type": "Conv2d",
+        "parameters": 12288,
+        "size_MB": 0.046875
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.4": {
+        "type": "UniversalInvertedResidual",
+        "parameters": 35072,
+        "size_MB": 0.1337890625
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.4.pw_exp": {
+        "type": "ConvNormAct",
+        "parameters": 16384,
+        "size_MB": 0.0625
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.4.pw_exp.conv": {
+        "type": "Conv2d",
+        "parameters": 16384,
+        "size_MB": 0.0625
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.4.dw_mid": {
+        "type": "ConvNormAct",
+        "parameters": 2304,
+        "size_MB": 0.0087890625
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.4.dw_mid.conv": {
+        "type": "Conv2d",
+        "parameters": 2304,
+        "size_MB": 0.0087890625
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.4.pw_proj": {
+        "type": "ConvNormAct",
+        "parameters": 16384,
+        "size_MB": 0.0625
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.4.pw_proj.conv": {
+        "type": "Conv2d",
+        "parameters": 16384,
+        "size_MB": 0.0625
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.5": {
+        "type": "UniversalInvertedResidual",
+        "parameters": 35072,
+        "size_MB": 0.1337890625
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.5.pw_exp": {
+        "type": "ConvNormAct",
+        "parameters": 16384,
+        "size_MB": 0.0625
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.5.pw_exp.conv": {
+        "type": "Conv2d",
+        "parameters": 16384,
+        "size_MB": 0.0625
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.5.dw_mid": {
+        "type": "ConvNormAct",
+        "parameters": 2304,
+        "size_MB": 0.0087890625
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.5.dw_mid.conv": {
+        "type": "Conv2d",
+        "parameters": 2304,
+        "size_MB": 0.0087890625
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.5.pw_proj": {
+        "type": "ConvNormAct",
+        "parameters": 16384,
+        "size_MB": 0.0625
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.3.5.pw_proj.conv": {
+        "type": "Conv2d",
+        "parameters": 16384,
+        "size_MB": 0.0625
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.4": {
+        "type": "Sequential",
+        "parameters": 30720,
+        "size_MB": 0.1171875
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.4.0": {
+        "type": "ConvBnAct",
+        "parameters": 30720,
+        "size_MB": 0.1171875
+    },
+    "encoding_pipeline.encoders.left.backbone.blocks.4.0.conv": {
+        "type": "Conv2d",
+        "parameters": 30720,
+        "size_MB": 0.1171875
+    },
+    "encoding_pipeline.encoders.right": {
+        "type": "SpatialRGBEncoder",
+        "parameters": 329696,
+        "size_MB": 1.2576904296875
+    },
+    "encoding_pipeline.encoders.right.backbone": {
+        "type": "MobileNetV3Features",
+        "parameters": 329696,
+        "size_MB": 1.2576904296875
+    },
+    "encoding_pipeline.encoders.right.backbone.conv_stem": {
+        "type": "Conv2d",
+        "parameters": 864,
+        "size_MB": 0.0032958984375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks": {
+        "type": "Sequential",
+        "parameters": 328832,
+        "size_MB": 1.25439453125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.0": {
+        "type": "Sequential",
+        "parameters": 4864,
+        "size_MB": 0.0185546875
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.0.0": {
+        "type": "ConvBnAct",
+        "parameters": 4608,
+        "size_MB": 0.017578125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.0.0.conv": {
+        "type": "Conv2d",
+        "parameters": 4608,
+        "size_MB": 0.017578125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.0.1": {
+        "type": "ConvBnAct",
+        "parameters": 256,
+        "size_MB": 0.0009765625
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.0.1.conv": {
+        "type": "Conv2d",
+        "parameters": 256,
+        "size_MB": 0.0009765625
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.1": {
+        "type": "Sequential",
+        "parameters": 8448,
+        "size_MB": 0.0322265625
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.1.0": {
+        "type": "ConvBnAct",
+        "parameters": 6912,
+        "size_MB": 0.0263671875
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.1.0.conv": {
+        "type": "Conv2d",
+        "parameters": 6912,
+        "size_MB": 0.0263671875
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.1.1": {
+        "type": "ConvBnAct",
+        "parameters": 1536,
+        "size_MB": 0.005859375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.1.1.conv": {
+        "type": "Conv2d",
+        "parameters": 1536,
+        "size_MB": 0.005859375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2": {
+        "type": "Sequential",
+        "parameters": 70064,
+        "size_MB": 0.26727294921875
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.0": {
+        "type": "UniversalInvertedResidual",
+        "parameters": 10880,
+        "size_MB": 0.04150390625
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.0.dw_start": {
+        "type": "ConvNormAct",
+        "parameters": 800,
+        "size_MB": 0.0030517578125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.0.dw_start.conv": {
+        "type": "Conv2d",
+        "parameters": 800,
+        "size_MB": 0.0030517578125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.0.pw_exp": {
+        "type": "ConvNormAct",
+        "parameters": 3072,
+        "size_MB": 0.01171875
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.0.pw_exp.conv": {
+        "type": "Conv2d",
+        "parameters": 3072,
+        "size_MB": 0.01171875
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.0.dw_mid": {
+        "type": "ConvNormAct",
+        "parameters": 2400,
+        "size_MB": 0.0091552734375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.0.dw_mid.conv": {
+        "type": "Conv2d",
+        "parameters": 2400,
+        "size_MB": 0.0091552734375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.0.pw_proj": {
+        "type": "ConvNormAct",
+        "parameters": 4608,
+        "size_MB": 0.017578125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.0.pw_proj.conv": {
+        "type": "Conv2d",
+        "parameters": 4608,
+        "size_MB": 0.017578125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.1": {
+        "type": "UniversalInvertedResidual",
+        "parameters": 10080,
+        "size_MB": 0.0384521484375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.1.pw_exp": {
+        "type": "ConvNormAct",
+        "parameters": 4608,
+        "size_MB": 0.017578125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.1.pw_exp.conv": {
+        "type": "Conv2d",
+        "parameters": 4608,
+        "size_MB": 0.017578125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.1.dw_mid": {
+        "type": "ConvNormAct",
+        "parameters": 864,
+        "size_MB": 0.0032958984375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.1.dw_mid.conv": {
+        "type": "Conv2d",
+        "parameters": 864,
+        "size_MB": 0.0032958984375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.1.pw_proj": {
+        "type": "ConvNormAct",
+        "parameters": 4608,
+        "size_MB": 0.017578125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.1.pw_proj.conv": {
+        "type": "Conv2d",
+        "parameters": 4608,
+        "size_MB": 0.017578125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.2": {
+        "type": "UniversalInvertedResidual",
+        "parameters": 10080,
+        "size_MB": 0.0384521484375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.2.pw_exp": {
+        "type": "ConvNormAct",
+        "parameters": 4608,
+        "size_MB": 0.017578125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.2.pw_exp.conv": {
+        "type": "Conv2d",
+        "parameters": 4608,
+        "size_MB": 0.017578125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.2.dw_mid": {
+        "type": "ConvNormAct",
+        "parameters": 864,
+        "size_MB": 0.0032958984375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.2.dw_mid.conv": {
+        "type": "Conv2d",
+        "parameters": 864,
+        "size_MB": 0.0032958984375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.2.pw_proj": {
+        "type": "ConvNormAct",
+        "parameters": 4608,
+        "size_MB": 0.017578125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.2.pw_proj.conv": {
+        "type": "Conv2d",
+        "parameters": 4608,
+        "size_MB": 0.017578125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.3": {
+        "type": "UniversalInvertedResidual",
+        "parameters": 10080,
+        "size_MB": 0.0384521484375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.3.pw_exp": {
+        "type": "ConvNormAct",
+        "parameters": 4608,
+        "size_MB": 0.017578125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.3.pw_exp.conv": {
+        "type": "Conv2d",
+        "parameters": 4608,
+        "size_MB": 0.017578125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.3.dw_mid": {
+        "type": "ConvNormAct",
+        "parameters": 864,
+        "size_MB": 0.0032958984375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.3.dw_mid.conv": {
+        "type": "Conv2d",
+        "parameters": 864,
+        "size_MB": 0.0032958984375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.3.pw_proj": {
+        "type": "ConvNormAct",
+        "parameters": 4608,
+        "size_MB": 0.017578125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.3.pw_proj.conv": {
+        "type": "Conv2d",
+        "parameters": 4608,
+        "size_MB": 0.017578125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.4": {
+        "type": "UniversalInvertedResidual",
+        "parameters": 10080,
+        "size_MB": 0.0384521484375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.4.pw_exp": {
+        "type": "ConvNormAct",
+        "parameters": 4608,
+        "size_MB": 0.017578125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.4.pw_exp.conv": {
+        "type": "Conv2d",
+        "parameters": 4608,
+        "size_MB": 0.017578125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.4.dw_mid": {
+        "type": "ConvNormAct",
+        "parameters": 864,
+        "size_MB": 0.0032958984375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.4.dw_mid.conv": {
+        "type": "Conv2d",
+        "parameters": 864,
+        "size_MB": 0.0032958984375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.4.pw_proj": {
+        "type": "ConvNormAct",
+        "parameters": 4608,
+        "size_MB": 0.017578125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.4.pw_proj.conv": {
+        "type": "Conv2d",
+        "parameters": 4608,
+        "size_MB": 0.017578125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.5": {
+        "type": "UniversalInvertedResidual",
+        "parameters": 18864,
+        "size_MB": 0.07196044921875
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.5.dw_start": {
+        "type": "ConvNormAct",
+        "parameters": 432,
+        "size_MB": 0.00164794921875
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.5.dw_start.conv": {
+        "type": "Conv2d",
+        "parameters": 432,
+        "size_MB": 0.00164794921875
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.5.pw_exp": {
+        "type": "ConvNormAct",
+        "parameters": 9216,
+        "size_MB": 0.03515625
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.5.pw_exp.conv": {
+        "type": "Conv2d",
+        "parameters": 9216,
+        "size_MB": 0.03515625
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.5.pw_proj": {
+        "type": "ConvNormAct",
+        "parameters": 9216,
+        "size_MB": 0.03515625
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.2.5.pw_proj.conv": {
+        "type": "Conv2d",
+        "parameters": 9216,
+        "size_MB": 0.03515625
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3": {
+        "type": "Sequential",
+        "parameters": 214736,
+        "size_MB": 0.81915283203125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.0": {
+        "type": "UniversalInvertedResidual",
+        "parameters": 35280,
+        "size_MB": 0.13458251953125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.0.dw_start": {
+        "type": "ConvNormAct",
+        "parameters": 432,
+        "size_MB": 0.00164794921875
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.0.dw_start.conv": {
+        "type": "Conv2d",
+        "parameters": 432,
+        "size_MB": 0.00164794921875
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.0.pw_exp": {
+        "type": "ConvNormAct",
+        "parameters": 13824,
+        "size_MB": 0.052734375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.0.pw_exp.conv": {
+        "type": "Conv2d",
+        "parameters": 13824,
+        "size_MB": 0.052734375
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.0.dw_mid": {
+        "type": "ConvNormAct",
+        "parameters": 2592,
+        "size_MB": 0.0098876953125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.0.dw_mid.conv": {
+        "type": "Conv2d",
+        "parameters": 2592,
+        "size_MB": 0.0098876953125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.0.pw_proj": {
+        "type": "ConvNormAct",
+        "parameters": 18432,
+        "size_MB": 0.0703125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.0.pw_proj.conv": {
+        "type": "Conv2d",
+        "parameters": 18432,
+        "size_MB": 0.0703125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.1": {
+        "type": "UniversalInvertedResidual",
+        "parameters": 40768,
+        "size_MB": 0.155517578125
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.1.dw_start": {
+        "type": "ConvNormAct",
+        "parameters": 1600,
+        "size_MB": 0.006103515625
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.1.dw_start.conv": {
+        "type": "Conv2d",
+        "parameters": 1600,
+        "size_MB": 0.006103515625
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.1.pw_exp": {
+        "type": "ConvNormAct",
+        "parameters": 16384,
+        "size_MB": 0.0625
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.1.pw_exp.conv": {
+        "type": "Conv2d",
+        "parameters": 16384,
+        "size_MB": 0.0625
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.1.dw_mid": {
+        "type": "ConvNormAct",
+        "parameters": 6400,
+        "size_MB": 0.0244140625
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.1.dw_mid.conv": {
+        "type": "Conv2d",
+        "parameters": 6400,
+        "size_MB": 0.0244140625
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.1.pw_proj": {
+        "type": "ConvNormAct",
+        "parameters": 16384,
+        "size_MB": 0.0625
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.1.pw_proj.conv": {
+        "type": "Conv2d",
+        "parameters": 16384,
+        "size_MB": 0.0625
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.2": {
+        "type": "UniversalInvertedResidual",
+        "parameters": 39168,
+        "size_MB": 0.1494140625
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.2.pw_exp": {
+        "type": "ConvNormAct",
+        "parameters": 16384,
+        "size_MB": 0.0625
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.2.pw_exp.conv": {
+        "type": "Conv2d",
+        "parameters": 16384,
+        "size_MB": 0.0625
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.2.dw_mid": {
+        "type": "ConvNormAct",
+        "parameters": 6400,
+        "size_MB": 0.0244140625
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.2.dw_mid.conv": {
+        "type": "Conv2d",
+        "parameters": 6400,
+        "size_MB": 0.0244140625
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.2.pw_proj": {
+        "type": "ConvNormAct",
+        "parameters": 16384,
+        "size_MB": 0.0625
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.2.pw_proj.conv": {
+        "type": "Conv2d",
+        "parameters": 16384,
+        "size_MB": 0.0625
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.3": {
+        "type": "UniversalInvertedResidual",
+        "parameters": 29376,
+        "size_MB": 0.112060546875
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.3.pw_exp": {
+        "type": "ConvNormAct",
+        "parameters": 12288,
+        "size_MB": 0.046875
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.3.pw_exp.conv": {
+        "type": "Conv2d",
+        "parameters": 12288,
+        "size_MB": 0.046875
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.3.dw_mid": {
+        "type": "ConvNormAct",
+        "parameters": 4800,
+        "size_MB": 0.018310546875
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.3.dw_mid.conv": {
+        "type": "Conv2d",
+        "parameters": 4800,
+        "size_MB": 0.018310546875
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.3.pw_proj": {
+        "type": "ConvNormAct",
+        "parameters": 12288,
+        "size_MB": 0.046875
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.3.pw_proj.conv": {
+        "type": "Conv2d",
+        "parameters": 12288,
+        "size_MB": 0.046875
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.4": {
+        "type": "UniversalInvertedResidual",
+        "parameters": 35072,
+        "size_MB": 0.1337890625
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.4.pw_exp": {
+        "type": "ConvNormAct",
+        "parameters": 16384,
+        "size_MB": 0.0625
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.4.pw_exp.conv": {
+        "type": "Conv2d",
+        "parameters": 16384,
+        "size_MB": 0.0625
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.4.dw_mid": {
+        "type": "ConvNormAct",
+        "parameters": 2304,
+        "size_MB": 0.0087890625
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.4.dw_mid.conv": {
+        "type": "Conv2d",
+        "parameters": 2304,
+        "size_MB": 0.0087890625
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.4.pw_proj": {
+        "type": "ConvNormAct",
+        "parameters": 16384,
+        "size_MB": 0.0625
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.4.pw_proj.conv": {
+        "type": "Conv2d",
+        "parameters": 16384,
+        "size_MB": 0.0625
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.5": {
+        "type": "UniversalInvertedResidual",
+        "parameters": 35072,
+        "size_MB": 0.1337890625
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.5.pw_exp": {
+        "type": "ConvNormAct",
+        "parameters": 16384,
+        "size_MB": 0.0625
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.5.pw_exp.conv": {
+        "type": "Conv2d",
+        "parameters": 16384,
+        "size_MB": 0.0625
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.5.dw_mid": {
+        "type": "ConvNormAct",
+        "parameters": 2304,
+        "size_MB": 0.0087890625
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.5.dw_mid.conv": {
+        "type": "Conv2d",
+        "parameters": 2304,
+        "size_MB": 0.0087890625
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.5.pw_proj": {
+        "type": "ConvNormAct",
+        "parameters": 16384,
+        "size_MB": 0.0625
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.3.5.pw_proj.conv": {
+        "type": "Conv2d",
+        "parameters": 16384,
+        "size_MB": 0.0625
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.4": {
+        "type": "Sequential",
+        "parameters": 30720,
+        "size_MB": 0.1171875
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.4.0": {
+        "type": "ConvBnAct",
+        "parameters": 30720,
+        "size_MB": 0.1171875
+    },
+    "encoding_pipeline.encoders.right.backbone.blocks.4.0.conv": {
+        "type": "Conv2d",
+        "parameters": 30720,
+        "size_MB": 0.1171875
+    },
+    "encoding_pipeline.encoders.instruction": {
+        "type": "LanguageEncoder",
+        "parameters": 11720448,
+        "size_MB": 44.7099609375
+    },
+    "encoding_pipeline.encoders.instruction.encoder": {
+        "type": "Embedding",
+        "parameters": 11720448,
+        "size_MB": 44.7099609375
+    },
+    "decoder": {
+        "type": "ActionTransformer",
+        "parameters": 1633479,
+        "size_MB": 6.231227874755859
+    },
+    "decoder.action_heads": {
+        "type": "ModuleDict",
+        "parameters": 199431,
+        "size_MB": 0.7607688903808594
+    },
+    "decoder.action_heads.ee_pos_action": {
+        "type": "ActionHead",
+        "parameters": 66563,
+        "size_MB": 0.2539176940917969
+    },
+    "decoder.action_heads.ee_pos_action.blocks": {
+        "type": "ModuleList",
+        "parameters": 66176,
+        "size_MB": 0.25244140625
+    },
+    "decoder.action_heads.ee_pos_action.blocks.0": {
+        "type": "MLPBlock",
+        "parameters": 66176,
+        "size_MB": 0.25244140625
+    },
+    "decoder.action_heads.ee_pos_action.blocks.0.norm": {
+        "type": "LayerNorm",
+        "parameters": 256,
+        "size_MB": 0.0009765625
+    },
+    "decoder.action_heads.ee_pos_action.blocks.0.mlp": {
+        "type": "MLP",
+        "parameters": 65920,
+        "size_MB": 0.25146484375
+    },
+    "decoder.action_heads.ee_pos_action.blocks.0.mlp.layers": {
+        "type": "Sequential",
+        "parameters": 65920,
+        "size_MB": 0.25146484375
+    },
+    "decoder.action_heads.ee_pos_action.blocks.0.mlp.layers.0": {
+        "type": "Linear",
+        "parameters": 33024,
+        "size_MB": 0.1259765625
+    },
+    "decoder.action_heads.ee_pos_action.blocks.0.mlp.layers.3": {
+        "type": "Linear",
+        "parameters": 32896,
+        "size_MB": 0.12548828125
+    },
+    "decoder.action_heads.ee_pos_action.output_proj": {
+        "type": "Linear",
+        "parameters": 387,
+        "size_MB": 0.001476287841796875
+    },
+    "decoder.action_heads.ee_ori_action": {
+        "type": "ActionHead",
+        "parameters": 66563,
+        "size_MB": 0.2539176940917969
+    },
+    "decoder.action_heads.ee_ori_action.blocks": {
+        "type": "ModuleList",
+        "parameters": 66176,
+        "size_MB": 0.25244140625
+    },
+    "decoder.action_heads.ee_ori_action.blocks.0": {
+        "type": "MLPBlock",
+        "parameters": 66176,
+        "size_MB": 0.25244140625
+    },
+    "decoder.action_heads.ee_ori_action.blocks.0.norm": {
+        "type": "LayerNorm",
+        "parameters": 256,
+        "size_MB": 0.0009765625
+    },
+    "decoder.action_heads.ee_ori_action.blocks.0.mlp": {
+        "type": "MLP",
+        "parameters": 65920,
+        "size_MB": 0.25146484375
+    },
+    "decoder.action_heads.ee_ori_action.blocks.0.mlp.layers": {
+        "type": "Sequential",
+        "parameters": 65920,
+        "size_MB": 0.25146484375
+    },
+    "decoder.action_heads.ee_ori_action.blocks.0.mlp.layers.0": {
+        "type": "Linear",
+        "parameters": 33024,
+        "size_MB": 0.1259765625
+    },
+    "decoder.action_heads.ee_ori_action.blocks.0.mlp.layers.3": {
+        "type": "Linear",
+        "parameters": 32896,
+        "size_MB": 0.12548828125
+    },
+    "decoder.action_heads.ee_ori_action.output_proj": {
+        "type": "Linear",
+        "parameters": 387,
+        "size_MB": 0.001476287841796875
+    },
+    "decoder.action_heads.gripper_state_action": {
+        "type": "ActionHead",
+        "parameters": 66305,
+        "size_MB": 0.2529335021972656
+    },
+    "decoder.action_heads.gripper_state_action.blocks": {
+        "type": "ModuleList",
+        "parameters": 66176,
+        "size_MB": 0.25244140625
+    },
+    "decoder.action_heads.gripper_state_action.blocks.0": {
+        "type": "MLPBlock",
+        "parameters": 66176,
+        "size_MB": 0.25244140625
+    },
+    "decoder.action_heads.gripper_state_action.blocks.0.norm": {
+        "type": "LayerNorm",
+        "parameters": 256,
+        "size_MB": 0.0009765625
+    },
+    "decoder.action_heads.gripper_state_action.blocks.0.mlp": {
+        "type": "MLP",
+        "parameters": 65920,
+        "size_MB": 0.25146484375
+    },
+    "decoder.action_heads.gripper_state_action.blocks.0.mlp.layers": {
+        "type": "Sequential",
+        "parameters": 65920,
+        "size_MB": 0.25146484375
+    },
+    "decoder.action_heads.gripper_state_action.blocks.0.mlp.layers.0": {
+        "type": "Linear",
+        "parameters": 33024,
+        "size_MB": 0.1259765625
+    },
+    "decoder.action_heads.gripper_state_action.blocks.0.mlp.layers.3": {
+        "type": "Linear",
+        "parameters": 32896,
+        "size_MB": 0.12548828125
+    },
+    "decoder.action_heads.gripper_state_action.output_proj": {
+        "type": "Linear",
+        "parameters": 129,
+        "size_MB": 0.000492095947265625
+    },
+    "decoder.input_sequence_builder": {
+        "type": "TransformerInputBuilder",
+        "parameters": 640000,
+        "size_MB": 2.44140625
+    },
+    "decoder.input_sequence_builder.flat_positional_encoding_layer": {
+        "type": "LearnedPositionalEncoding1D",
+        "parameters": 640000,
+        "size_MB": 2.44140625
+    },
+    "decoder.input_sequence_builder.flat_positional_encoding_layer.learned_encoding": {
+        "type": "Embedding",
+        "parameters": 640000,
+        "size_MB": 2.44140625
+    },
+    "decoder.learnable_query": {
+        "type": "Embedding",
+        "parameters": 1280,
+        "size_MB": 0.0048828125
+    },
+    "decoder.action_decoder": {
+        "type": "BidirectionalDecoder",
+        "parameters": 792768,
+        "size_MB": 3.024169921875
+    },
+    "decoder.action_decoder.positional_encoding": {
+        "type": "SinusoidalPositionalEncoding1D",
+        "parameters": 64,
+        "size_MB": 0.000244140625
+    },
+    "decoder.action_decoder.layers": {
+        "type": "ModuleList",
+        "parameters": 792576,
+        "size_MB": 3.0234375
+    },
+    "decoder.action_decoder.layers.0": {
+        "type": "TransformerDecoderLayer",
+        "parameters": 264192,
+        "size_MB": 1.0078125
+    },
+    "decoder.action_decoder.layers.0.self_attention_block": {
+        "type": "SelfAttentionBlock",
+        "parameters": 66176,
+        "size_MB": 0.25244140625
+    },
+    "decoder.action_decoder.layers.0.self_attention_block.normalization": {
+        "type": "UnconditionedNorm",
+        "parameters": 128,
+        "size_MB": 0.00048828125
+    },
+    "decoder.action_decoder.layers.0.self_attention_block.normalization.norm": {
+        "type": "RMSNorm",
+        "parameters": 128,
+        "size_MB": 0.00048828125
+    },
+    "decoder.action_decoder.layers.0.self_attention_block.attention": {
+        "type": "CachedAttention",
+        "parameters": 66048,
+        "size_MB": 0.251953125
+    },
+    "decoder.action_decoder.layers.0.self_attention_block.attention.query_projection": {
+        "type": "Linear",
+        "parameters": 16512,
+        "size_MB": 0.06298828125
+    },
+    "decoder.action_decoder.layers.0.self_attention_block.attention.key_projection": {
+        "type": "Linear",
+        "parameters": 16512,
+        "size_MB": 0.06298828125
+    },
+    "decoder.action_decoder.layers.0.self_attention_block.attention.value_projection": {
+        "type": "Linear",
+        "parameters": 16512,
+        "size_MB": 0.06298828125
+    },
+    "decoder.action_decoder.layers.0.self_attention_block.attention.output_projection": {
+        "type": "Linear",
+        "parameters": 16512,
+        "size_MB": 0.06298828125
+    },
+    "decoder.action_decoder.layers.0.cross_attention_block": {
+        "type": "CrossAttentionBlock",
+        "parameters": 66176,
+        "size_MB": 0.25244140625
+    },
+    "decoder.action_decoder.layers.0.cross_attention_block.normalization": {
+        "type": "UnconditionedNorm",
+        "parameters": 128,
+        "size_MB": 0.00048828125
+    },
+    "decoder.action_decoder.layers.0.cross_attention_block.normalization.norm": {
+        "type": "RMSNorm",
+        "parameters": 128,
+        "size_MB": 0.00048828125
+    },
+    "decoder.action_decoder.layers.0.cross_attention_block.attention": {
+        "type": "CachedAttention",
+        "parameters": 66048,
+        "size_MB": 0.251953125
+    },
+    "decoder.action_decoder.layers.0.cross_attention_block.attention.query_projection": {
+        "type": "Linear",
+        "parameters": 16512,
+        "size_MB": 0.06298828125
+    },
+    "decoder.action_decoder.layers.0.cross_attention_block.attention.key_projection": {
+        "type": "Linear",
+        "parameters": 16512,
+        "size_MB": 0.06298828125
+    },
+    "decoder.action_decoder.layers.0.cross_attention_block.attention.value_projection": {
+        "type": "Linear",
+        "parameters": 16512,
+        "size_MB": 0.06298828125
+    },
+    "decoder.action_decoder.layers.0.cross_attention_block.attention.output_projection": {
+        "type": "Linear",
+        "parameters": 16512,
+        "size_MB": 0.06298828125
+    },
+    "decoder.action_decoder.layers.0.feedforward_block": {
+        "type": "FeedforwardBlock",
+        "parameters": 131840,
+        "size_MB": 0.5029296875
+    },
+    "decoder.action_decoder.layers.0.feedforward_block.normalization": {
+        "type": "UnconditionedNorm",
+        "parameters": 128,
+        "size_MB": 0.00048828125
+    },
+    "decoder.action_decoder.layers.0.feedforward_block.normalization.norm": {
+        "type": "RMSNorm",
+        "parameters": 128,
+        "size_MB": 0.00048828125
+    },
+    "decoder.action_decoder.layers.0.feedforward_block.feedforward": {
+        "type": "Sequential",
+        "parameters": 131712,
+        "size_MB": 0.50244140625
+    },
+    "decoder.action_decoder.layers.0.feedforward_block.feedforward.0": {
+        "type": "Linear",
+        "parameters": 66048,
+        "size_MB": 0.251953125
+    },
+    "decoder.action_decoder.layers.0.feedforward_block.feedforward.3": {
+        "type": "Linear",
+        "parameters": 65664,
+        "size_MB": 0.25048828125
+    },
+    "decoder.action_decoder.layers.1": {
+        "type": "TransformerDecoderLayer",
+        "parameters": 264192,
+        "size_MB": 1.0078125
+    },
+    "decoder.action_decoder.layers.1.self_attention_block": {
+        "type": "SelfAttentionBlock",
+        "parameters": 66176,
+        "size_MB": 0.25244140625
+    },
+    "decoder.action_decoder.layers.1.self_attention_block.normalization": {
+        "type": "UnconditionedNorm",
+        "parameters": 128,
+        "size_MB": 0.00048828125
+    },
+    "decoder.action_decoder.layers.1.self_attention_block.normalization.norm": {
+        "type": "RMSNorm",
+        "parameters": 128,
+        "size_MB": 0.00048828125
+    },
+    "decoder.action_decoder.layers.1.self_attention_block.attention": {
+        "type": "CachedAttention",
+        "parameters": 66048,
+        "size_MB": 0.251953125
+    },
+    "decoder.action_decoder.layers.1.self_attention_block.attention.query_projection": {
+        "type": "Linear",
+        "parameters": 16512,
+        "size_MB": 0.06298828125
+    },
+    "decoder.action_decoder.layers.1.self_attention_block.attention.key_projection": {
+        "type": "Linear",
+        "parameters": 16512,
+        "size_MB": 0.06298828125
+    },
+    "decoder.action_decoder.layers.1.self_attention_block.attention.value_projection": {
+        "type": "Linear",
+        "parameters": 16512,
+        "size_MB": 0.06298828125
+    },
+    "decoder.action_decoder.layers.1.self_attention_block.attention.output_projection": {
+        "type": "Linear",
+        "parameters": 16512,
+        "size_MB": 0.06298828125
+    },
+    "decoder.action_decoder.layers.1.cross_attention_block": {
+        "type": "CrossAttentionBlock",
+        "parameters": 66176,
+        "size_MB": 0.25244140625
+    },
+    "decoder.action_decoder.layers.1.cross_attention_block.normalization": {
+        "type": "UnconditionedNorm",
+        "parameters": 128,
+        "size_MB": 0.00048828125
+    },
+    "decoder.action_decoder.layers.1.cross_attention_block.normalization.norm": {
+        "type": "RMSNorm",
+        "parameters": 128,
+        "size_MB": 0.00048828125
+    },
+    "decoder.action_decoder.layers.1.cross_attention_block.attention": {
+        "type": "CachedAttention",
+        "parameters": 66048,
+        "size_MB": 0.251953125
+    },
+    "decoder.action_decoder.layers.1.cross_attention_block.attention.query_projection": {
+        "type": "Linear",
+        "parameters": 16512,
+        "size_MB": 0.06298828125
+    },
+    "decoder.action_decoder.layers.1.cross_attention_block.attention.key_projection": {
+        "type": "Linear",
+        "parameters": 16512,
+        "size_MB": 0.06298828125
+    },
+    "decoder.action_decoder.layers.1.cross_attention_block.attention.value_projection": {
+        "type": "Linear",
+        "parameters": 16512,
+        "size_MB": 0.06298828125
+    },
+    "decoder.action_decoder.layers.1.cross_attention_block.attention.output_projection": {
+        "type": "Linear",
+        "parameters": 16512,
+        "size_MB": 0.06298828125
+    },
+    "decoder.action_decoder.layers.1.feedforward_block": {
+        "type": "FeedforwardBlock",
+        "parameters": 131840,
+        "size_MB": 0.5029296875
+    },
+    "decoder.action_decoder.layers.1.feedforward_block.normalization": {
+        "type": "UnconditionedNorm",
+        "parameters": 128,
+        "size_MB": 0.00048828125
+    },
+    "decoder.action_decoder.layers.1.feedforward_block.normalization.norm": {
+        "type": "RMSNorm",
+        "parameters": 128,
+        "size_MB": 0.00048828125
+    },
+    "decoder.action_decoder.layers.1.feedforward_block.feedforward": {
+        "type": "Sequential",
+        "parameters": 131712,
+        "size_MB": 0.50244140625
+    },
+    "decoder.action_decoder.layers.1.feedforward_block.feedforward.0": {
+        "type": "Linear",
+        "parameters": 66048,
+        "size_MB": 0.251953125
+    },
+    "decoder.action_decoder.layers.1.feedforward_block.feedforward.3": {
+        "type": "Linear",
+        "parameters": 65664,
+        "size_MB": 0.25048828125
+    },
+    "decoder.action_decoder.layers.2": {
+        "type": "TransformerDecoderLayer",
+        "parameters": 264192,
+        "size_MB": 1.0078125
+    },
+    "decoder.action_decoder.layers.2.self_attention_block": {
+        "type": "SelfAttentionBlock",
+        "parameters": 66176,
+        "size_MB": 0.25244140625
+    },
+    "decoder.action_decoder.layers.2.self_attention_block.normalization": {
+        "type": "UnconditionedNorm",
+        "parameters": 128,
+        "size_MB": 0.00048828125
+    },
+    "decoder.action_decoder.layers.2.self_attention_block.normalization.norm": {
+        "type": "RMSNorm",
+        "parameters": 128,
+        "size_MB": 0.00048828125
+    },
+    "decoder.action_decoder.layers.2.self_attention_block.attention": {
+        "type": "CachedAttention",
+        "parameters": 66048,
+        "size_MB": 0.251953125
+    },
+    "decoder.action_decoder.layers.2.self_attention_block.attention.query_projection": {
+        "type": "Linear",
+        "parameters": 16512,
+        "size_MB": 0.06298828125
+    },
+    "decoder.action_decoder.layers.2.self_attention_block.attention.key_projection": {
+        "type": "Linear",
+        "parameters": 16512,
+        "size_MB": 0.06298828125
+    },
+    "decoder.action_decoder.layers.2.self_attention_block.attention.value_projection": {
+        "type": "Linear",
+        "parameters": 16512,
+        "size_MB": 0.06298828125
+    },
+    "decoder.action_decoder.layers.2.self_attention_block.attention.output_projection": {
+        "type": "Linear",
+        "parameters": 16512,
+        "size_MB": 0.06298828125
+    },
+    "decoder.action_decoder.layers.2.cross_attention_block": {
+        "type": "CrossAttentionBlock",
+        "parameters": 66176,
+        "size_MB": 0.25244140625
+    },
+    "decoder.action_decoder.layers.2.cross_attention_block.normalization": {
+        "type": "UnconditionedNorm",
+        "parameters": 128,
+        "size_MB": 0.00048828125
+    },
+    "decoder.action_decoder.layers.2.cross_attention_block.normalization.norm": {
+        "type": "RMSNorm",
+        "parameters": 128,
+        "size_MB": 0.00048828125
+    },
+    "decoder.action_decoder.layers.2.cross_attention_block.attention": {
+        "type": "CachedAttention",
+        "parameters": 66048,
+        "size_MB": 0.251953125
+    },
+    "decoder.action_decoder.layers.2.cross_attention_block.attention.query_projection": {
+        "type": "Linear",
+        "parameters": 16512,
+        "size_MB": 0.06298828125
+    },
+    "decoder.action_decoder.layers.2.cross_attention_block.attention.key_projection": {
+        "type": "Linear",
+        "parameters": 16512,
+        "size_MB": 0.06298828125
+    },
+    "decoder.action_decoder.layers.2.cross_attention_block.attention.value_projection": {
+        "type": "Linear",
+        "parameters": 16512,
+        "size_MB": 0.06298828125
+    },
+    "decoder.action_decoder.layers.2.cross_attention_block.attention.output_projection": {
+        "type": "Linear",
+        "parameters": 16512,
+        "size_MB": 0.06298828125
+    },
+    "decoder.action_decoder.layers.2.feedforward_block": {
+        "type": "FeedforwardBlock",
+        "parameters": 131840,
+        "size_MB": 0.5029296875
+    },
+    "decoder.action_decoder.layers.2.feedforward_block.normalization": {
+        "type": "UnconditionedNorm",
+        "parameters": 128,
+        "size_MB": 0.00048828125
+    },
+    "decoder.action_decoder.layers.2.feedforward_block.normalization.norm": {
+        "type": "RMSNorm",
+        "parameters": 128,
+        "size_MB": 0.00048828125
+    },
+    "decoder.action_decoder.layers.2.feedforward_block.feedforward": {
+        "type": "Sequential",
+        "parameters": 131712,
+        "size_MB": 0.50244140625
+    },
+    "decoder.action_decoder.layers.2.feedforward_block.feedforward.0": {
+        "type": "Linear",
+        "parameters": 66048,
+        "size_MB": 0.251953125
+    },
+    "decoder.action_decoder.layers.2.feedforward_block.feedforward.3": {
+        "type": "Linear",
+        "parameters": 65664,
+        "size_MB": 0.25048828125
+    },
+    "decoder.action_decoder.final_normalization": {
+        "type": "RMSNorm",
+        "parameters": 128,
+        "size_MB": 0.00048828125
+    }
+}

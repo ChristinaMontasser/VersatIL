@@ -12,7 +12,7 @@ defaults:
   - /training: default
   - /policy/encoding_pipeline: stereo_rgb_language_encoder
   - /policy/decoder: mixture_density_act
-  - /policy/algorithm: bc
+  - /policy/algorithm: bc #FIX: I guess it should be behavioral_cloning
   - /policy/loss: negative_loglikelihood
   - override /policy/decoder/heads@policy.decoder.action_heads: gaussian_libero
   - _self_

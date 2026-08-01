@@ -61,6 +61,7 @@ class FloatPolicyRuntime(PolicyRuntime):
         self._precision = str(self.config.experiment.precision)
         precision_type = PrecisionType(self._precision)
         if precision_type.should_convert_model():
+            logging.info("precision_type.should_convert_model()")
             self._policy = self._policy.to(precision_type.get_model_dtype())
 
         if self._compile_model:

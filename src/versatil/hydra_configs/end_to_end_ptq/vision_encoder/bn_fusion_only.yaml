@@ -1,0 +1,24 @@
+# @package _global_
+defaults:
+  - /post_training_compression
+  - _self_
+
+checkpoint_path: ???
+checkpoint_name: last.ckpt
+output_directory: null
+preparation:
+  replace_frozen_batchnorm: true
+  fuse_conv_batchnorm: true
+pruning: null
+quantization: null
+modules:
+  - module_path: encoding_pipeline.encoders.left
+    preparation:
+      replace_frozen_batchnorm: true
+      fuse_conv_batchnorm: true
+    pruning: null
+  - module_path: encoding_pipeline.encoders.right
+    preparation:
+      replace_frozen_batchnorm: true
+      fuse_conv_batchnorm: true
+    pruning: null

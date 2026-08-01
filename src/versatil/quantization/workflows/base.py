@@ -98,7 +98,6 @@ class BaseQuantizationWorkflow(ABC):
         """
         validate_quantization_targets(model=model, targets=self.targets)
 
-
 def validate_quantization_targets(
     model: nn.Module,
     targets: list[QuantizationModuleTarget],

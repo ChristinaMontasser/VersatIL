@@ -73,7 +73,7 @@ class StructuredPruner(BasePruner):
         """Module types targeted for pruning."""
         return self._layer_types
 
-    def prune(self, module: nn.Module) -> tuple[int, int]:
+    def prune(self, module: nn.Module, calibration_loader: DataLoader | None = None, policy: Policy | None = None) -> tuple[int, int]:
         """Apply per-layer Ln structured pruning.
 
         Iterates over all target layers and applies Ln structured pruning
