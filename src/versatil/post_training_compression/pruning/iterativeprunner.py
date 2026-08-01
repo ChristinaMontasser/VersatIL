@@ -11,14 +11,16 @@ from collections import OrderedDict
 from copy import deepcopy
 from typing import Dict, List, Tuple
 
+import logging
 import torch
 from torch import nn
-from torch.utils.data import DataLoader
 from torch.nn.utils import prune
-import logging
-from versatil.data.tokenization import Tokenizer
+from torch.utils.data import DataLoader
+
+from versatil.explainability.attribution.policy import (
+    prepare_policy_observation_for_explanation,
+)
 from versatil.models.policy import Policy
-from versatil.explainability.attribution.policy import prepare_policy_observation_for_explanation
 
 from versatil.post_training_compression.pruning.base import BasePruner
 
@@ -66,14 +68,27 @@ class IterativeCalibrationPruner(BasePruner):
             Tuple of (total_parameters, zero_parameters) for the pruned model.
         """
         prunable_map = self._build_module_map(module)
-        # Dense reference used as teacher for activations/outputs
-        dense_model = deepcopy(module).eval()
-        dense_map = self._build_module_map(dense_model)
+        if not prunable_map:
+            raise ValueError("No matching prunable modules found in the model.")
 
-        # Ensure we only operate on modules present in both models
-        common_names = [n for n in prunable_map.keys() if n in dense_map]
-        if not common_names:
-            raise ValueError("No matching prunable modules found between model and dense_model.")
+        dense_model: nn.Module | None = None
+        dense_map: OrderedDict[str, nn.Module] | None = None
+        common_names = list(prunable_map.keys())
+
+        if calibration_loader is not None:
+            dense_model = deepcopy(module).eval()
+            dense_map = self._build_module_map(dense_model)
+
+            common_names = [name for name in prunable_map.keys() if name in dense_map]
+            if not common_names:
+                raise ValueError(
+                    "No matching prunable modules found between model and dense_model."
+                )
+
+            calibration_batches = self._prepare_calibration_batches(
+                calibration_loader=calibration_loader,
+                policy=policy,
+            )
 
         prunable_params = [(prunable_map[n], "weight") for n in common_names]
 
@@ -92,32 +107,27 @@ class IterativeCalibrationPruner(BasePruner):
                 amount=current_s,
             )
 
-            # Stream calibration: for each batch run one dense forward, then
-            # immediately calibrate every layer using that batch's recorded
-            # activations. This keeps memory usage constant w.r.t dataset size.
-            # Perform streaming calibration/tuning only if a calibration
-            # DataLoader was supplied. This keeps the method compatible with
-            # the compressor which may not provide calibration data.
-            # TODO: the problem that was no calibration loader was uploaded. 
-            if calibration_loader is not None:
-                try:
-                    n_batches = len(calibration_loader)
-                except Exception:
-                    n_batches = None
+            if (
+                calibration_loader is not None
+                and dense_model is not None
+                and dense_map is not None
+            ):
                 logger.info(
-                    "IterativeCalibrationPruner: calibration_loader provided (batches=%s); starting streaming calibration.",
-                    n_batches,
+                    "IterativeCalibrationPruner: calibration_loader provided; starting calibration pass for pruning step %s/%s.",
+                    t,
+                    self.T,
                 )
                 self._stream_and_calibrate(
                     dense_root=dense_model,
                     dense_map=dense_map,
                     prunable_map=prunable_map,
-                    calibration_loader=calibration_loader,
+                    calibration_batches=calibration_batches,
                     module_names=common_names,
-                    policy= policy
                 )
-            else:
-                logger.info("IterativeCalibrationPruner: no calibration_loader supplied; skipping streaming calibration/tuning.")
+            elif calibration_loader is None:
+                logger.info(
+                    "IterativeCalibrationPruner: no calibration_loader supplied; skipping calibration/tuning."
+                )
 
         # Finalize pruning: make masks permanent
         for m, name in prunable_params:
@@ -166,100 +176,125 @@ class IterativeCalibrationPruner(BasePruner):
         """
         return {name: [] for name in dense_map.keys()}
 
-    def _stream_and_calibrate(self, dense_root: nn.Module, dense_map: "OrderedDict[str, nn.Module]", prunable_map: "OrderedDict[str, nn.Module]", calibration_loader: DataLoader, module_names: List[str], policy: Policy | None) -> None:
+    def _prepare_calibration_batches(
+        self,
+        calibration_loader: DataLoader,
+        policy: Policy | None,
+    ) -> list[dict[str, torch.Tensor] | tuple[torch.Tensor, ...] | torch.Tensor]:
+        """Prepare dense-model inputs once so every pruning step can reuse them."""
+        return [
+            self._prepare_dense_input(batch=batch, policy=policy)
+            for batch in calibration_loader
+        ]
+
+    @staticmethod
+    def _normalize_tensor(x: torch.Tensor) -> torch.Tensor:
+        """Flatten loader-added wrappers when a tensor already carries a batch axis."""
+        if x.dim() == 5:
+            return x.reshape(-1, *x.shape[2:])
+        return x
+
+    def _prepare_dense_input(
+        self,
+        batch: dict[str, torch.Tensor] | tuple[torch.Tensor, ...] | list[torch.Tensor] | torch.Tensor,
+        policy: Policy | None,
+    ) -> dict[str, torch.Tensor] | tuple[torch.Tensor, ...] | torch.Tensor:
+        """Convert a calibration batch into the exact dense-model input once."""
+        if isinstance(batch, dict):
+            normalized_batch = {
+                key: self._normalize_tensor(value)
+                if isinstance(value, torch.Tensor)
+                else value
+                for key, value in batch.items()
+            }
+            observation = normalized_batch.get("observation")
+            if not isinstance(observation, dict):
+                raise ValueError(
+                    "Calibration batches with dict inputs must contain an 'observation' mapping."
+                )
+            if policy is None:
+                raise ValueError(
+                    "Calibration batches with observation dicts require a policy."
+                )
+
+            prepared_observation = prepare_policy_observation_for_explanation(
+                policy=policy,
+                observation=observation,
+                preprocess_observation=False,
+            )
+            prepared_observation.pop("language_instruction", None)
+            return prepared_observation
+
+        if isinstance(batch, tuple):
+            return tuple(
+                self._normalize_tensor(value) if isinstance(value, torch.Tensor) else value
+                for value in batch
+            )
+
+        if isinstance(batch, list):
+            return tuple(
+                self._normalize_tensor(value) if isinstance(value, torch.Tensor) else value
+                for value in batch
+            )
+
+        if isinstance(batch, torch.Tensor):
+            return self._normalize_tensor(batch)
+
+        raise TypeError(f"Unsupported calibration batch type: {type(batch)!r}")
+
+    def _stream_and_calibrate(self, dense_root: nn.Module, dense_map: "OrderedDict[str, nn.Module]", prunable_map: "OrderedDict[str, nn.Module]", calibration_batches: list[dict[str, torch.Tensor] | tuple[torch.Tensor, ...] | torch.Tensor], module_names: List[str]) -> None:
         """Stream calibration: for each batch run one dense forward, then calibrate.
 
         This method registers forward hooks on the dense model per-batch, runs a
         single forward pass under `torch.no_grad()`, collects input/output
         activations for each prunable layer, then immediately performs bias
         correction and a single-step layer-wise tuning using those activations.
-        Hooks are removed after each batch to avoid accumulation.
+        Hooks stay registered for the whole calibration pass to avoid repeated
+        setup/teardown overhead.
         """
-        # Hook factory that records input/output into local temporary dict
+        # Hook factory that records input/output into local temporary dict.
         def make_hook(name: str, storage: Dict[str, Tuple[torch.Tensor, torch.Tensor]]):
             def hook(module, inp, out):
-                # Record inputs[0] conventionally; keep tensors on their device
-                inp_t = inp[0].detach().clone() if isinstance(inp, (tuple, list)) and len(inp) > 0 else inp.detach().clone()
+                # Record inputs[0] conventionally; keep tensors on their device.
+                inp_t = (
+                    inp[0].detach().clone()
+                    if isinstance(inp, (tuple, list)) and len(inp) > 0
+                    else inp.detach().clone()
+                )
                 out_t = out.detach().clone()
                 storage[name] = (inp_t, out_t)
 
             return hook
 
-        # Iterate over calibration batches streaming
-        for batch in calibration_loader:
-            # if isinstance(batch, dict):
-              #  logger.info("Calibration batch keys: %s", batch.keys())
-            hooks = []
-            storage: Dict[str, Tuple[torch.Tensor, torch.Tensor]] = {}
-            # Register hooks for every dense prunable module
-            for name in module_names:
-                module = dense_map[name]
-                h = module.register_forward_hook(make_hook(name, storage))
-                hooks.append(h)
+        hooks = []
+        storage: Dict[str, Tuple[torch.Tensor, torch.Tensor]] = {}
+        for name in module_names:
+            module = dense_map[name]
+            hooks.append(module.register_forward_hook(make_hook(name, storage)))
 
-            # Run dense forward once per batch without gradient
-            try:
+        try:
+            for batch in calibration_batches:
+                storage.clear()
+
                 with torch.no_grad():
-                    # Normalize tensor shapes that DataLoader may wrap with an
-                    # extra batch-dimension. Common case: a list of 4D
-                    # tensors (each already a batch) becomes a 5D tensor with
-                    # shape (1, T, C, H, W) when `batch_size=1` in DataLoader.
-                    def _normalize_arg(x):
-                        if isinstance(x, torch.Tensor):
-                            if x.dim() == 5:
-                                # Collapse leading two dims (B, T, C, H, W)
-                                return x.reshape(-1, *x.shape[2:])
-                        return x
                     if isinstance(batch, dict):
-                       # logger.info("Top-level keys: %s", batch.keys())
-
-                        obs = batch.get("observation")
-
-                        # if isinstance(obs, dict):
-                        #    # logger.info("Observation keys: %s", obs.keys())
-
-                        #     for k, v in obs.items():
-                        #         logger.info(
-                        #             "obs[%s]: type=%s shape=%s",
-                        #             k,
-                        #             type(v),
-                        #             getattr(v, "shape", None)
-                        #         )
-                    if isinstance(batch, dict):
-                        batch = {k: _normalize_arg(v) for k, v in batch.items()}
-                        # import inspect
-
-                        # logger.info(
-                        #     "Encoder forward signature: %s",
-                        #     inspect.signature(dense_root.forward)
-                        # )
-                        prepared_observation = prepare_policy_observation_for_explanation(policy= policy, observation = batch["observation"], preprocess_observation=False )
-                        prepared_observation.pop("language_instruction", None)
-                        dense_root(prepared_observation)
-                    elif isinstance(batch, (list, tuple)):
-                        batch = tuple(_normalize_arg(v) for v in batch)
-                        # Expand as positional args
+                        dense_root(batch)
+                    elif isinstance(batch, tuple):
                         dense_root(*batch)
                     else:
-                        batch = _normalize_arg(batch)
                         dense_root(batch)
-            finally:
-                # Remove hooks promptly to avoid leaks
-                for h in hooks:
-                    h.remove()
 
-            # Immediately calibrate every prunable layer using this batch's activations
-            for name in module_names:
-                pair = storage.get(name)
-                if pair is None:
-                    # Layer may not have run for this input (e.g., conditional branches)
-                    continue
-                pruned_module = prunable_map[name]
-                dense_module = dense_map[name]
-                # Bias/variance correction first
-                self._bias_variance_correction(pruned_module, dense_module)
-                # Single-step layer-wise tuning with this batch's activation pair
-                self._layer_wise_tuning(pruned_module, dense_module, [pair])
+                for name in module_names:
+                    pair = storage.get(name)
+                    if pair is None:
+                        continue
+                    pruned_module = prunable_map[name]
+                    dense_module = dense_map[name]
+                    self._bias_variance_correction(pruned_module, dense_module)
+                    #self._layer_wise_tuning(pruned_module, dense_module, [pair])
+        finally:
+            for hook in hooks:
+                hook.remove()
 
     def _layer_wise_tuning(self, pruned_module: nn.Module, dense_module: nn.Module, activation_pairs: List[Tuple[torch.Tensor, torch.Tensor]]) -> None:
         """Tune a single pruned layer using recorded input/output activation pairs.
