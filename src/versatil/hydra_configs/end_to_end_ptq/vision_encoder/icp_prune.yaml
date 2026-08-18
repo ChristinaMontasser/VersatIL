@@ -6,15 +6,17 @@ defaults:
 checkpoint_path: ???
 checkpoint_name: last.ckpt
 output_directory: null
-calibration_steps: 8 
+calibration_steps: 16 
 preparation:
   replace_frozen_batchnorm: false
   fuse_conv_batchnorm: false
 pruning:
   - _target_: versatil.post_training_compression.pruning.iterativeprunner.IterativeCalibrationPruner
     T: 3
-    initial_sparsity: 0.1
-    final_sparsity: 0.2
+    initial_sparsity: 0.05
+    final_sparsity: 0.3
+    calibration_steps: 16 
+
 quantization: null
 modules:
   - module_path: encoding_pipeline.encoders.left

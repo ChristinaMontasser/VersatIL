@@ -126,7 +126,7 @@ class PostTrainingCompressor:
                 calibration_provider = build_calib(
                     context=context,
                     exportable=exportable,
-                    #targets=quantization_workflow.targets,
+                    targets=quantization_workflow.targets,
                     calibration_steps=self.calibration_steps,
                 )
             except Exception as e:

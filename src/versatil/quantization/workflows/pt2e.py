@@ -55,12 +55,12 @@ class PT2EQuantizationWorkflow(BaseQuantizationWorkflow):
     @property
     def pt2e_backend(self) -> BasePT2EBackend:
         """Return the first target backend for runtime environment setup."""
-        return self.targets[0].pt2e_backend
+        return self._targets[0].pt2e_backend
 
     @property
     def pt2e_backend_names(self) -> tuple[str, ...]:
         """Return serialized PT2E backend names used by all targets."""
-        return tuple(target.pt2e_backend.name for target in self.targets)
+        return tuple(target.pt2e_backend.name for target in self._targets)
 
     @property
     def quantization_mode(self) -> str:
@@ -70,12 +70,12 @@ class PT2EQuantizationWorkflow(BaseQuantizationWorkflow):
     @property
     def needs_calibration(self) -> bool:
         """Static PT2E requires calibration, dynamic does not."""
-        return any(target.needs_calibration for target in self.targets)
+        return any(target.needs_calibration for target in self._targets)
 
     @property
     def is_qat(self) -> bool:
         """Return whether the PT2E backend is configured for QAT."""
-        return any(target.pt2e_backend.is_qat for target in self.targets)
+        return any(target.pt2e_backend.is_qat for target in self._targets)
 
     def load_policy_context(
         self,
@@ -122,7 +122,7 @@ class PT2EQuantizationWorkflow(BaseQuantizationWorkflow):
         calibration = self._build_calibration(
             context=context,
             exportable=exportable,
-            targets=self.targets,
+            targets=self._targets,
             calibration_steps=calibration_steps,
         )
         # Export always uses synthetic batch>=2 example inputs: a raw
@@ -142,7 +142,7 @@ class PT2EQuantizationWorkflow(BaseQuantizationWorkflow):
         float_exported = copy.deepcopy(exported)
         converted = self._convert_exported_model(
             exported=exported,
-            targets=self.targets,
+            targets=self._targets,
             calibration=calibration,
         )
         return QuantizedContext(
