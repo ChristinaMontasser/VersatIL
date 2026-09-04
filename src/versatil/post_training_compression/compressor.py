@@ -19,6 +19,7 @@ from versatil.post_training_compression.deployment_backends.torch_inductor impor
     TorchInductorBackend,
 )
 from versatil.post_training_compression.preparation import (
+    equalize_cross_layer_pairs,
     fuse_all_conv_batchnorm_pairs,
     prepare_batchnorms_for_quantization,
 )
@@ -260,6 +261,9 @@ class PostTrainingCompressor:
                 if module.preparation.fuse_conv_batchnorm:
                     count = fuse_all_conv_batchnorm_pairs(submodule)
                     logging.info(f"Fused {count} Conv+BN pairs in {label}")
+                if module.preparation.cross_layer_equalization:
+                    count = equalize_cross_layer_pairs(model=submodule)
+                    logging.info(f"Equalized {count} cross-layer pairs in {label}")
             for pruner in module.pruning:
                 # If a calibration provider was supplied, forward its
                 # underlying dataloader to pruners that accept it.

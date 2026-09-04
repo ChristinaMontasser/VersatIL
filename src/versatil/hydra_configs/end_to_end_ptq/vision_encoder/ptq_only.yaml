@@ -8,8 +8,8 @@ checkpoint_name: last.ckpt
 output_directory: null
 calibration_steps: 16
 preparation:
-  replace_frozen_batchnorm: false
-  fuse_conv_batchnorm: false
+  replace_frozen_batchnorm: true
+  fuse_conv_batchnorm: true
 pruning: null
 quantization:
   _target_: versatil.quantization.workflows.pt2e.PT2EQuantizationWorkflow

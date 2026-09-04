@@ -10,6 +10,8 @@ calibration_steps: 16
 preparation:
   replace_frozen_batchnorm: false
   fuse_conv_batchnorm: false
+  cross_layer_equalization: false
+
 pruning:
   - _target_: versatil.post_training_compression.pruning.iterativeprunner.IterativeCalibrationPruner
     T: 3

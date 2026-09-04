@@ -21,6 +21,7 @@ from versatil.inference.socket_transport import (
 )
 from versatil.post_training_compression.constants import CompressionFilename
 from versatil.training.constants import CheckpointFilename
+from versatil.endpoints.inspect_architecture import export_report
 
 EXPERIMENTS_DIR = get_hydra_configs_dir()
 
@@ -62,7 +63,12 @@ def load_policy(
             checkpoint_name=checkpoint_name,
             compile_model=compile_model,
         )
-
+def model_size(model):
+    return sum(
+        tensor.nbytes
+        for tensor in model.state_dict().values()
+        if isinstance(tensor, torch.Tensor)
+    )
 
 @hydra.main(
     version_base=None,
@@ -92,6 +98,16 @@ def main(config: DictConfig) -> None:
         checkpoint_name=config.checkpoint_name,
         compile_model=config.compile_model,
     )
+    model = policy_runtime.checkpoint_loader._policy
+    # print(f"Model file: {policy_runtime.}")
+    # print(f"Serialized size MB: {policy_runtime.stat().st_size / 1024**2:.3f}")
+    # print(f"Model type: {type(model).__name__}")
+    # print(f"Loaded tensor size MB: {tensor_size_mb(model):.3f}")
+    # report_model(model)
+
+    model_size(model)
+    size_mb = model_size(model) / 1024**2
+    print(f"{size_mb:.2f} MB")
     logging.info("Policy runtime is done")
     observation_transport = SocketObservationTransport(
         server_address=config.client.model_server_address,

@@ -16,10 +16,12 @@ class PreparationConfig:
         replace_frozen_batchnorm: Whether FrozenBatchNorm layers become plain BatchNorm
             before fusion.
         fuse_conv_batchnorm: Whether Conv and BatchNorm pairs are fused.
+        cross_layer_equalization: Whether compatible affine-layer pairs are equalized.
     """
 
     replace_frozen_batchnorm: bool = True
     fuse_conv_batchnorm: bool = True
+    cross_layer_equalization: bool = False
 
 
 @dataclass

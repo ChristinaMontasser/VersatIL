@@ -62,7 +62,7 @@ def report_model(model):
                 first_param.device
             )
 
-def export_report(model, path="model_report.json"):
+def export_report(model, path="reports/model_report.json"):
 
     report = {}
 

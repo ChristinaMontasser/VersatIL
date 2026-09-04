@@ -10,6 +10,7 @@ from torchao.quantization.pt2e.quantizer.x86_inductor_quantizer import (
     X86InductorQuantizer,
     get_default_x86_inductor_quantization_config,
 )
+from torchao.quantization.pt2e.quantizer import QuantizationConfig
 
 from versatil.quantization.constants import PT2EBackendName
 from versatil.quantization.pt2e.backends.base import BasePT2EBackend
@@ -75,6 +76,14 @@ class X86InductorBackend(BasePT2EBackend):
             is_qat=self._is_qat,
             reduce_range=self._reduce_range,
         )
+    #     config = QuantizationConfig( ##change
+    #         None,
+    #         None,
+    #         quantization_config.weight,
+    #         quantization_config.bias,
+    #         quantization_config.is_qat,
+    # )
+      
         if module_path == "":
             quantizer.set_global(config)
         else:

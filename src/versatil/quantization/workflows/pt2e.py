@@ -31,7 +31,86 @@ from versatil.quantization.workflows.base import (
 
 logger = logging.getLogger(__name__)
 
+from torchao.quantization.pt2e import HistogramObserver
 
+def _analyze_pt2e_observers(prepared: nn.Module) -> None:
+    """Log PT2E modules, layer types, and activation observer parameters."""
+
+    logger.info("PT2E model: %s", prepared.__class__.__name__)
+
+    # Print the FX graph once
+    graph = getattr(prepared, "graph", None)
+    if graph is not None:
+        for node in graph.nodes:
+            if node.op == "call_module":
+                try:
+                    target_module = prepared.get_submodule(node.target)
+                    module_type = target_module.__class__.__name__
+                except Exception:
+                    module_type = "Unknown"
+
+                logger.info(
+                    "PT2E layer: name=%s type=%s category=%s target=%s",
+                    node.name,
+                    module_type,
+                    _classify_module(module_type),
+                    node.target,
+                )
+            else:
+                logger.info(
+                    "PT2E node: name=%s op=%s target=%s",
+                    node.name,
+                    node.op,
+                    node.target,
+                )
+
+    # Analyze observers
+    for name, module in prepared.named_modules():
+        if not isinstance(module, HistogramObserver):
+            continue
+
+        if (
+            not torch.isfinite(module.min_val).all()
+            or not torch.isfinite(module.max_val).all()
+        ):
+            logger.warning(
+                "PT2E observer [%s]: NOT CALIBRATED "
+                "(min=%s, max=%s)",
+                name,
+                module.min_val,
+                module.max_val,
+            )
+            continue
+
+        optimized_min, optimized_max = module._non_linear_param_search()
+        scale, zero_point = module.calculate_qparams()
+
+        logger.info(
+            "PT2E observer [%s]: category=ACTIVATION "
+            "observed_range=[%.6f, %.6f], "
+            "optimized_range=[%.6f, %.6f], "
+            "scale=%.6f, zero_point=%d",
+            name,
+            module.min_val.item(),
+            module.max_val.item(),
+            optimized_min.item(),
+            optimized_max.item(),
+            scale.item(),
+            zero_point.item(),
+        )
+
+
+def _classify_module(module_type: str) -> str:
+    if "Observer" in module_type:
+        return "ACTIVATION_OBSERVER"
+    if module_type in {"Linear", "Conv1d", "Conv2d", "Conv3d"}:
+        return "LINEAR_OR_CONV"
+    if module_type in {"ReLU", "GELU", "SiLU", "Sigmoid", "Tanh"}:
+        return "ACTIVATION"
+    if module_type in {"BatchNorm1d", "BatchNorm2d", "BatchNorm3d"}:
+        return "NORMALIZATION"
+
+    return "OTHER"
 class PT2EQuantizationWorkflow(BaseQuantizationWorkflow):
     """PT2E graph quantization workflow."""
 
@@ -250,6 +329,8 @@ class PT2EQuantizationWorkflow(BaseQuantizationWorkflow):
                 with torch.no_grad():
                     for batch in calibration:
                         prepared(*batch)
+            _analyze_pt2e_observers(prepared) ##change
+            
             converted = convert_pt2e(prepared)
         static_op_count = str(converted.graph).count(
             FXNodePattern.QUANTIZE_PER_TENSOR.value
