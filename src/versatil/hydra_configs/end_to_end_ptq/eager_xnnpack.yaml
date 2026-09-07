@@ -16,6 +16,8 @@ quantization:
   targets:
     - _target_: versatil.quantization.module_target.EagerQuantizationModuleTarget
       module_path: ""
+      smooth_quant: false
+      smooth_quant_alpha: 0.5
       quantize_config:
         _target_: torchao.quantization.Int8DynamicActivationIntxWeightConfig
         weight_dtype: ${torch_dtype:int4}

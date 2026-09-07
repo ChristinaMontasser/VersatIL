@@ -11,7 +11,10 @@ from torchao.quantization.pt2e.quantizer.x86_inductor_quantizer import (
     get_default_x86_inductor_quantization_config,
 )
 from torchao.quantization.pt2e.quantizer import QuantizationConfig
-
+from torchao.prototype.smoothquant import SmoothQuantConfig
+from torchao.quantization import quantize_
+from torchao.quantization.quantize_.common.quantization_step import QuantizationStep
+from torchao.quantization.quant_api import Int8DynamicActivationInt8WeightConfig
 from versatil.quantization.constants import PT2EBackendName
 from versatil.quantization.pt2e.backends.base import BasePT2EBackend
 
@@ -82,6 +85,11 @@ class X86InductorBackend(BasePT2EBackend):
     #         quantization_config.weight,
     #         quantization_config.bias,
     #         quantization_config.is_qat,
+    # )
+    #     config = SmoothQuantConfig(
+    #     base_config=Int8DynamicActivationInt8WeightConfig(),
+    #     step=QuantizationStep.PREPARE,
+    #     alpha=0.5,
     # )
       
         if module_path == "":

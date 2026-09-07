@@ -1,0 +1,37 @@
+# @package _global_
+defaults:
+  - /post_training_compression
+  - _self_
+
+checkpoint_path: ???
+checkpoint_name: last.ckpt
+output_directory: null
+calibration_steps: 16
+preparation:
+  replace_frozen_batchnorm: false
+  fuse_conv_batchnorm: false
+pruning: null
+quantization:
+  _target_: versatil.quantization.workflows.eager.EagerQuantizationWorkflow
+  targets:
+    - _target_: versatil.quantization.module_target.EagerQuantizationModuleTarget
+      module_path: encoding_pipeline.encoders.left
+      smooth_quant: true
+      smooth_quant_alpha: 0.5
+      quantize_config:
+        _target_: torchao.quantization.Int8DynamicActivationInt8WeightConfig
+    - _target_: versatil.quantization.module_target.EagerQuantizationModuleTarget
+      module_path: encoding_pipeline.encoders.right
+      smooth_quant: true
+      smooth_quant_alpha: 0.5
+      quantize_config:
+        _target_: torchao.quantization.Int8DynamicActivationInt8WeightConfig
+  is_qat: false
+  auto_filter_incompatible_linears: true
+modules:
+  - module_path: encoding_pipeline.encoders.left
+    preparation: ${preparation}
+    pruning: null
+  - module_path: encoding_pipeline.encoders.right
+    preparation: ${preparation}
+    pruning: null

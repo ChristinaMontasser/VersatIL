@@ -3,7 +3,6 @@
 import pytest
 import torch
 from torch import nn
-
 from versatil.post_training_compression.preparation.equalization import (
     equalize_cross_layer_pairs,
 )

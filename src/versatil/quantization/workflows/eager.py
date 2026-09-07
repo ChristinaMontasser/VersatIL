@@ -3,12 +3,17 @@
 import logging
 from dataclasses import dataclass
 
+import torch
 import torch.nn as nn
+from torch.utils.data import DataLoader
+from torchao.prototype.smoothquant import SmoothQuantConfig
 from torchao.quantization import quantize_
 from torchao.quantization.granularity import PerGroup
 from torchao.quantization.qat import QATConfig
+from torchao.quantization.quantize_.common.quantization_step import QuantizationStep
 
 from versatil.models.exportable_policy import ExportablePolicy
+from versatil.data.episodic_dataset import EpisodicDataset
 from versatil.post_training_compression.constants import QuantizationWorkflow
 from versatil.post_training_compression.export import (
     build_example_inputs,
@@ -19,13 +24,13 @@ from versatil.post_training_compression.policy_loading import (
     load_qat_policy_context,
 )
 from versatil.quantization.constants import QuantizationMode
+from versatil.quantization.calibration import CalibrationDataProvider
 from versatil.quantization.module_target import EagerQuantizationModuleTarget
 from versatil.quantization.workflows.base import (
     BaseQuantizationWorkflow,
     PolicyContext,
     QuantizedContext,
 )
-
 logger = logging.getLogger(__name__)
 
 
@@ -121,7 +126,7 @@ class EagerQuantizationWorkflow(BaseQuantizationWorkflow):
             context: Loaded policy context containing the eager policy to
                 mutate.
             exportable: Export wrapper around the same policy.
-            calibration_steps: Unused for eager quantization.
+            calibration_steps: Number of batches used by SmoothQuant calibration.
 
         Returns:
             Exported eager-quantized model and example inputs for deployment.
@@ -139,7 +144,19 @@ class EagerQuantizationWorkflow(BaseQuantizationWorkflow):
         if self.is_qat:
             self.convert_model(model=context.policy)
         else:
-            self._apply_ptq(model=context.policy)
+            calibration = self._build_calibration(
+                context=context,
+                exportable=exportable,
+                calibration_steps=calibration_steps,
+            )
+            if calibration is None:
+                self._apply_ptq(model=context.policy)
+            else:
+                self._apply_ptq(
+                    model=context.policy,
+                    calibration=calibration,
+                    exportable=exportable,
+                )
         exported = export_policy(exportable=exportable, example_inputs=example_inputs)
         return QuantizedContext(
             float_model=float_exported,
@@ -222,7 +239,53 @@ class EagerQuantizationWorkflow(BaseQuantizationWorkflow):
                 filter_fn=lambda module, fqn, names=selected_names: fqn in names,
             )
 
-    def _apply_ptq(self, model: nn.Module) -> None:
+    def _build_calibration(
+        self,
+        context: PolicyContext,
+        exportable: ExportablePolicy,
+        calibration_steps: int,
+        targets: list[EagerQuantizationModuleTarget] | None = None,
+    ) -> CalibrationDataProvider | None:
+        """Build calibration data when an eager target uses SmoothQuant."""
+        calibration_targets = self.targets if targets is None else targets
+        if not any(target.smooth_quant for target in calibration_targets):
+            return None
+        if calibration_steps < 1:
+            raise ValueError(
+                "SmoothQuant requires calibration_steps >= 1, "
+                f"got {calibration_steps}."
+            )
+        dataset = EpisodicDataset(
+            zarr_path=context.config.task.dataset_schema.zarr_path,
+            action_space=context.config.task.action_space,
+            observation_space=context.observation_space,
+            dataloader_config=context.config.task.dataloader,
+            pred_horizon=context.config.task.prediction_horizon,
+            obs_horizon=context.observation_horizon,
+            train=True,
+            seed=context.config.experiment.seed,
+            augment_images=False,
+        )
+        dataset.set_normalizer(context.policy.normalizer)
+        dataset.set_tokenizer(context.tokenizer)
+        calibration_loader = DataLoader(
+            dataset=dataset,
+            batch_size=context.config.task.dataloader.batch_size,
+            shuffle=False,
+            num_workers=0,
+        )
+        return CalibrationDataProvider(
+            dataloader=calibration_loader,
+            observation_keys=exportable.observation_keys,
+            num_calibration_steps=calibration_steps,
+        )
+
+    def _apply_ptq(
+        self,
+        model: nn.Module,
+        calibration: CalibrationDataProvider | None = None,
+        exportable: ExportablePolicy | None = None,
+    ) -> None:
         """Apply eager PTQ to targeted modules.
 
         Linears whose ``in_features`` are incompatible with the config group
@@ -235,6 +298,11 @@ class EagerQuantizationWorkflow(BaseQuantizationWorkflow):
             ValueError: If a target path is invalid or targets overlap.
         """
         self.validate_targets(model=model)
+        uses_smooth_quant = any(target.smooth_quant for target in self.targets)
+        if uses_smooth_quant and calibration is None:
+            raise ValueError("SmoothQuant requires a calibration data provider.")
+        if uses_smooth_quant and exportable is None:
+            raise ValueError("SmoothQuant requires an exportable policy.")
         for target in self.targets:
             selected, skipped = self._select_linear_modules(
                 model=model,
@@ -244,11 +312,43 @@ class EagerQuantizationWorkflow(BaseQuantizationWorkflow):
                 logger.info(f"Skipping PTQ module {name}: {reason}")
             selected_names = set(selected)
             logger.info(f"quantize_() target: {target.label}")
-            quantize_(
-                model=model,
-                config=target.quantize_config,
-                filter_fn=lambda module, fqn, names=selected_names: fqn in names,
-            )
+            if target.smooth_quant:
+                logger.info(
+                    "Applying SmoothQuant preparation to %s with alpha=%s",
+                    target.label,
+                    target.smooth_quant_alpha,
+                )
+                quantize_(
+                    model=model,
+                    config=SmoothQuantConfig(
+                        base_config=target.quantize_config,
+                        step=QuantizationStep.PREPARE,
+                        alpha=target.smooth_quant_alpha,
+                    ),
+                    filter_fn=lambda module, fqn, names=selected_names: fqn
+                    in names,
+                )
+                with torch.no_grad():
+                    for batch in calibration:
+                        exportable(*batch)
+            if target.smooth_quant:
+                quantize_(
+                    model=model,
+                    config=SmoothQuantConfig(
+                        base_config=target.quantize_config,
+                        step=QuantizationStep.CONVERT,
+                        alpha=target.smooth_quant_alpha,
+                    ),
+                    filter_fn=lambda module, fqn, names=selected_names: fqn
+                    in names,
+                )
+            else:
+                quantize_(
+                    model=model,
+                    config=target.quantize_config,
+                    filter_fn=lambda module, fqn, names=selected_names: fqn
+                    in names,
+                )
 
     def _select_linear_modules(
         self,

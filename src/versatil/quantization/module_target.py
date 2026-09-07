@@ -68,6 +68,8 @@ class EagerQuantizationModuleTarget(QuantizationModuleTarget):
         self,
         module_path: str,
         quantize_config: AOBaseConfig,
+        smooth_quant: bool = False,
+        smooth_quant_alpha: float = 0.5,
     ) -> None:
         """Initialize an eager quantization target.
 
@@ -75,9 +77,20 @@ class EagerQuantizationModuleTarget(QuantizationModuleTarget):
             module_path: Dotted path to the target module, or ``""`` for root.
             quantize_config: torchao eager quantization config applied to this
                 target.
+            smooth_quant: Apply TorchAO SmoothQuant preparation before eager
+                quantization.
+            smooth_quant_alpha: SmoothQuant activation-to-weight migration
+                factor.
         """
         super().__init__(module_path=module_path)
         self.quantize_config = quantize_config
+        if not 0.0 <= smooth_quant_alpha <= 1.0:
+            raise ValueError(
+                "smooth_quant_alpha must be between 0.0 and 1.0, "
+                f"got {smooth_quant_alpha}."
+            )
+        self.smooth_quant = smooth_quant
+        self.smooth_quant_alpha = smooth_quant_alpha
 
 
 class PT2EQuantizationModuleTarget(QuantizationModuleTarget):

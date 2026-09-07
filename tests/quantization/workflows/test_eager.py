@@ -327,6 +327,43 @@ class TestEagerQuantizationWorkflow:
             decoder_target.quantize_config
         )
 
+    def test_smooth_quant_calibrates_exportable_between_prepare_and_convert(
+        self,
+        policy_with_linear_modules_factory,
+    ):
+        model = policy_with_linear_modules_factory()
+        config = Int8DynamicActivationInt8WeightConfig()
+        target = EagerQuantizationModuleTarget(
+            module_path="encoder",
+            quantize_config=config,
+            smooth_quant=True,
+            smooth_quant_alpha=0.5,
+        )
+        workflow = EagerQuantizationWorkflow(targets=[target])
+        exportable = MagicMock()
+        calibration = MagicMock()
+        calibration_batch = (torch.zeros(1, 32),)
+        calibration.__iter__.return_value = iter([calibration_batch])
+
+        with patch(f"{EAGER_WORKFLOW_MODULE}.quantize_") as quantize_mock:
+            workflow._apply_ptq(
+                model=model,
+                calibration=calibration,
+                exportable=exportable,
+            )
+
+        assert quantize_mock.call_count == 2
+        prepare_config = quantize_mock.call_args_list[0].kwargs["config"]
+        convert_config = quantize_mock.call_args_list[1].kwargs["config"]
+        assert prepare_config.base_config is config
+        assert prepare_config.step == "prepare"
+        assert prepare_config.alpha == 0.5
+        assert convert_config.base_config is config
+        assert convert_config.step == "convert"
+        assert convert_config.alpha == 0.5
+        exportable.assert_called_once()
+        assert exportable.call_args.args[0] is calibration_batch[0]
+
     def test_ptq_filters_group_incompatible_linears(
         self,
         policy_with_linear_modules_factory,

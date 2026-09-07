@@ -75,11 +75,15 @@ class EagerQuantizationModuleTargetConfig:
         _target_: Import path instantiated by Hydra.
         module_path: Dotted path to the target module, or ``""`` for root.
         quantize_config: torchao eager quantization config applied to this target.
+        smooth_quant: Apply TorchAO SmoothQuant preparation before quantization.
+        smooth_quant_alpha: SmoothQuant activation-to-weight migration factor.
     """
 
     _target_: str = "versatil.quantization.module_target.EagerQuantizationModuleTarget"
     module_path: str = ""
     quantize_config: Any = MISSING
+    smooth_quant: bool = False
+    smooth_quant_alpha: float = 0.5
 
 
 @dataclass
