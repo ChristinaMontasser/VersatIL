@@ -23,6 +23,7 @@ from versatil.quantization.calibration import CalibrationDataProvider
 from versatil.quantization.constants import FXNodePattern, QuantizationMode
 from versatil.quantization.module_target import PT2EQuantizationModuleTarget
 from versatil.quantization.pt2e.backends.base import BasePT2EBackend
+from versatil.quantization.pt2e.smooth_quant import SmoothQuantPreparer
 from versatil.quantization.workflows.base import (
     BaseQuantizationWorkflow,
     PolicyContext,
@@ -208,6 +209,11 @@ class PT2EQuantizationWorkflow(BaseQuantizationWorkflow):
         # training batch with batch_size=1 would trip torch.export's 0/1
         # specialization on the dynamic batch dimension. Calibration still
         # runs on real dataloader batches.
+        self._prepare_smooth_quant(
+            context=context,
+            exportable=exportable,
+            calibration=calibration,
+        )
         example_inputs = build_example_inputs(
             exportable=exportable,
             observation_space=context.observation_space,
@@ -231,6 +237,48 @@ class PT2EQuantizationWorkflow(BaseQuantizationWorkflow):
             quantization_workflow=QuantizationWorkflow.PT2E.value,
         )
 
+    def _prepare_smooth_quant(
+        self,
+        context: PolicyContext,
+        exportable: ExportablePolicy,
+        calibration: CalibrationDataProvider | None,
+    ) -> ExportablePolicy:
+        """Apply configured SmoothQuant preparation before PT2E export."""
+        smooth_targets = [target for target in self._targets if target.smooth_quant]
+        if not smooth_targets:
+            return exportable
+        if calibration is None:
+            raise ValueError(
+                "SmoothQuant preparation requires calibration data, but no "
+                "CalibrationDataProvider was created."
+            )
+        for target in smooth_targets:
+            preparer = SmoothQuantPreparer(alpha=target.smooth_quant_alpha)
+            activation_scales = preparer.collect_activation_scales(
+                model=exportable,
+                calibration=lambda: iter(calibration),
+                module_filter=lambda name, module, target=target: (
+                    target.contains_module(name)
+                    and isinstance(module, (nn.Conv2d, nn.Linear))
+                ),
+            )
+            selected = preparer.apply(
+                model=context.policy,
+                activation_scales=activation_scales,
+            )
+            if not selected:
+                raise ValueError(
+                    f"SmoothQuant target '{target.label}' selected no supported "
+                    "Conv2d or Linear modules."
+                )
+            logger.info(
+                "SmoothQuant target %s transformed %d modules: %s",
+                target.label,
+                len(selected),
+                selected,
+            )
+        return exportable
+
     @staticmethod
     def _build_calibration(
         context: PolicyContext,
@@ -252,7 +300,9 @@ class PT2EQuantizationWorkflow(BaseQuantizationWorkflow):
             Calibration provider for static targets, or ``None`` when all
             targets are dynamic.
         """
-        needs_calibration = any(target.needs_calibration for target in targets)
+        needs_calibration = any(
+            target.needs_calibration or target.smooth_quant for target in targets
+        )
         if not needs_calibration:
             return None
         if calibration_steps < 1:

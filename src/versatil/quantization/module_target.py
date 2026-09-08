@@ -100,6 +100,8 @@ class PT2EQuantizationModuleTarget(QuantizationModuleTarget):
         self,
         module_path: str,
         pt2e_backend: BasePT2EBackend,
+        smooth_quant: bool = False,
+        smooth_quant_alpha: float = 0.5,
     ) -> None:
         """Initialize a PT2E quantization target.
 
@@ -110,6 +112,13 @@ class PT2EQuantizationModuleTarget(QuantizationModuleTarget):
         """
         super().__init__(module_path=module_path)
         self.pt2e_backend = pt2e_backend
+        if not 0.0 <= smooth_quant_alpha <= 1.0:
+            raise ValueError(
+                "smooth_quant_alpha must be between 0.0 and 1.0, "
+                f"got {smooth_quant_alpha}."
+            )
+        self.smooth_quant = smooth_quant
+        self.smooth_quant_alpha = smooth_quant_alpha
 
     @property
     def needs_calibration(self) -> bool:

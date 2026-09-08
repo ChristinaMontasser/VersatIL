@@ -94,6 +94,8 @@ class PT2EQuantizationModuleTargetConfig:
         _target_: Import path instantiated by Hydra.
         module_path: Dotted path to the target module, or ``""`` for root.
         pt2e_backend: PT2E backend that creates the quantizer for this target.
+        smooth_quant: Apply SmoothQuant-style float preparation before export.
+        smooth_quant_alpha: Activation-to-weight migration factor.
     """
 
     _target_: str = "versatil.quantization.module_target.PT2EQuantizationModuleTarget"
@@ -101,6 +103,8 @@ class PT2EQuantizationModuleTargetConfig:
     pt2e_backend: BasePT2EBackendConfig = field(
         default_factory=X86InductorBackendConfig
     )
+    smooth_quant: bool = False
+    smooth_quant_alpha: float = 0.5
 
 
 @dataclass
