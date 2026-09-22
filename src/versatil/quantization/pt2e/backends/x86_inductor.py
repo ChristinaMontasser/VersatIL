@@ -3,20 +3,21 @@
 import os
 from collections.abc import Generator
 from contextlib import contextmanager
-
+import torch
 import torch._inductor.config as inductor_config
 from torchao.quantization.pt2e.quantizer import Quantizer
 from torchao.quantization.pt2e.quantizer.x86_inductor_quantizer import (
     X86InductorQuantizer,
     get_default_x86_inductor_quantization_config,
 )
-from torchao.quantization.pt2e.quantizer import QuantizationConfig
+from torchao.quantization.pt2e.quantizer import QuantizationConfig, QuantizationSpec
 from torchao.prototype.smoothquant import SmoothQuantConfig
 from torchao.quantization import quantize_
 from torchao.quantization.quantize_.common.quantization_step import QuantizationStep
 from torchao.quantization.quant_api import Int8DynamicActivationInt8WeightConfig
 from versatil.quantization.constants import PT2EBackendName
 from versatil.quantization.pt2e.backends.base import BasePT2EBackend
+from versatil.quantization.workflows import none
 
 _CUDA_VISIBLE_DEVICES_KEY = "CUDA_VISIBLE_DEVICES"
 _TORCHINDUCTOR_FREEZING_KEY = "TORCHINDUCTOR_FREEZING"
@@ -74,11 +75,27 @@ class X86InductorBackend(BasePT2EBackend):
             Configured X86InductorQuantizer.
         """
         quantizer = X86InductorQuantizer()
-        config = get_default_x86_inductor_quantization_config(
+        # quantization_config
+        # config = get_default_x86_inductor_quantization_config(
+        #     is_dynamic=self._is_dynamic,
+        #     is_qat=self._is_qat,
+        #     reduce_range=self._reduce_range,
+        # )
+
+        quantization_config = get_default_x86_inductor_quantization_config(
             is_dynamic=self._is_dynamic,
             is_qat=self._is_qat,
             reduce_range=self._reduce_range,
         )
+    #     weight_quantization_spec_updated_int4 = QuantizationSpec(
+    #         dtype = torch.int4,
+    #         quant_min= quantization_config.weight.quant_min,
+    #         quant_max= quantization_config.weight.quant_max,
+    #         qscheme=quantization_config.weight.qscheme,
+    #         ch_axis=quantization_config.weight.ch_axis,
+    #         is_dynamic=quantization_config.weight.is_dynamic,
+    #         observer_or_fake_quant_ctr=quantization_config.weight.observer_or_fake_quant_ctr,
+    #     )
     #     config = QuantizationConfig( ##change
     #         None,
     #         None,
@@ -86,6 +103,22 @@ class X86InductorBackend(BasePT2EBackend):
     #         quantization_config.bias,
     #         quantization_config.is_qat,
     # )
+        weight_quantization_spec_updated_int4 = QuantizationSpec(
+            dtype=torch.int4,
+            quant_min=-8,
+            quant_max=7,
+            qscheme=quantization_config.weight.qscheme,
+            ch_axis=quantization_config.weight.ch_axis,
+            is_dynamic=quantization_config.weight.is_dynamic,
+            observer_or_fake_quant_ctr=quantization_config.weight.observer_or_fake_quant_ctr,
+        )
+        config = QuantizationConfig(
+            None,
+            None,
+            weight_quantization_spec_updated_int4,
+            quantization_config.bias,
+            quantization_config.is_qat,
+        )
     #     config = SmoothQuantConfig(
     #     base_config=Int8DynamicActivationInt8WeightConfig(),
     #     step=QuantizationStep.PREPARE,

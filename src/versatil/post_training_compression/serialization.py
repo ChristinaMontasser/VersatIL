@@ -19,6 +19,7 @@ from versatil.post_training_compression.constants import (
 )
 from versatil.post_training_compression.export import _export_with_dynamic_batch
 from versatil.training.constants import CheckpointFilename
+from versatil.quantization.pt2e.smooth_quant import remove_unused_exported_state
 
 
 def save_compressed_model(
@@ -84,6 +85,13 @@ def save_compressed_model(
             model=converted_model,
             example_inputs=example_inputs,
         )
+        exported_model = exported_program.module()
+        removed_state = remove_unused_exported_state(model=exported_model)
+        if removed_state:
+            exported_program = _export_with_dynamic_batch(
+                model=exported_model,
+                example_inputs=example_inputs,
+            )
         torch.export.save(exported_program, str(model_path))
     torch.save(normalizer.state_dict(), save_path / normalizer_filename)
     config_omega = OmegaConf.structured(quantization_config)

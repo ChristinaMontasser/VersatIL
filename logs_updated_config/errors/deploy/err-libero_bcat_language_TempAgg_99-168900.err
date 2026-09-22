@@ -1,0 +1,2 @@
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 9606.12it/s]
+[2026-09-11T05:28:33.035] error: *** JOB 168900 ON g27dl05 CANCELLED AT 2026-09-11T05:28:33 DUE TO TIME LIMIT ***

@@ -110,20 +110,16 @@ class PostTrainingCompressor:
         self.validate(policy=policy, modules=modules)
         quantization_workflow.validate_targets(model=policy)
     
-        # Build an ExportablePolicy early so workflows that can supply
-        # calibration data (e.g. PT2E) can create a CalibrationDataProvider
-        # to be forwarded into pruning steps that perform layer-wise tuning.
+        # Preparation changes the module graph and activation distributions.
+        # Apply it before building the exportable calibration model so pruning
+        # and SmoothQuant observe the same structure that will be exported.
+        self._prepare_modules(policy=policy, modules=modules)
         exportable = ExportablePolicy.from_policy(policy)
         calibration_provider = None
         build_calib = getattr(quantization_workflow, "_build_calibration", None)
-        import inspect
-
-        logger.info("build_calib=%s", build_calib)
-        logger.info("signature=%s", inspect.signature(build_calib))
 
         if callable(build_calib):
             try:
-                logger.info("_build_calibration exists and is used")
                 calibration_provider = build_calib(
                     context=context,
                     exportable=exportable,
@@ -137,10 +133,17 @@ class PostTrainingCompressor:
                     str(e)
                 )
         else:
-            logger.info("_build_calibration is not callable")
+            logger.info("Quantization workflow does not provide calibration data.")
 
-        # Pass optional calibration provider (or None) into preparation/pruning
-        self._prepare_and_prune(policy=policy, modules=modules, calibration_provider=calibration_provider)
+        self._prune_modules(
+            policy=policy,
+            modules=modules,
+            calibration_provider=calibration_provider,
+        )
+        # Pruning mutates the policy after the dense calibration exportable
+        # was created. Rebuild it so SmoothQuant and PT2E export see the final
+        # pruned model rather than the dense calibration copy.
+        exportable = ExportablePolicy.from_policy(policy)
         logging.info(f"Input keys: {exportable.observation_keys}")
         logging.info(f"Output keys: {exportable.action_keys}")
         quantized = quantization_workflow.quantize(
@@ -246,7 +249,22 @@ class PostTrainingCompressor:
             policy: Loaded policy model to mutate in-place.
             modules: Resolved preparation and pruning targets.
         """
+        self._prepare_modules(policy=policy, modules=modules)
+        self._prune_modules(
+            policy=policy,
+            modules=modules,
+            calibration_provider=calibration_provider,
+        )
+
+    def _prepare_modules(
+        self,
+        policy: nn.Module,
+        modules: list[CompressionTarget],
+    ) -> None:
+        """Apply preparation transforms to each configured module."""
         for module in modules:
+            if module.preparation is None:
+                continue
             submodule = (
                 policy
                 if module.module_path == ""
@@ -264,6 +282,21 @@ class PostTrainingCompressor:
                 if module.preparation.cross_layer_equalization:
                     count = equalize_cross_layer_pairs(model=submodule)
                     logging.info(f"Equalized {count} cross-layer pairs in {label}")
+
+    def _prune_modules(
+        self,
+        policy: nn.Module,
+        modules: list[CompressionTarget],
+        calibration_provider: CalibrationDataProvider | None = None,
+    ) -> None:
+        """Apply configured pruning strategies after preparation."""
+        for module in modules:
+            submodule = (
+                policy
+                if module.module_path == ""
+                else policy.get_submodule(module.module_path)
+            )
+            label = module.module_path or "(root)"
             for pruner in module.pruning:
                 # If a calibration provider was supplied, forward its
                 # underlying dataloader to pruners that accept it.
@@ -280,7 +313,14 @@ class PostTrainingCompressor:
                         )
                 else: 
                     logging.info("no dataloade for the calibration")
-                total, zeroed = pruner.prune(module=submodule, calibration_loader=calib_loader, policy=policy)
+                if calib_loader is None:
+                    total, zeroed = pruner.prune(module=submodule)
+                else:
+                    total, zeroed = pruner.prune(
+                        module=submodule,
+                        calibration_loader=calib_loader,
+                        policy=policy,
+                    )
                 zeroed_percentage = 100.0 * zeroed / total if total > 0 else 0.0
                 logging.info(
                     f"Pruned {label} with {type(pruner).__name__}: "

@@ -116,7 +116,8 @@ class SmolVLM(HuggingFaceGenerativeVLM):
                 )
             )
         num_cameras = len(self.camera_keys)
-        pixel_values = torch.stack(camera_images, dim=1)  # (B, num_cameras, C, H, W)
+       # pixel_values = torch.stack(camera_images, dim=1)  # (B, num_cameras, C, H, W)
+        pixel_values = torch.stack(camera_images, dim=1).contiguous()
         image_features = self.vlm.get_image_features(pixel_values)
         # pooler_output: (B * num_cameras, tokens_per_camera, hidden_dimension)
         image_embeddings = image_features.pooler_output

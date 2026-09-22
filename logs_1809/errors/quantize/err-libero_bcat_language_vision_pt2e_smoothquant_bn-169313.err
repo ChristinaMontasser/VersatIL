@@ -1,0 +1,4 @@
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 7654.82it/s]
+/mnt/cluster/environments/naguibchr/versatil_env/lib/python3.14/copyreg.py:104: FutureWarning: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.
+  return cls.__new__(cls, *args)
+W0918 15:07:21.058000 3141184 site-packages/torch/_inductor/codecache.py:841] [0/0] pre_grad_custom_pass function does not implement uuid(); falling back to early timing (pre-grad pass cache will be bypassed). Implement uuid() on your CustomGraphPass to enable caching.

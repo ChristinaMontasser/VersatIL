@@ -69,6 +69,20 @@ def model_size(model):
         for tensor in model.state_dict().values()
         if isinstance(tensor, torch.Tensor)
     )
+def print_tensor_storage(model):
+    total = 0
+
+    for name, tensor in list(model.named_parameters()) + list(model.named_buffers()):
+        size = tensor.numel() * tensor.element_size()
+        total += size
+        print(
+            f"{size / 1024**2:8.2f} MB  "
+            f"{str(tensor.dtype):12}  "
+            f"{str(tuple(tensor.shape)):30}  "
+            f"{name}"
+        )
+
+    print(f"\nTOTAL: {total / 1024**2:.2f} MB")
 
 @hydra.main(
     version_base=None,
@@ -98,7 +112,13 @@ def main(config: DictConfig) -> None:
         checkpoint_name=config.checkpoint_name,
         compile_model=config.compile_model,
     )
-    model = policy_runtime.checkpoint_loader._policy
+    if isinstance(policy_runtime, CompressedPolicyRuntime):
+        model = policy_runtime._compressed_model
+        if model is None:
+            raise RuntimeError("Compressed policy runtime has no loaded model.")
+    else:
+        model = policy_runtime.checkpoint_loader._policy
+    print_tensor_storage(model)
     # print(f"Model file: {policy_runtime.}")
     # print(f"Serialized size MB: {policy_runtime.stat().st_size / 1024**2:.3f}")
     # print(f"Model type: {type(model).__name__}")

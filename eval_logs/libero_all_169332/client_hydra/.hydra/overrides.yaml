@@ -1,0 +1,10 @@
+- checkpoint_path=/mnt/cluster/workspaces/naguibchr/VersatIL/checkpoints/libero/bcat_language/20260731_172705/compressed/20260918_150709
+- device=cpu
+- compile_model=false
+- max_steps=1000000
+- client.model_server_address=127.0.0.1
+- client.model_server_port=5551
+- client.compression_type=raw
+- client.temporal_aggregation=true
+- client.temporal_max_timesteps=800
+- client.request_timeout_seconds=60

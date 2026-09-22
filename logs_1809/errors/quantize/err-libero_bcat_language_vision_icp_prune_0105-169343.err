@@ -1,0 +1,5 @@
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 25408.42it/s]
+/mnt/cluster/environments/naguibchr/versatil_env/lib/python3.14/multiprocessing/resource_tracker.py:475: UserWarning: resource_tracker: There appear to be 2 leaked semaphore objects to clean up at shutdown: {'/loky-3235048-fo1tby60', '/loky-3235048-19swlb26'}
+  warnings.warn(
+/var/spool/slurmd/job169343/slurm_script: line 22: 3235048 Killed                  python -m versatil.endpoints.post_training_compress --config-name end_to_end_ptq/vision_encoder/icp_prune checkpoint_path=checkpoints/libero/bcat_language/20260731_172705 checkpoint_name=last.ckpt generate_report=true
+[2026-09-18T18:27:25.242] error: Detected 1 oom_kill event in StepId=169343.batch. Some of the step tasks have been OOM Killed.

@@ -8,13 +8,13 @@ checkpoint_name: last.ckpt
 output_directory: null
 calibration_steps: 16 
 preparation:
-  replace_frozen_batchnorm: false
-  fuse_conv_batchnorm: false
+  replace_frozen_batchnorm: true
+  fuse_conv_batchnorm: true
 pruning:
   - _target_: versatil.post_training_compression.pruning.iterativeprunner.IterativeCalibrationPruner
     T: 3
-    initial_sparsity: 0.05
-    final_sparsity: 0.3
+    initial_sparsity: 0.01
+    final_sparsity: 0.2
     calibration_steps: 16 
 
 quantization: null

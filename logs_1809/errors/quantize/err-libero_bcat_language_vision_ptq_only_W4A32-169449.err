@@ -1,0 +1,64 @@
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 27055.64it/s]
+/mnt/cluster/environments/naguibchr/versatil_env/lib/python3.14/copyreg.py:104: FutureWarning: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.
+  return cls.__new__(cls, *args)
+Error executing job with overrides: ['checkpoint_path=checkpoints/libero/bcat_language/20260731_172705', 'checkpoint_name=last.ckpt', 'generate_report=true']
+Traceback (most recent call last):
+  File "/mnt/cluster/workspaces/naguibchr/VersatIL/src/versatil/endpoints/post_training_compress.py", line 32, in main
+    compressor.compress(hydra_config=config)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/cluster/workspaces/naguibchr/VersatIL/src/versatil/post_training_compression/compressor.py", line 149, in compress
+    quantized = quantization_workflow.quantize(
+        context=context,
+        exportable=exportable,
+        calibration_steps=self.calibration_steps,
+    )
+  File "/mnt/cluster/workspaces/naguibchr/VersatIL/src/versatil/quantization/workflows/pt2e.py", line 242, in quantize
+    converted = self._convert_exported_model(
+        exported=exported,
+        targets=self._targets,
+        calibration=calibration,
+    )
+  File "/mnt/cluster/workspaces/naguibchr/VersatIL/src/versatil/quantization/workflows/pt2e.py", line 402, in _convert_exported_model
+    prepared = prepare_pt2e(exported, composed)
+  File "/mnt/cluster/environments/naguibchr/versatil_env/lib/python3.14/site-packages/torchao/quantization/pt2e/quantize_pt2e.py", line 110, in prepare_pt2e
+    model = prepare(
+        model,
+    ...<2 lines>...
+        obs_or_fq_callback=quantizer.prepare_obs_or_fq_callback,
+    )
+  File "/mnt/cluster/environments/naguibchr/versatil_env/lib/python3.14/site-packages/torchao/quantization/pt2e/prepare.py", line 671, in prepare
+    obs_or_fq_map = _get_obs_or_fq_map(
+        edge_or_node_to_group_id, edge_or_node_to_qspec, is_qat
+    )
+  File "/mnt/cluster/environments/naguibchr/versatil_env/lib/python3.14/site-packages/torchao/quantization/pt2e/prepare.py", line 412, in _get_obs_or_fq_map
+    group_id_to_obs_or_fq[group_id] = _create_obs_or_fq_from_qspec(
+                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        qspec, obs_or_fq_map, is_qat
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/mnt/cluster/environments/naguibchr/versatil_env/lib/python3.14/site-packages/torchao/quantization/pt2e/prepare.py", line 123, in _create_obs_or_fq_from_qspec
+    return observer_or_fake_quant_ctr.with_args(**kwargs)()
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/mnt/cluster/environments/naguibchr/versatil_env/lib/python3.14/site-packages/torchao/quantization/pt2e/observer.py", line 105, in __call__
+    return self.p(*args, **keywords)
+           ~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/mnt/cluster/environments/naguibchr/versatil_env/lib/python3.14/site-packages/torchao/quantization/pt2e/observer.py", line 105, in __call__
+    return self.p(*args, **keywords)
+           ~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/mnt/cluster/environments/naguibchr/versatil_env/lib/python3.14/site-packages/torchao/quantization/pt2e/observer.py", line 751, in __init__
+    super().__init__(
+    ~~~~~~~~~~~~~~~~^
+        dtype=dtype,
+        ^^^^^^^^^^^^
+    ...<7 lines>...
+        **kwargs,
+        ^^^^^^^^^
+    )
+    ^
+  File "/mnt/cluster/environments/naguibchr/versatil_env/lib/python3.14/site-packages/torchao/quantization/pt2e/observer.py", line 295, in __init__
+    assert self.dtype in _ALLOWED_DTYPES, (
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Default Observer only works for (torch.qint8, torch.quint8, torch.quint4x2, torch.qint32, torch.int8, torch.uint8, torch.int16, torch.int32, torch.float8_e5m2, torch.float8_e4m3fn, torch.uint16) data type
+
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.

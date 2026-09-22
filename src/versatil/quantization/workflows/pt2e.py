@@ -6,6 +6,7 @@ import logging
 import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader
+from torchao.quantization.pt2e import HistogramObserver
 from torchao.quantization.pt2e.quantize_pt2e import convert_pt2e, prepare_pt2e
 from torchao.quantization.pt2e.quantizer.composable_quantizer import (
     ComposableQuantizer,
@@ -15,6 +16,7 @@ from versatil.data.episodic_dataset import EpisodicDataset
 from versatil.models.exportable_policy import ExportablePolicy
 from versatil.post_training_compression.constants import QuantizationWorkflow
 from versatil.post_training_compression.export import (
+    _export_with_dynamic_batch,
     build_example_inputs,
     export_policy,
 )
@@ -23,7 +25,11 @@ from versatil.quantization.calibration import CalibrationDataProvider
 from versatil.quantization.constants import FXNodePattern, QuantizationMode
 from versatil.quantization.module_target import PT2EQuantizationModuleTarget
 from versatil.quantization.pt2e.backends.base import BasePT2EBackend
-from versatil.quantization.pt2e.smooth_quant import SmoothQuantPreparer
+from versatil.quantization.pt2e.smooth_quant import (
+    SmoothQuantPreparer,
+    apply_smooth_quant_scales_to_graph,
+    remove_unused_exported_state,
+)
 from versatil.quantization.workflows.base import (
     BaseQuantizationWorkflow,
     PolicyContext,
@@ -32,8 +38,8 @@ from versatil.quantization.workflows.base import (
 
 logger = logging.getLogger(__name__)
 
-from torchao.quantization.pt2e import HistogramObserver
-
+#---------------------------------------------------------------------------
+#helper to understand the modeules' distributions  
 def _analyze_pt2e_observers(prepared: nn.Module) -> None:
     """Log PT2E modules, layer types, and activation observer parameters."""
 
@@ -112,6 +118,9 @@ def _classify_module(module_type: str) -> str:
         return "NORMALIZATION"
 
     return "OTHER"
+#---------------------------------------------------------------------------
+
+
 class PT2EQuantizationWorkflow(BaseQuantizationWorkflow):
     """PT2E graph quantization workflow."""
 
@@ -209,7 +218,7 @@ class PT2EQuantizationWorkflow(BaseQuantizationWorkflow):
         # training batch with batch_size=1 would trip torch.export's 0/1
         # specialization on the dynamic batch dimension. Calibration still
         # runs on real dataloader batches.
-        self._prepare_smooth_quant(
+        smooth_quant_scales = self._prepare_smooth_quant(
             context=context,
             exportable=exportable,
             calibration=calibration,
@@ -221,6 +230,11 @@ class PT2EQuantizationWorkflow(BaseQuantizationWorkflow):
             tokenizer=context.tokenizer,
         )
         exported = export_policy(exportable=exportable, example_inputs=example_inputs)
+        # This is the reciprocal of this scale
+        apply_smooth_quant_scales_to_graph(
+            model=exported,
+            scales=smooth_quant_scales,
+        )
         # prepare_pt2e/convert_pt2e mutate the exported graph in place; keep a
         # genuinely float copy so the report compares against the pre-
         # quantization model instead of the mutated graph itself.
@@ -230,6 +244,16 @@ class PT2EQuantizationWorkflow(BaseQuantizationWorkflow):
             targets=self._targets,
             calibration=calibration,
         )
+        if isinstance(converted, torch.fx.GraphModule):
+            converted = _export_with_dynamic_batch(
+                model=converted,
+                example_inputs=example_inputs,
+            ).module()
+            removed_state = remove_unused_exported_state(model=converted)
+            logger.info("Removed %d unused PT2E exported state entries.", removed_state)
+            logger.info(
+                "Re-exported converted PT2E graph to remove unused float state."
+            )
         return QuantizedContext(
             float_model=float_exported,
             quantized_model=converted,
@@ -242,16 +266,17 @@ class PT2EQuantizationWorkflow(BaseQuantizationWorkflow):
         context: PolicyContext,
         exportable: ExportablePolicy,
         calibration: CalibrationDataProvider | None,
-    ) -> ExportablePolicy:
+    ) -> dict[str, torch.Tensor]:
         """Apply configured SmoothQuant preparation before PT2E export."""
         smooth_targets = [target for target in self._targets if target.smooth_quant]
         if not smooth_targets:
-            return exportable
+            return {}
         if calibration is None:
             raise ValueError(
                 "SmoothQuant preparation requires calibration data, but no "
                 "CalibrationDataProvider was created."
             )
+        transformed: dict[str, torch.Tensor] = {}
         for target in smooth_targets:
             preparer = SmoothQuantPreparer(alpha=target.smooth_quant_alpha)
             activation_scales = preparer.collect_activation_scales(
@@ -275,9 +300,10 @@ class PT2EQuantizationWorkflow(BaseQuantizationWorkflow):
                 "SmoothQuant target %s transformed %d modules: %s",
                 target.label,
                 len(selected),
-                selected,
+                list(selected),
             )
-        return exportable
+            transformed.update(selected)
+        return transformed
 
     @staticmethod
     def _build_calibration(

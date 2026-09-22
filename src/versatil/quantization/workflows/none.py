@@ -20,6 +20,7 @@ from versatil.quantization.calibration import CalibrationDataProvider
 from versatil.data.episodic_dataset import EpisodicDataset
 from versatil.models.exportable_policy import ExportablePolicy
 from torch.utils.data import DataLoader
+from versatil.quantization.module_target import PT2EQuantizationModuleTarget
 
 class NoQuantizationWorkflow(BaseQuantizationWorkflow):
     """Export the float policy without applying quantization."""
@@ -67,7 +68,7 @@ class NoQuantizationWorkflow(BaseQuantizationWorkflow):
         self,
         context: PolicyContext,
         exportable: ExportablePolicy,
-        #targets: list[PT2EQuantizationModuleTarget],
+        targets: list[PT2EQuantizationModuleTarget],
         calibration_steps: int,
     ) -> CalibrationDataProvider | None:
         """Build calibration data for static PT2E quantization.

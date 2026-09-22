@@ -515,7 +515,9 @@ class TestCompressOrchestration:
             checkpoint_name=compressor.checkpoint_name,
         )
         quantization.validate_targets.assert_called_once_with(model=policy)
-        mock_exportable_factory.assert_called_once_with(policy)
+        assert mock_exportable_factory.call_count == 2
+        assert mock_exportable_factory.call_args_list[0].args == (policy,)
+        assert mock_exportable_factory.call_args_list[1].args == (policy,)
         quantization.quantize.assert_called_once_with(
             context=context,
             exportable=exportable,

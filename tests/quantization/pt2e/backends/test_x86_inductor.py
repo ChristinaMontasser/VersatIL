@@ -40,13 +40,17 @@ class TestX86InductorBackendCreateQuantizer:
         quantizer = backend.create_quantizer(module_path=module_path)
 
         if module_path == "":
-            assert quantizer.global_config.weight.dtype == torch.int8
+            config = quantizer.global_config
         else:
             assert module_path in quantizer.module_name_qconfig
-            assert quantizer.module_name_qconfig[module_path].weight.dtype == torch.int8
+            config = quantizer.module_name_qconfig[module_path]
+
+        assert config.input_activation is None
+        assert config.output_activation is None
+        assert config.weight.dtype == torch.int4
 
     @pytest.mark.parametrize("is_dynamic", [True, False])
-    def test_dynamic_flag_propagates(
+    def test_dynamic_flag_does_not_enable_activation_quantization(
         self,
         x86_inductor_backend_factory,
         is_dynamic,
@@ -55,7 +59,8 @@ class TestX86InductorBackendCreateQuantizer:
 
         quantizer = backend.create_quantizer(module_path="")
 
-        assert quantizer.global_config.input_activation.is_dynamic == is_dynamic
+        assert quantizer.global_config.input_activation is None
+        assert quantizer.global_config.output_activation is None
 
     @pytest.mark.parametrize("is_qat", [True, False])
     def test_qat_flag_propagates(self, x86_inductor_backend_factory, is_qat):

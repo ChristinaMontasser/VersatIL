@@ -1,0 +1,45 @@
+# @package _global_
+defaults:
+  - /post_training_compression
+  - _self_
+
+checkpoint_path: ???
+checkpoint_name: last.ckpt
+output_directory: null
+calibration_steps: 16
+preparation:
+  replace_frozen_batchnorm: false
+  fuse_conv_batchnorm: false
+  cross_layer_equalization: false
+pruning:
+  - _target_: versatil.post_training_compression.pruning.iterativeprunner.IterativeCalibrationPruner
+    T: 3
+    initial_sparsity: 0.05
+    final_sparsity: 0.2
+    calibration_steps: ${calibration_steps} 
+
+quantization:
+  _target_: versatil.quantization.workflows.pt2e.PT2EQuantizationWorkflow
+  targets:
+    - _target_: versatil.quantization.module_target.PT2EQuantizationModuleTarget
+      module_path: encoding_pipeline.encoders.left
+      smooth_quant: true
+      smooth_quant_alpha: 0.5
+      pt2e_backend:
+        _target_: versatil.quantization.pt2e.backends.x86_inductor.X86InductorBackend
+        is_dynamic: false
+    - _target_: versatil.quantization.module_target.PT2EQuantizationModuleTarget
+      module_path: encoding_pipeline.encoders.right
+      smooth_quant: true
+      smooth_quant_alpha: 0.5
+      pt2e_backend:
+        _target_: versatil.quantization.pt2e.backends.x86_inductor.X86InductorBackend
+        is_dynamic: false
+modules:
+  - module_path: encoding_pipeline.encoders.left
+    pruning: ${pruning}
+    preparation: ${preparation}
+  - module_path: encoding_pipeline.encoders.right
+    pruning: ${pruning}
+    preparation: ${preparation}
+
