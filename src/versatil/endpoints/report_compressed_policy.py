@@ -4,6 +4,7 @@ import json
 import logging
 
 import hydra
+import torch
 from omegaconf import DictConfig, OmegaConf
 
 from versatil.common.logging import override_log_format
@@ -26,6 +27,13 @@ def main(config: DictConfig) -> None:
     if config.output_path is not None:
         report_generator.write(output_path=str(config.output_path))
     print(json.dumps(report_generator.build_report(), indent=2))
+    if config.include_quantization_report:
+        print(
+            report_generator.build_quantization_report(
+                device=torch.device(config.device),
+                compile_eager_for_report=config.compile_eager_for_report,
+            )
+        )
 
 
 if __name__ == "__main__":

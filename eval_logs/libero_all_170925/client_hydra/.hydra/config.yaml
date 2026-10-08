@@ -1,0 +1,15 @@
+checkpoint_path: /mnt/cluster/workspaces/naguibchr/VersatIL/checkpoints/libero/bcat_language/20260731_172705/compressed/20261002_114546
+checkpoint_name: last.ckpt
+device: cpu
+max_steps: 1000000
+compile_model: false
+client:
+  model_server_address: 127.0.0.1
+  model_server_port: 5550
+  temporal_aggregation: true
+  action_execution_horizon: null
+  update_rate_hz: null
+  temporal_max_timesteps: 800
+  timing_log: false
+  compression_type: raw
+  request_timeout_seconds: 60.0

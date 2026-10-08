@@ -1,0 +1,15 @@
+checkpoint_path: /mnt/cluster/workspaces/naguibchr/VersatIL/checkpoints/libero/smolvla/20260915_160721/compressed/20261005_192239
+checkpoint_name: last.ckpt
+device: cuda
+max_steps: 1000000
+compile_model: true
+client:
+  model_server_address: 127.0.0.1
+  model_server_port: 5560
+  temporal_aggregation: true
+  action_execution_horizon: null
+  update_rate_hz: null
+  temporal_max_timesteps: 800
+  timing_log: false
+  compression_type: raw
+  request_timeout_seconds: 60.0

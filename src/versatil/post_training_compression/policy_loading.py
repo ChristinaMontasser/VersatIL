@@ -17,7 +17,7 @@ def load_float_policy_context(
     """Load a policy context from a float checkpoint."""
     logging.info(f"Loading policy from {checkpoint_path}")
     checkpoint_loader = FloatCheckpointLoader(
-        device=torch.device("cpu"),
+        device=torch.device("cuda"),
         checkpoint_path=checkpoint_path,
         checkpoint_name=checkpoint_name,
     )

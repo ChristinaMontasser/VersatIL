@@ -131,11 +131,15 @@ def x86_inductor_backend_factory() -> Callable[..., X86InductorBackend]:
         is_dynamic: bool = False,
         is_qat: bool = False,
         reduce_range: bool = False,
+        weight_quantization=None,
+        activation_quantization=None,
     ) -> X86InductorBackend:
         return X86InductorBackend(
             is_dynamic=is_dynamic,
             is_qat=is_qat,
             reduce_range=reduce_range,
+            weight_quantization=weight_quantization,
+            activation_quantization=activation_quantization,
         )
 
     return factory

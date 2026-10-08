@@ -17,6 +17,7 @@ def _export_with_dynamic_batch(
     example_inputs: tuple[torch.Tensor, ...],
     dynamic_shapes_key: str | None = None,
     max_batch_size: int | None = None,
+    min_batch_size: int = 1,
 ) -> torch.export.ExportedProgram:
     """Export model with dynamic batch dimension on all inputs.
 
@@ -27,6 +28,7 @@ def _export_with_dynamic_batch(
             with this key (for models with named *args). Otherwise
             uses a positional tuple.
         max_batch_size: Optional upper bound for the dynamic batch dimension.
+        min_batch_size: Lower bound for the dynamic batch dimension.
 
     Returns:
         ExportedProgram with dynamic batch dimension.
@@ -44,7 +46,14 @@ def _export_with_dynamic_batch(
                 f"max_batch_size {max_batch_size} is smaller than example "
                 f"batch size {largest_example_batch}."
             )
-    batch_dim = torch.export.Dim("batch", min=1, max=max_batch_size)
+    if min_batch_size < 1:
+        raise ValueError("min_batch_size must be >= 1.")
+    if max_batch_size is not None and max_batch_size < min_batch_size:
+        raise ValueError(
+            f"max_batch_size {max_batch_size} is smaller than min_batch_size "
+            f"{min_batch_size}."
+        )
+    batch_dim = torch.export.Dim("batch", min=min_batch_size, max=max_batch_size)
     per_input_shapes = tuple({0: batch_dim} for _ in range(len(example_inputs)))
     if dynamic_shapes_key is not None:
         dynamic_shapes = {dynamic_shapes_key: per_input_shapes}
@@ -84,6 +93,7 @@ def export_policy(
         model=exportable,
         example_inputs=example_inputs,
         dynamic_shapes_key="observation_tensors",
+        min_batch_size=2,
     ).module()
 
 

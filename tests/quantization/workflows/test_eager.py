@@ -30,6 +30,12 @@ class PolicyWithLinearModules(nn.Module):
         self.decoder = nn.Sequential(nn.Linear(32, 16), nn.Linear(8, 8))
 
 
+class PolicyWithEmbeddingModule(nn.Module):
+    def __init__(self) -> None:
+        super().__init__()
+        self.encoder = nn.Embedding(32, 16)
+
+
 @pytest.fixture
 def eager_target_factory() -> Callable[..., EagerQuantizationModuleTarget]:
     """Factory for eager quantization module targets."""
@@ -303,6 +309,20 @@ class TestEagerQuantizationWorkflow:
         filter_fn = call_kwargs["filter_fn"]
         assert filter_fn(model.decoder[0], "decoder.0") is True
         assert filter_fn(model.encoder[0], "encoder.0") is False
+
+    def test_ptq_selects_embedding_modules(
+        self,
+        eager_target_factory,
+    ):
+        model = PolicyWithEmbeddingModule()
+        target = eager_target_factory(module_path="encoder")
+        workflow = EagerQuantizationWorkflow(targets=[target])
+
+        with patch(f"{EAGER_WORKFLOW_MODULE}.quantize_") as quantize_mock:
+            workflow._apply_ptq(model=model)
+
+        filter_fn = quantize_mock.call_args.kwargs["filter_fn"]
+        assert filter_fn(model.encoder, "encoder") is True
 
     def test_ptq_applies_each_target_config(
         self,

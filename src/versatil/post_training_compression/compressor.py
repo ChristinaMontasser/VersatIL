@@ -50,6 +50,7 @@ class PostTrainingCompressor:
         checkpoint_name: str = CheckpointFilename.DEFAULT_CHECKPOINT.value,
         output_directory: str | None = None,
         generate_report: bool = False,
+        compile_eager_for_report: bool = False,
         pruning: list[BasePruner] | None = None,
         quantization: BaseQuantizationWorkflow | None = None,
         deployment_backend: DeploymentBackend | None = None,
@@ -68,6 +69,8 @@ class PostTrainingCompressor:
             generate_report: Whether to generate a quantization
                 report after saving. Disabled by default since
                 it runs additional forward passes for benchmarking.
+            compile_eager_for_report: Whether the report should benchmark
+                eager quantization after TorchInductor compilation.
             pruning: Global pruning strategies (inherited by modules).
             quantization: Quantization workflow. ``None`` exports the
                 float model without quantization.
@@ -78,6 +81,7 @@ class PostTrainingCompressor:
         self.checkpoint_name = checkpoint_name
         self.output_directory = output_directory
         self.generate_report = generate_report
+        self.compile_eager_for_report = compile_eager_for_report
         self.calibration_steps = calibration_steps
         self.modules = modules
         self.preparation = preparation
@@ -118,7 +122,7 @@ class PostTrainingCompressor:
         calibration_provider = None
         build_calib = getattr(quantization_workflow, "_build_calibration", None)
 
-        if callable(build_calib):
+        if callable(build_calib) and any(module.pruning for module in modules):
             try:
                 calibration_provider = build_calib(
                     context=context,
@@ -132,6 +136,11 @@ class PostTrainingCompressor:
                     "_build_calibration failed with error: %s",
                     str(e)
                 )
+        elif callable(build_calib):
+            logger.info(
+                "Skipping pre-pruning calibration; no pruning targets are configured. "
+                "The quantization workflow will build calibration data later."
+            )
         else:
             logger.info("Quantization workflow does not provide calibration data.")
 
@@ -182,6 +191,7 @@ class PostTrainingCompressor:
                 example_inputs=quantized.example_inputs,
                 action_keys=policy.output_keys,
                 quantization_workflow=quantized.quantization_workflow,
+                compile_eager_for_report=self.compile_eager_for_report,
             )
             logging.info(f"\n{report.generate_report()}")
         return output_directory
@@ -363,6 +373,10 @@ class PostTrainingCompressor:
                 QuantizationMode.PT2E.value,
                 QuantizationMode.EAGER.value,
             ),
+            DeploymentBackendName.EXECUTORCH_CUDA.value: (
+                QuantizationMode.NONE.value,
+                QuantizationMode.EAGER.value,
+            ),
         }
         supported_modes = compatibility.get(deployment_backend_name)
         if supported_modes is None:
@@ -402,6 +416,11 @@ class PostTrainingCompressor:
                 PT2EBackendName.XNNPACK.value,
             ),
         }
+        if deployment_backend_name == DeploymentBackendName.EXECUTORCH_CUDA.value:
+            raise ValueError(
+                "ExecuTorch CUDA deployment does not support PT2E quantization "
+                "through the current VersatIL PT2E workflow."
+            )
         supported_backends = compatibility[deployment_backend_name]
         unsupported_backends = [
             name for name in pt2e_backend_names if name not in supported_backends

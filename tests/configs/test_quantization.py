@@ -2,6 +2,7 @@
 
 import hydra
 import pytest
+import torch
 from hydra.errors import InstantiationException
 from omegaconf import OmegaConf
 
@@ -11,7 +12,9 @@ from versatil.configs.quantization import (
     Int4WeightOnlyQuantizeConfig,
     PT2EQuantizationModuleTargetConfig,
     PT2EQuantizationWorkflowConfig,
+    X86InductorActivationQuantizationConfig,
     X86InductorBackendConfig,
+    X86InductorWeightQuantizationConfig,
     XNNPACKPT2EBackendConfig,
 )
 from versatil.quantization.constants import PT2EBackendName
@@ -41,6 +44,35 @@ class TestX86InductorBackendConfig:
         assert isinstance(backend, X86InductorBackend)
         assert backend.is_dynamic == is_dynamic
         assert backend.is_qat == is_qat
+
+    def test_hydra_instantiates_custom_weight_configuration(self):
+        config = OmegaConf.structured(
+            X86InductorBackendConfig(
+                weight_quantization=X86InductorWeightQuantizationConfig()
+            )
+        )
+
+        backend = hydra.utils.instantiate(config)
+
+        quantizer = backend.create_quantizer(module_path="")
+
+        assert quantizer.global_config.input_activation is None
+        assert quantizer.global_config.output_activation is None
+        assert quantizer.global_config.weight.dtype is torch.int8
+
+    def test_hydra_instantiates_custom_activation_configuration(self):
+        config = OmegaConf.structured(
+            X86InductorBackendConfig(
+                activation_quantization=X86InductorActivationQuantizationConfig()
+            )
+        )
+
+        backend = hydra.utils.instantiate(config)
+
+        quantizer = backend.create_quantizer(module_path="")
+
+        assert quantizer.global_config.input_activation.dtype is torch.int8
+        assert quantizer.global_config.weight is None
 
 
 @pytest.mark.unit

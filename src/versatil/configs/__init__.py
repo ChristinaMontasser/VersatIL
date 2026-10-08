@@ -152,6 +152,7 @@ from versatil.configs.policy import PolicyConfig
 from versatil.configs.post_training_compression import (
     BasePrunerConfig,
     CompressionTargetConfig,
+    ExecutorchCUDABackendConfig,
     ExecutorchXNNPACKBackendConfig,
     PostTrainingCompressorConfig,
     PreparationConfig,
@@ -167,6 +168,9 @@ from versatil.configs.quantization import (
     Int8DynamicQuantizeConfig,
     PT2EQuantizationModuleTargetConfig,
     PT2EQuantizationWorkflowConfig,
+    X86InductorActivationQuantizationConfig,
+    X86InductorQuantizationSpecConfig,
+    X86InductorWeightQuantizationConfig,
     X86InductorBackendConfig,
     XNNPACKPT2EBackendConfig,
 )
@@ -325,6 +329,9 @@ __all__ = [
     "CompressionTargetConfig",
     "EagerQuantizationWorkflowConfig",
     "PT2EQuantizationWorkflowConfig",
+    "X86InductorActivationQuantizationConfig",
+    "X86InductorQuantizationSpecConfig",
+    "X86InductorWeightQuantizationConfig",
     "PostTrainingCompressorConfig",
     "PreparationConfig",
     "StructuredPrunerConfig",

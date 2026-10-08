@@ -6,6 +6,11 @@ from unittest.mock import patch
 import pytest
 import torch
 
+from versatil.configs.quantization import (
+    X86InductorActivationQuantizationConfig,
+    X86InductorWeightQuantizationConfig,
+)
+
 
 @pytest.mark.unit
 class TestX86InductorBackendStorage:
@@ -45,12 +50,12 @@ class TestX86InductorBackendCreateQuantizer:
             assert module_path in quantizer.module_name_qconfig
             config = quantizer.module_name_qconfig[module_path]
 
-        assert config.input_activation is None
-        assert config.output_activation is None
-        assert config.weight.dtype == torch.int4
+        assert config.input_activation is not None
+        assert config.output_activation is not None
+        assert config.weight.dtype == torch.int8
 
     @pytest.mark.parametrize("is_dynamic", [True, False])
-    def test_dynamic_flag_does_not_enable_activation_quantization(
+    def test_dynamic_flag_propagates_to_default_config(
         self,
         x86_inductor_backend_factory,
         is_dynamic,
@@ -59,8 +64,7 @@ class TestX86InductorBackendCreateQuantizer:
 
         quantizer = backend.create_quantizer(module_path="")
 
-        assert quantizer.global_config.input_activation is None
-        assert quantizer.global_config.output_activation is None
+        assert quantizer.global_config.input_activation.is_dynamic == is_dynamic
 
     @pytest.mark.parametrize("is_qat", [True, False])
     def test_qat_flag_propagates(self, x86_inductor_backend_factory, is_qat):
@@ -82,6 +86,67 @@ class TestX86InductorBackendCreateQuantizer:
 
         expected_quant_max = 127 if reduce_range else 255
         assert quantizer.global_config.input_activation.quant_max == expected_quant_max
+
+    def test_custom_weight_configuration_is_applied(
+        self,
+        x86_inductor_backend_factory,
+    ):
+        backend = x86_inductor_backend_factory(
+            weight_quantization=X86InductorWeightQuantizationConfig()
+        )
+
+        config = backend.create_quantizer(module_path="").global_config
+
+        assert config.input_activation is None
+        assert config.output_activation is None
+        assert config.weight.dtype == torch.int8
+        assert config.weight.quant_min == -8
+        assert config.weight.quant_max == 7
+
+    def test_custom_activation_configuration_is_applied(
+        self,
+        x86_inductor_backend_factory,
+    ):
+        backend = x86_inductor_backend_factory(
+            activation_quantization=X86InductorActivationQuantizationConfig()
+        )
+
+        config = backend.create_quantizer(module_path="").global_config
+
+        assert config.input_activation.dtype == torch.int8
+        assert config.output_activation.dtype == torch.int8
+        assert config.weight is None
+        assert config.bias is None
+
+    def test_custom_weight_configuration_can_quantize_bias(
+        self,
+        x86_inductor_backend_factory,
+    ):
+        backend = x86_inductor_backend_factory(
+            weight_quantization=X86InductorWeightQuantizationConfig(
+                quantize_bias=True
+            )
+        )
+
+        config = backend.create_quantizer(module_path="").global_config
+
+        assert config.weight.dtype == torch.int8
+        assert config.bias is config.weight
+
+    def test_custom_activation_and_weight_configurations_are_composable(
+        self,
+        x86_inductor_backend_factory,
+    ):
+        backend = x86_inductor_backend_factory(
+            weight_quantization=X86InductorWeightQuantizationConfig(),
+            activation_quantization=X86InductorActivationQuantizationConfig(),
+        )
+
+        config = backend.create_quantizer(module_path="").global_config
+
+        assert config.input_activation.dtype == torch.int8
+        assert config.weight.dtype == torch.int4
+        assert config.bias is None
 
 
 @pytest.mark.unit

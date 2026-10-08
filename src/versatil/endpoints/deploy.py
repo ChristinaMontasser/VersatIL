@@ -24,7 +24,7 @@ from versatil.training.constants import CheckpointFilename
 from versatil.endpoints.inspect_architecture import export_report
 
 EXPERIMENTS_DIR = get_hydra_configs_dir()
-
+#torch.set_float32_matmul_precision("high")
 
 def load_policy(
     checkpoint_path: str,

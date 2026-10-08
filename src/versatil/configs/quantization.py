@@ -20,18 +20,64 @@ class BasePT2EBackendConfig:
 
 
 @dataclass
+class X86InductorQuantizationSpecConfig:
+    """Hydra-safe scalar description of one PT2E quantization spec.
+
+    Attributes:
+        bit_width: Integer quantization width.
+        quant_min: Minimum representable quantized weight value.
+        quant_max: Maximum representable quantized weight value.
+        qscheme: Torch quantization scheme name.
+        ch_axis: Tensor dimension used for per-channel quantization.
+        is_dynamic: Whether activation quantization is dynamic.
+    """
+
+    bit_width: int = 4
+    quant_min: int = -8
+    quant_max: int = 7
+    qscheme: str = "per_channel_symmetric"
+    ch_axis: int = 0
+    is_dynamic: bool = False
+
+
+@dataclass
+class X86InductorWeightQuantizationConfig(X86InductorQuantizationSpecConfig):
+    """Weight quantization settings for the X86 Inductor PT2E backend."""
+
+    quantize_bias: bool = False
+
+
+@dataclass
+class X86InductorActivationQuantizationConfig(X86InductorQuantizationSpecConfig):
+    """Activation quantization settings for the X86 Inductor PT2E backend."""
+
+    bit_width: int = 8
+    quant_min: int = -128
+    quant_max: int = 127
+    qscheme: str = "per_tensor_affine"
+    ch_axis: int | None = None
+    is_dynamic: bool | None = None
+
+
+@dataclass
 class X86InductorBackendConfig(BasePT2EBackendConfig):
     """X86 Inductor backend for PT2E quantized operator lowering.
 
     Attributes:
         _target_: Import path instantiated by Hydra.
         reduce_range: Reduce quantization range for older CPUs without VNNI.
+        weight_quantization: Optional weight override. ``None`` leaves weights
+            unquantized when activation settings are provided.
+        activation_quantization: Optional activation override. ``None`` leaves
+            activations unquantized when weight settings are provided.
     """
 
     _target_: str = (
         "versatil.quantization.pt2e.backends.x86_inductor.X86InductorBackend"
     )
     reduce_range: bool = False
+    weight_quantization: X86InductorWeightQuantizationConfig | None = None
+    activation_quantization: X86InductorActivationQuantizationConfig | None = None
 
 
 @dataclass

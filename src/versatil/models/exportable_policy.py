@@ -141,6 +141,9 @@ class ExportablePolicy(nn.Module):
                 )
             shape = (batch_size, *observation_shapes[key])
             dtype = observation_dtypes.get(key, torch.float32)
-            example_tensors.append(torch.zeros(shape, dtype=dtype))
+            if torch.is_floating_point(torch.empty((), dtype=dtype)):
+                example_tensors.append(torch.full(shape, 1e-3, dtype=dtype))
+            else:
+                example_tensors.append(torch.zeros(shape, dtype=dtype))
 
         return tuple(example_tensors)

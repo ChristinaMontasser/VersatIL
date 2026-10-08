@@ -10,13 +10,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Mixed-precision training keeps trainable parameters in float32 storage, so optimizer updates no longer round away in bf16. This unblocks autoregressive OpenVLA LoRA fine-tuning, whose adapters previously never left their initialization.
 - Forward passes outside the Lightning loop (synthetic rollout evaluation, prior target standardization, explainability attribution, encoder shape probing) run under the same autocast as training instead of crashing on mixed-precision policies.
+- X86 PT2E custom 4-bit quantization uses observer-compatible int8 storage with the configured signed int4 range, avoiding torchao's default observer dtype assertion during preparation.
 
 ### Added
 - The publish workflow verifies each release by installing it from PyPI in clean pip and uv environments and running a training smoke test.
+- X86 PT2E quantization supports independent Hydra configuration for weight and activation bit widths, quantization ranges, schemes, channel axes, dynamic activation quantization, and optional bias quantization.
+- Added W4A32 and W4A8 X86 PT2E example configurations for post-training compression.
 
 ### Changed
 - OpenVLA and OpenVLA-OFT presets train LoRA with the recipe learning rate of 5e-4.
 - main carries a `.dev` version between releases so source installs are distinguishable from PyPI releases.
+- X86 PT2E uses torchao's default quantization configuration when no custom activation or weight configuration is provided. Supplying either section leaves the omitted side unquantized; bias follows the weight policy only when explicitly enabled.
 
 ## [0.4.1] - 2026-07-05
 

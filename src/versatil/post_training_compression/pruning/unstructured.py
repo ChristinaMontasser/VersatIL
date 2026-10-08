@@ -70,6 +70,7 @@ class UnstructuredPruner(BasePruner):
                 PrunableLayerType.CONV1D.value,
                 PrunableLayerType.CONV2D.value,
                 PrunableLayerType.LINEAR.value,
+                PrunableLayerType.EMBEDDING.value, #changed by christy
             ]
         self._layer_types = tuple(
             PrunableLayerType(name).to_module_type() for name in layer_types

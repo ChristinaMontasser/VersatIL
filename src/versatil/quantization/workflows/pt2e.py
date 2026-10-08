@@ -118,6 +118,28 @@ def _classify_module(module_type: str) -> str:
         return "NORMALIZATION"
 
     return "OTHER"
+
+
+def _log_silu_quantization_status(converted: nn.Module) -> None:
+    """Log whether converted SiLU outputs have quantization boundaries."""
+    graph = getattr(converted, "graph", None)
+    if graph is None:
+        return
+
+    silu_nodes = [node for node in graph.nodes if "silu" in str(node.target)]
+    quantized_nodes = []
+    for node in silu_nodes:
+        if any("quantize_per_tensor" in str(user.target) for user in node.users):
+            quantized_nodes.append(node.name)
+
+    logger.info(
+        "SiLU quantization status: total=%d quantized_outputs=%d "
+        "floating_outputs=%d quantized_nodes=%s",
+        len(silu_nodes),
+        len(quantized_nodes),
+        len(silu_nodes) - len(quantized_nodes),
+        quantized_nodes,
+    )
 #---------------------------------------------------------------------------
 
 
@@ -181,10 +203,12 @@ class PT2EQuantizationWorkflow(BaseQuantizationWorkflow):
             Float policy context used for PT2E export, preparation,
             calibration, and conversion.
         """
-        return load_float_policy_context(
+        context = load_float_policy_context(
             checkpoint_path=checkpoint_path,
             checkpoint_name=checkpoint_name,
         )
+        context.policy.to(device=torch.device("cpu"))
+        return context
 
     def quantize(
         self,
@@ -229,6 +253,8 @@ class PT2EQuantizationWorkflow(BaseQuantizationWorkflow):
             observation_horizon=context.observation_horizon,
             tokenizer=context.tokenizer,
         )
+        device = next(context.policy.parameters()).device
+        example_inputs = self._move_to_device(example_inputs, device=device)
         exported = export_policy(exportable=exportable, example_inputs=example_inputs)
         # This is the reciprocal of this scale
         apply_smooth_quant_scales_to_graph(
@@ -260,6 +286,37 @@ class PT2EQuantizationWorkflow(BaseQuantizationWorkflow):
             example_inputs=example_inputs,
             quantization_workflow=QuantizationWorkflow.PT2E.value,
         )
+
+    @staticmethod
+    def _move_to_device(value, device: torch.device):
+        """Move nested export inputs to the policy device."""
+        if isinstance(value, torch.Tensor):
+            return value.to(device)
+        if isinstance(value, tuple):
+            moved = tuple(
+                PT2EQuantizationWorkflow._move_to_device(item, device)
+                for item in value
+            )
+            if all(item is original for item, original in zip(moved, value)):
+                return value
+            return moved
+        if isinstance(value, list):
+            moved = [
+                PT2EQuantizationWorkflow._move_to_device(item, device)
+                for item in value
+            ]
+            if all(item is original for item, original in zip(moved, value)):
+                return value
+            return moved
+        if isinstance(value, dict):
+            moved = {
+                key: PT2EQuantizationWorkflow._move_to_device(item, device)
+                for key, item in value.items()
+            }
+            if all(item is value[key] for key, item in moved.items()):
+                return value
+            return moved
+        return value
 
     def _prepare_smooth_quant(
         self,
@@ -397,6 +454,21 @@ class PT2EQuantizationWorkflow(BaseQuantizationWorkflow):
             logger.info(f"PT2E target: {target.label}")
 
         composed = ComposableQuantizer(quantizers)
+        # print("=== GRAPH BEFORE PREPARE ===")
+        # print(exported.graph)
+
+        # for node in exported.graph.nodes:
+        #     if "conv" in str(node.target).lower():
+        #         print(
+        #             "CONV:",
+        #             node,
+        #             "op=", node.op,
+        #             "target=", node.target,
+        #         )
+
+        # print("=== QUANTIZERS ===")
+        # for target in targets:
+        #     print(target.label, type(target.pt2e_backend))
         first_backend = targets[0].pt2e_backend
         with first_backend.environment_context():
             prepared = prepare_pt2e(exported, composed)
@@ -405,9 +477,10 @@ class PT2EQuantizationWorkflow(BaseQuantizationWorkflow):
                 with torch.no_grad():
                     for batch in calibration:
                         prepared(*batch)
-            _analyze_pt2e_observers(prepared) ##change
+            #_analyze_pt2e_observers(prepared) ##change
             
             converted = convert_pt2e(prepared)
+        _log_silu_quantization_status(converted)
         static_op_count = str(converted.graph).count(
             FXNodePattern.QUANTIZE_PER_TENSOR.value
         )

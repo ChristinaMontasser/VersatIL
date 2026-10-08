@@ -4,6 +4,7 @@ from hydra.core.config_store import ConfigStore
 
 from versatil.configs import (
     CompressionTargetConfig,
+    ExecutorchCUDABackendConfig,
     EagerQuantizationModuleTargetConfig,
     EagerQuantizationWorkflowConfig,
     ExecutorchXNNPACKBackendConfig,
@@ -49,6 +50,11 @@ def register(cs: ConfigStore) -> None:
         group="compression/deployment_backend",
         name="executorch_xnnpack",
         node=ExecutorchXNNPACKBackendConfig,
+    )
+    cs.store(
+        group="compression/deployment_backend",
+        name="executorch_cuda",
+        node=ExecutorchCUDABackendConfig,
     )
     cs.store(
         group="quantization/workflow",

@@ -18,6 +18,7 @@ from versatil.inference.policy_runtime.executorch_adapter import ExecuTorchModul
 from versatil.post_training_compression.constants import (
     ArtifactFormat,
     CompressionMetadataKey,
+    DeploymentBackendName,
     QuantizationWorkflow,
 )
 from versatil.quantization.pt2e.backends.base import BasePT2EBackend
@@ -25,7 +26,7 @@ from versatil.quantization.pt2e.backends.base import BasePT2EBackend
 
 class CompressedPolicyRuntime(PolicyRuntime):
     """Inference runtime for compressed policy checkpoints."""
-
+    _MODEL_BATCH_SIZE = 20
     def __init__(
         self,
         device: torch.device,
@@ -88,9 +89,19 @@ class CompressedPolicyRuntime(PolicyRuntime):
                 )
             return model
         if artifact_format == ArtifactFormat.EXECUTORCH_PTE.value:
-            if self.device.type != "cpu":
+            deployment_backend = self.checkpoint_loader.metadata.get(
+                CompressionMetadataKey.DEPLOYMENT_BACKEND.value,
+                DeploymentBackendName.EXECUTORCH_XNNPACK.value,
+            )
+            expected_device = (
+                "cuda"
+                if deployment_backend == DeploymentBackendName.EXECUTORCH_CUDA.value
+                else "cpu"
+            )
+            if self.device.type != expected_device:
                 raise ValueError(
-                    "ExecuTorch XNNPACK artifacts support CPU inference only, "
+                    f"ExecuTorch {deployment_backend} artifacts support "
+                    f"{expected_device.upper()} inference only, "
                     f"got '{self.device}'."
                 )
             return ExecuTorchModuleAdapter(model_path=model_path)
@@ -132,6 +143,39 @@ class CompressedPolicyRuntime(PolicyRuntime):
             f"PT2E backend, got {type(backend).__name__}."
         )
 
+    # @staticmethod
+    # def _should_compile(
+    #     workflow: str | None,
+    #     device: torch.device,
+    # ) -> bool:
+    #     """Decide whether to compile based on workflow and device.
+
+    #     CUDA + `quantize_()` models must not be compiled because
+    #     `torch.compile` lowers int8 matmuls to torch._int_mm, which
+    #     requires M > 16 on CUDA (cuBLAS constraint). Since inference
+    #     batch size is unknown at load time (1 on real robot, N in
+    #     sim), compilation is skipped entirely for this combination.
+
+    #     See: https://github.com/pytorch/ao/issues/2376
+
+    #     Args:
+    #         workflow: The quantization workflow from metadata.
+    #         device: Target inference device.
+
+    #     Returns:
+    #         True if the model should be compiled.
+    #     """
+    #     if workflow == QuantizationWorkflow.EAGER.value and device.type == "cuda":
+    #         logging.warning(
+    #             "Skipping torch.compile for eager quantized model on CUDA. "
+    #             "torch._int_mm requires batch > 16 on CUDA which "
+    #             "cannot be guaranteed at inference time. "
+    #             "See https://github.com/pytorch/ao/issues/2376"
+    #         )
+    #         return False
+    #     return True
+
+
     @staticmethod
     def _should_compile(
         workflow: str | None,
@@ -139,11 +183,9 @@ class CompressedPolicyRuntime(PolicyRuntime):
     ) -> bool:
         """Decide whether to compile based on workflow and device.
 
-        CUDA + `quantize_()` models must not be compiled because
-        `torch.compile` lowers int8 matmuls to torch._int_mm, which
-        requires M > 16 on CUDA (cuBLAS constraint). Since inference
-        batch size is unknown at load time (1 on real robot, N in
-        sim), compilation is skipped entirely for this combination.
+        Eager CUDA models are compiled when requested. Their generated
+        torch._int_mm kernels require compatible CUDA matrix dimensions,
+        so callers must use a supported batch and shape combination.
 
         See: https://github.com/pytorch/ao/issues/2376
 
@@ -154,16 +196,8 @@ class CompressedPolicyRuntime(PolicyRuntime):
         Returns:
             True if the model should be compiled.
         """
-        if workflow == QuantizationWorkflow.EAGER.value and device.type == "cuda":
-            logging.warning(
-                "Skipping torch.compile for eager quantized model on CUDA. "
-                "torch._int_mm requires batch > 16 on CUDA which "
-                "cannot be guaranteed at inference time. "
-                "See https://github.com/pytorch/ao/issues/2376"
-            )
-            return False
         return True
-
+    
     def _validate_device(self, backend: BasePT2EBackend) -> None:
         """Validate that the device is supported by the backend.
 
@@ -202,7 +236,7 @@ class CompressedPolicyRuntime(PolicyRuntime):
             compiled = torch.compile(model)
             logging.info(f"Compiled PT2E model with {type(backend).__name__} backend")
         else:
-            compiled = torch.compile(model)
+            compiled = torch.compile(model, mode="default")
             logging.info("Compiled model with inductor backend")
         return compiled
 
@@ -235,8 +269,21 @@ class CompressedPolicyRuntime(PolicyRuntime):
                 batched=True,
             )
         observation_tensors = tuple(normalized_obs[key] for key in self.input_keys)
-        output_tensors = self._run_compressed_model(
+        # logging.info(
+        #     "Compressed policy input shapes: %s",
+        #     [tuple(tensor.shape) for tensor in observation_tensors],
+        # )
+        model_observation_tensors, original_batch_size = self._pad_batch(
             observation_tensors=observation_tensors,
+            target_batch_size=self._MODEL_BATCH_SIZE,
+        )
+
+        output_tensors = self._run_compressed_model(
+            observation_tensors=model_observation_tensors,
+        )
+
+        output_tensors = tuple(
+            tensor[:original_batch_size] for tensor in output_tensors
         )
         if len(output_tensors) != len(self.output_keys):
             raise ValueError(
@@ -272,6 +319,44 @@ class CompressedPolicyRuntime(PolicyRuntime):
             return (output_tensors,)
         return tuple(output_tensors)
 
+    @staticmethod
+    def _pad_batch(
+        observation_tensors: tuple[torch.Tensor, ...],
+        target_batch_size: int,
+    ) -> tuple[tuple[torch.Tensor, ...], int]:
+        """Pad observations to the compiled model batch size.
+
+        Args:
+            observation_tensors: Observation tensors with batch dimension zero.
+            target_batch_size: Batch size expected by the compiled model.
+
+        Returns:
+            The padded tensors and the original batch size.
+
+        Raises:
+            ValueError: If the input batch exceeds the target size.
+        """
+        batch_size = observation_tensors[0].shape[0]
+        if batch_size > target_batch_size:
+            raise ValueError(
+                f"Received batch size {batch_size}, but the model batch size "
+                f"is {target_batch_size}."
+            )
+
+        if batch_size == target_batch_size:
+            return observation_tensors, batch_size
+
+        padding_size = target_batch_size - batch_size
+        padded_tensors = tuple(
+            torch.cat(
+                [tensor, tensor[-1:].expand(
+                    (padding_size, *tensor.shape[1:])
+                )],
+                dim=0,
+            )
+            for tensor in observation_tensors
+        )
+        return padded_tensors, batch_size
     @property
     def input_keys(self) -> list[str]:
         """Get compressed model input key ordering."""

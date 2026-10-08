@@ -8,8 +8,8 @@ checkpoint_name: last.ckpt
 output_directory: null
 calibration_steps: 16
 preparation:
-  replace_frozen_batchnorm: false
-  fuse_conv_batchnorm: false
+  replace_frozen_batchnorm: true
+  fuse_conv_batchnorm: true
 
 pruning: null
 quantization:
@@ -20,11 +20,43 @@ quantization:
       pt2e_backend:
         _target_: versatil.quantization.pt2e.backends.x86_inductor.X86InductorBackend
         is_dynamic: false
+        is_qat: false
+        reduce_range: false
+        weight_quantization:
+          bit_width: 8
+          quant_min: -128
+          quant_max: 127
+          qscheme: per_channel_symmetric
+          ch_axis: 0
+          quantize_bias: false
+        activation_quantization:
+          bit_width: 8
+          quant_min: -128
+          quant_max: 127
+          qscheme: per_tensor_affine
+          ch_axis: null
+          is_dynamic: false
     - _target_: versatil.quantization.module_target.PT2EQuantizationModuleTarget
       module_path: encoding_pipeline.encoders.right
       pt2e_backend:
         _target_: versatil.quantization.pt2e.backends.x86_inductor.X86InductorBackend
         is_dynamic: false
+        is_qat: false
+        reduce_range: false
+        weight_quantization:
+          bit_width: 8
+          quant_min: -128
+          quant_max: 127
+          qscheme: per_channel_symmetric
+          ch_axis: 0
+          quantize_bias: false
+        activation_quantization:
+          bit_width: 8
+          quant_min: -128
+          quant_max: 127
+          qscheme: per_tensor_affine
+          ch_axis: null
+          is_dynamic: false
 modules:
   - module_path: encoding_pipeline.encoders.left
     preparation: ${preparation}

@@ -1,0 +1,64 @@
+# @package _global_
+defaults:
+  - /post_training_compression
+  - _self_
+
+checkpoint_path: ???
+checkpoint_name: last.ckpt
+output_directory: null
+calibration_steps: 16
+preparation:
+  replace_frozen_batchnorm: false
+  fuse_conv_batchnorm: false
+
+pruning: null
+quantization:
+  _target_: versatil.quantization.workflows.eager.EagerQuantizationWorkflow
+  targets:
+    - _target_: versatil.quantization.module_target.EagerQuantizationModuleTarget
+      module_path: decoder.vlm_backbone.vlm.base_model.model.model.vision_model
+      quantize_config:
+        _target_: torchao.quantization.IntxWeightOnlyConfig
+        weight_dtype: ${torch_dtype:int8}
+        granularity:
+          _target_: torchao.quantization.PerGroup
+          group_size: 32
+    - _target_: versatil.quantization.module_target.EagerQuantizationModuleTarget
+      module_path: decoder.vlm_backbone.vlm.base_model.model.model.connector
+      quantize_config:
+        _target_: torchao.quantization.IntxWeightOnlyConfig
+        weight_dtype: ${torch_dtype:int8}
+        granularity:
+          _target_: torchao.quantization.PerGroup
+          group_size: 32
+    - _target_: versatil.quantization.module_target.EagerQuantizationModuleTarget
+      module_path: decoder.vlm_backbone.vlm.base_model.model.model.text_model
+      quantize_config:
+        _target_: torchao.quantization.IntxWeightOnlyConfig
+        weight_dtype: ${torch_dtype:int8}
+        granularity:
+          _target_: torchao.quantization.PerGroup
+          group_size: 32
+    - _target_: versatil.quantization.module_target.EagerQuantizationModuleTarget
+      module_path: decoder.expert_layers
+      quantize_config:
+        _target_: torchao.quantization.IntxWeightOnlyConfig
+        weight_dtype: ${torch_dtype:int8}
+        granularity:
+          _target_: torchao.quantization.PerGroup
+          group_size: 32
+  is_qat: false
+  auto_filter_incompatible_linears: true
+modules:
+  - module_path: decoder.vlm_backbone.vlm.base_model.model.model.vision_model
+    preparation: ${preparation}
+    pruning: null
+  - module_path: decoder.vlm_backbone.vlm.base_model.model.model.connector
+    preparation: ${preparation}
+    pruning: null
+  - module_path: decoder.vlm_backbone.vlm.base_model.model.model.text_model
+    preparation: ${preparation}
+    pruning: null
+  - module_path: decoder.expert_layers
+    preparation: ${preparation}
+    pruning: null

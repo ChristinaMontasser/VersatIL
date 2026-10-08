@@ -25,6 +25,7 @@ class DeploymentBackendName(StrEnum):
 
     TORCH_INDUCTOR = "torch_inductor"
     EXECUTORCH_XNNPACK = "executorch_xnnpack"
+    EXECUTORCH_CUDA = "executorch_cuda"
 
 
 class CompressionMetadataKey(StrEnum):
@@ -61,6 +62,7 @@ class PrunableLayerType(StrEnum):
     CONV1D = "conv1d"
     CONV2D = "conv2d"
     LINEAR = "linear"
+    EMBEDDING = "embedding" #changed
 
     def to_module_type(self) -> type[nn.Module]:
         """Resolve to the corresponding torch.nn.Module class."""
@@ -68,6 +70,7 @@ class PrunableLayerType(StrEnum):
             PrunableLayerType.CONV1D.value: nn.Conv1d,
             PrunableLayerType.CONV2D.value: nn.Conv2d,
             PrunableLayerType.LINEAR.value: nn.Linear,
+            PrunableLayerType.EMBEDDING.value: nn.Embedding, #changed
         }
         return mapping[self.value]
 

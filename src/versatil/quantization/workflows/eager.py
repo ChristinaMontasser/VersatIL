@@ -56,6 +56,7 @@ class EagerQuantizationWorkflow(BaseQuantizationWorkflow):
         targets: list[EagerQuantizationModuleTarget],
         is_qat: bool = False,
         auto_filter_incompatible_linears: bool = True,
+        calibration_batch_size: int | None = None,
     ) -> None:
         """Initialize eager torchao quantization.
 
@@ -65,12 +66,17 @@ class EagerQuantizationWorkflow(BaseQuantizationWorkflow):
                 and conversion.
             auto_filter_incompatible_linears: Whether to skip linears whose
                 ``in_features`` are incompatible with the config group size.
+            calibration_batch_size: Optional batch size for SmoothQuant
+                calibration. Defaults to the training dataloader batch size.
         """
         if not targets:
             raise ValueError("EagerQuantizationWorkflow requires at least one target.")
+        if calibration_batch_size is not None and calibration_batch_size < 1:
+            raise ValueError("calibration_batch_size must be at least 1.")
         self._targets = targets
         self._is_qat = is_qat
         self.auto_filter_incompatible_linears = auto_filter_incompatible_linears
+        self.calibration_batch_size = calibration_batch_size
         self._prepared_targets: list[_PreparedEagerTarget] = []
 
     @property
@@ -137,6 +143,7 @@ class EagerQuantizationWorkflow(BaseQuantizationWorkflow):
             observation_horizon=context.observation_horizon,
             tokenizer=context.tokenizer,
         )
+        example_inputs = self._move_to_device(example_inputs, device="cuda")
         # Export the float baseline before quantize_() mutates the policy.
         float_exported = export_policy(
             exportable=exportable, example_inputs=example_inputs
@@ -157,6 +164,11 @@ class EagerQuantizationWorkflow(BaseQuantizationWorkflow):
                     calibration=calibration,
                     exportable=exportable,
                 )
+        
+        # Quantization may have changed/moved modules, so determine the
+        # device again rather than assuming it stayed unchanged.
+        device = next(context.policy.parameters()).device
+        example_inputs = self._move_to_device(example_inputs, device)
         exported = export_policy(exportable=exportable, example_inputs=example_inputs)
         return QuantizedContext(
             float_model=float_exported,
@@ -270,7 +282,10 @@ class EagerQuantizationWorkflow(BaseQuantizationWorkflow):
         dataset.set_tokenizer(context.tokenizer)
         calibration_loader = DataLoader(
             dataset=dataset,
-            batch_size=context.config.task.dataloader.batch_size,
+            batch_size=(
+                self.calibration_batch_size
+                or context.config.task.dataloader.batch_size
+            ),
             shuffle=False,
             num_workers=0,
         )
@@ -278,6 +293,7 @@ class EagerQuantizationWorkflow(BaseQuantizationWorkflow):
             dataloader=calibration_loader,
             observation_keys=exportable.observation_keys,
             num_calibration_steps=calibration_steps,
+            device=next(context.policy.parameters()).device,
         )
 
     def _apply_ptq(
@@ -343,8 +359,14 @@ class EagerQuantizationWorkflow(BaseQuantizationWorkflow):
                     in names,
                 )
             else:
+                logger.info(
+                            "Applying regular quantization to %s device %s",
+                            target.label,
+                            next(model.parameters()).device,
+    )
                 quantize_(
                     model=model,
+                    device=next(model.parameters()).device,
                     config=target.quantize_config,
                     filter_fn=lambda module, fqn, names=selected_names: fqn
                     in names,
@@ -355,26 +377,30 @@ class EagerQuantizationWorkflow(BaseQuantizationWorkflow):
         model: nn.Module,
         target: EagerQuantizationModuleTarget,
     ) -> tuple[list[str], list[tuple[str, str]]]:
-        """Return selected and skipped linear module names.
+        """Return selected and skipped linear or embedding module names.
 
         Args:
             model: Policy model whose modules should be inspected.
             target: Eager target that scopes the module selection.
 
         Returns:
-            Two lists: selected fully qualified ``nn.Linear`` module names, and
-            skipped module names paired with skip reasons.
+            Two lists: selected fully qualified ``nn.Linear`` or
+            ``nn.Embedding`` module names, and skipped module names paired
+            with skip reasons.
         """
         group_size = self._weight_group_size(target=target)
         selected: list[str] = []
         skipped: list[tuple[str, str]] = []
         for name, module in model.named_modules():
+            # if not isinstance(module, (nn.Linear, nn.Embedding)):
+            #     continue
             if not isinstance(module, nn.Linear):
                 continue
             if not target.contains_module(module_name=name):
                 continue
             if (
-                self.auto_filter_incompatible_linears
+                isinstance(module, nn.Linear)
+                and self.auto_filter_incompatible_linears
                 and group_size is not None
                 and module.in_features % group_size != 0
             ):
@@ -408,3 +434,23 @@ class EagerQuantizationWorkflow(BaseQuantizationWorkflow):
             if isinstance(granularity, PerGroup):
                 return granularity.group_size
         return None
+    @staticmethod
+    def _move_to_device(value, device):
+        if isinstance(value, torch.Tensor):
+            return value.to(device)
+        if isinstance(value, dict):
+            return {
+                key: EagerQuantizationWorkflow._move_to_device(item, device)
+                for key, item in value.items()
+            }
+        if isinstance(value, tuple):
+            return tuple(
+                EagerQuantizationWorkflow._move_to_device(item, device)
+                for item in value
+            )
+        if isinstance(value, list):
+            return [
+                EagerQuantizationWorkflow._move_to_device(item, device)
+                for item in value
+            ]
+        return value

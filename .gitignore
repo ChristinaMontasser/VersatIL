@@ -170,3 +170,4 @@ cache/
 slurm/
 pymp-*/
 slurm-*
+logs*

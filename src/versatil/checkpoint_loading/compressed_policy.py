@@ -12,6 +12,7 @@ from versatil.post_training_compression.constants import (
     ArtifactFormat,
     CompressionFilename,
     CompressionMetadataKey,
+    DeploymentBackendName,
 )
 from versatil.post_training_compression.serialization import load_compression_metadata
 from versatil.training.constants import CheckpointFilename, CheckpointKey
@@ -54,12 +55,26 @@ class CompressedCheckpointLoader(BaseCheckpointLoader):
             CompressionMetadataKey.ARTIFACT_FORMAT.value,
             ArtifactFormat.TORCH_EXPORT_PT2.value,
         )
+        deployment_backend = self._metadata.get(
+            CompressionMetadataKey.DEPLOYMENT_BACKEND.value,
+            DeploymentBackendName.EXECUTORCH_XNNPACK.value,
+        )
         if (
             self._artifact_format == ArtifactFormat.EXECUTORCH_PTE.value
+            and deployment_backend == DeploymentBackendName.EXECUTORCH_XNNPACK.value
             and self._device.type != "cpu"
         ):
             raise ValueError(
                 "ExecuTorch XNNPACK artifacts support CPU inference only, "
+                f"got '{self._device}'."
+            )
+        if (
+            self._artifact_format == ArtifactFormat.EXECUTORCH_PTE.value
+            and deployment_backend == DeploymentBackendName.EXECUTORCH_CUDA.value
+            and self._device.type != "cuda"
+        ):
+            raise ValueError(
+                "ExecuTorch CUDA artifacts support CUDA inference only, "
                 f"got '{self._device}'."
             )
 

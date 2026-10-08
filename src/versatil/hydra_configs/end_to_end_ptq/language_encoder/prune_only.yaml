@@ -11,7 +11,7 @@ pruning:
   # - _target_: versatil.post_training_compression.pruning.StructuredPruner
   #   amount: 0.1
   - _target_: versatil.post_training_compression.pruning.UnstructuredPruner
-    amount: 0.1
+    amount: 0.2
 preparation: 
   replace_frozen_batchnorm: false
   fuse_conv_batchnorm: false

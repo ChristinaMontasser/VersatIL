@@ -26,6 +26,7 @@ class QuantizationReport:
         example_inputs: tuple[torch.Tensor, ...],
         action_keys: list[str],
         quantization_workflow: str = QuantizationWorkflow.PT2E.value,
+        compile_eager_for_report: bool = False,
     ) -> None:
         """Initialize with float and quantized models for comparison.
 
@@ -37,12 +38,17 @@ class QuantizationReport:
             quantization_workflow: QuantizationWorkflow value. PT2E
                 benchmarks with inductor compilation, eager PTQ
                 benchmarks eager execution.
+            compile_eager_for_report: Whether eager PTQ should be compiled
+                with TorchInductor for timing.
         """
         self._float_model = float_model
         self._quantized_model = quantized_model
         self._example_inputs = example_inputs
         self._action_keys = action_keys
         self._quantization_workflow = quantization_workflow
+        self._compile_eager_for_report = compile_eager_for_report
+        if self._quantization_workflow == QuantizationWorkflow.PT2E.value:
+            self._float_model = torch.compile(self._float_model)
 
     def compute_operator_coverage(self) -> dict[str, dict[str, int]]:
         """Count quantized vs total operators in the quantized model's FX graph.
@@ -159,9 +165,8 @@ class QuantizationReport:
     ) -> dict[str, float]:
         """Compare float vs quantized model inference latency.
 
-        For PT2E models, compiles the quantized model with
-        torch.compile(backend="inductor") to match the real inference
-        path. For eager PTQ models, benchmarks eager execution.
+        PT2E models are compiled with TorchInductor. Eager PTQ models are
+        compiled only when ``compile_eager_for_report`` is enabled.
 
         Args:
             warmup_runs: Number of warmup iterations before timing.
@@ -171,23 +176,31 @@ class QuantizationReport:
             Dict with "float_milliseconds", "quantized_milliseconds",
             "speedup".
         """
-        if self._quantization_workflow == QuantizationWorkflow.PT2E.value:
+        if (
+            self._quantization_workflow == QuantizationWorkflow.PT2E.value
+            or self._compile_eager_for_report
+        ):
             quantized_model = self._compile_for_benchmark()
         else:
             quantized_model = self._quantized_model
-
+            
         with torch.no_grad():
             for _ in range(warmup_runs):
                 self._float_model(*self._example_inputs)
                 quantized_model(*self._example_inputs)
-            start = time.perf_counter()
-            for _ in range(benchmark_runs):
-                self._float_model(*self._example_inputs)
-            float_time = (time.perf_counter() - start) / benchmark_runs
+            self._synchronize_cuda()
 
             start = time.perf_counter()
             for _ in range(benchmark_runs):
+                self._float_model(*self._example_inputs)
+            self._synchronize_cuda()
+            float_time = (time.perf_counter() - start) / benchmark_runs
+
+            self._synchronize_cuda()
+            start = time.perf_counter()
+            for _ in range(benchmark_runs):
                 quantized_model(*self._example_inputs)
+            self._synchronize_cuda()
             quantized_time = (time.perf_counter() - start) / benchmark_runs
 
         return {
@@ -195,6 +208,11 @@ class QuantizationReport:
             ReportMetricKey.QUANTIZED_MS.value: quantized_time * 1000,
             ReportMetricKey.SPEEDUP.value: float_time / max(quantized_time, 1e-9),
         }
+
+    def _synchronize_cuda(self) -> None:
+        """Wait for CUDA work when the report inputs run on a GPU."""
+        if any(tensor.device.type == "cuda" for tensor in self._example_inputs):
+            torch.cuda.synchronize()
 
     def _compile_for_benchmark(self) -> nn.Module:
         """Compile the quantized model with inductor for benchmarking."""

@@ -1,3 +1,6 @@
 # @package _global_
 checkpoint_path: ???
 output_path: null
+include_quantization_report: false
+compile_eager_for_report: false
+device: cpu

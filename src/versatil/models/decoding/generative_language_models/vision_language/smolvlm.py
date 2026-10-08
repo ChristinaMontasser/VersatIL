@@ -118,9 +118,36 @@ class SmolVLM(HuggingFaceGenerativeVLM):
         num_cameras = len(self.camera_keys)
        # pixel_values = torch.stack(camera_images, dim=1)  # (B, num_cameras, C, H, W)
         pixel_values = torch.stack(camera_images, dim=1).contiguous()
-        image_features = self.vlm.get_image_features(pixel_values)
+        flat_pixel_values = pixel_values.reshape(
+            batch_size * num_cameras, *pixel_values.shape[2:]
+        ).to(dtype=self.vlm.dtype)
+        patch_size = self.vlm.config.vision_config.patch_size
+        patch_attention_mask = torch.ones(
+            flat_pixel_values.shape[0],
+            flat_pixel_values.shape[2],
+            flat_pixel_values.shape[3],
+            dtype=torch.bool,
+            device=flat_pixel_values.device,
+        )
+        patches_subgrid = patch_attention_mask.unfold(
+            dimension=1, size=patch_size, step=patch_size
+        ).unfold(dimension=2, size=patch_size, step=patch_size)
+        patch_attention_mask = (
+            patches_subgrid.sum(dim=(-1, -2)) > 0
+        ).bool()
+        vlm_model = (
+            self.vlm.model.model
+            if self.lora_config is not None and self.lora_config.enabled
+            else self.vlm.model
+        )
+        image_outputs = vlm_model.vision_model(
+            pixel_values=flat_pixel_values,
+            patch_attention_mask=patch_attention_mask,
+            return_dict=True,
+        )
+        image_features = vlm_model.connector(image_outputs.last_hidden_state)
         # pooler_output: (B * num_cameras, tokens_per_camera, hidden_dimension)
-        image_embeddings = image_features.pooler_output
+        image_embeddings = image_features
         # SmolVLM convention: scale image embeddings by sqrt(hidden_dimension) to match
         # the magnitude of the language-model token embeddings.
         image_embeddings = image_embeddings * math.sqrt(image_embeddings.shape[-1])

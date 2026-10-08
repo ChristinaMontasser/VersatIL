@@ -125,6 +125,18 @@ class ExecutorchXNNPACKBackendConfig:
 
 
 @dataclass
+class ExecutorchCUDABackendConfig:
+    """ExecuTorch backend that lowers artifacts to CUDA .pte files."""
+
+    _target_: str = (
+        "versatil.post_training_compression.deployment_backends.executorch_cuda."
+        "ExecutorchCUDABackend"
+    )
+    max_batch_size: int = 32
+    model_name: str = "forward"
+
+
+@dataclass
 class PostTrainingCompressorConfig:
     """Top-level config for the post-training compression endpoint.
 
@@ -142,6 +154,8 @@ class PostTrainingCompressorConfig:
         generate_report: Whether to generate a quantization report after saving.
             Disabled by default since it runs additional forward passes for
             benchmarking.
+        compile_eager_for_report: Whether the report should benchmark eager
+            quantization after TorchInductor compilation.
         modules: Per-module compression schemes (empty = global).
         preparation: Global preparation settings.
         pruning: Global pruning strategies (inherited by modules).
@@ -159,6 +173,7 @@ class PostTrainingCompressorConfig:
     output_directory: str | None = None
     calibration_steps: int = 32
     generate_report: bool = False
+    compile_eager_for_report: bool = False
     modules: list[CompressionTargetConfig] = field(default_factory=list)
     preparation: PreparationConfig = field(default_factory=PreparationConfig)
     pruning: list[Any] | None = None  #  list[BasePrunerConfig] | None

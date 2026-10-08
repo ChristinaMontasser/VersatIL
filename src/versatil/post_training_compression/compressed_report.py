@@ -7,11 +7,16 @@ from typing import Any
 import torch
 import torch.nn as nn
 
+from versatil.checkpoint_loading.float_policy import FloatCheckpointLoader
+from versatil.models.exportable_policy import ExportablePolicy
 from versatil.post_training_compression.constants import (
     ArtifactFormat,
     CompressionFilename,
     CompressionMetadataKey,
+    QuantizationWorkflow,
 )
+from versatil.post_training_compression.export import build_example_inputs
+from versatil.post_training_compression.report import QuantizationReport
 from versatil.post_training_compression.serialization import load_compression_metadata
 
 
@@ -88,6 +93,89 @@ class CompressedPolicyReport:
         with destination.open("w") as file:
             json.dump(self.build_report(), file, indent=2)
         return destination
+    @staticmethod
+    def _compile_for_report(
+        model: nn.Module,
+        compile_model: bool,
+    ) -> nn.Module:
+        """Compile a report model with TorchInductor when requested.
+
+        Args:
+            model: Model to compile.
+            compile_model: Whether to enable TorchInductor compilation.
+
+        Returns:
+            The compiled or unmodified model.
+        """
+        model.eval()
+        if not compile_model:
+            return model
+
+        return torch.compile(model, backend="inductor")
+    
+    def build_quantization_report(
+        self,
+        device: torch.device,
+        compile_eager_for_report: bool = False,
+    ) -> str:
+        """Benchmark an existing Torch Export artifact against its float model.
+
+        Args:
+            device: Device used to load both the source policy and artifact.
+            compile_eager_for_report: Compile an eager artifact with
+                TorchInductor before timing.
+
+        Returns:
+            Human-readable quantization report.
+
+        Raises:
+            ValueError: If the artifact is not a Torch Export artifact or its
+                source checkpoint metadata is missing.
+        """
+        artifact_format = self._metadata.get(
+            CompressionMetadataKey.ARTIFACT_FORMAT.value
+        )
+        if artifact_format != ArtifactFormat.TORCH_EXPORT_PT2.value:
+            raise ValueError(
+                "Full quantization reports currently support torch_export_pt2 "
+                "artifacts only."
+            )
+        source_checkpoint = self._metadata.get(
+            CompressionMetadataKey.TRAINING_CHECKPOINT_PATH.value
+        )
+        if not source_checkpoint:
+            raise ValueError(
+                "Compression metadata is missing the source training checkpoint."
+            )
+
+        float_loader = FloatCheckpointLoader(
+            device=device,
+            checkpoint_path=source_checkpoint,
+            checkpoint_name="last.ckpt",
+        )
+        exportable = ExportablePolicy.from_policy(float_loader.policy).to(device)
+        example_inputs = build_example_inputs(
+            exportable=exportable,
+            observation_space=float_loader.observation_space,
+            observation_horizon=float_loader.observation_horizon,
+            tokenizer=float_loader.tokenizer,
+        )
+        example_inputs = tuple(
+            tensor.to(device=device) for tensor in example_inputs
+        )
+        quantized_model = torch.export.load(str(self._model_path)).module().to(device)
+        report = QuantizationReport(
+            float_model=exportable,
+            quantized_model=quantized_model,
+            example_inputs=example_inputs,
+            action_keys=self._metadata[CompressionMetadataKey.OUTPUT_KEYS.value],
+            quantization_workflow=self._metadata.get(
+                CompressionMetadataKey.QUANTIZATION_WORKFLOW.value,
+                QuantizationWorkflow.PT2E.value,
+            ),
+            compile_eager_for_report=compile_eager_for_report,
+        )
+        return report.generate_report()
 
     def _source_checkpoint_report(self) -> dict[str, Any]:
         source_path_value = self._metadata.get(
@@ -121,9 +209,7 @@ class CompressedPolicyReport:
         buffers = list(model.buffers())
         parameter_bytes = sum(parameter.numel() * parameter.element_size() for parameter in parameters)
         buffer_bytes = sum(buffer.numel() * buffer.element_size() for buffer in buffers)
-        zero_elements = sum(
-            int(torch.count_nonzero(parameter).item() == 0) for parameter in parameters
-        )
+        zero_elements = cls._count_zero_parameters(parameters=parameters)
         parameter_elements = sum(parameter.numel() for parameter in parameters)
         modules: dict[str, dict[str, int | str]] = {}
         for name, module in model.named_modules():
@@ -149,6 +235,26 @@ class CompressedPolicyReport:
                 value=parameter_bytes + buffer_bytes
             ),
             "zero_parameter_count": zero_elements,
-            "parameter_sparsity": zero_elements / max(parameter_elements, 1),
+            "parameter_sparsity": (
+                None
+                if zero_elements is None
+                else zero_elements / max(parameter_elements, 1)
+            ),
             "modules": modules,
         }
+
+    @staticmethod
+    def _count_zero_parameters(parameters: list[nn.Parameter]) -> int | None:
+        """Count zero-valued parameters when their tensor types support it.
+
+        TorchAO eager quantization uses tensor subclasses whose dispatch may
+        not implement ``torch.count_nonzero``. In that case sparsity is not
+        available from the serialized artifact.
+        """
+        zero_elements = 0
+        try:
+            for parameter in parameters:
+                zero_elements += int(torch.count_nonzero(parameter).item() == 0)
+        except NotImplementedError:
+            return None
+        return zero_elements
