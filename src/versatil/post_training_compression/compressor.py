@@ -180,6 +180,7 @@ class PostTrainingCompressor:
             artifact_format=deployment_artifact.artifact_format.value,
             backend_name=deployment_artifact.backend_name,
             model_bytes=deployment_artifact.model_bytes,
+            debug_artifacts=deployment_artifact.debug_artifacts,
             denoising_thresholds=policy.get_denoising_thresholds(),
             pt2e_backend_config=pt2e_backend_config,
         )

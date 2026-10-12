@@ -123,6 +123,20 @@ class EagerQuantizationModuleTargetConfig:
         quantize_config: torchao eager quantization config applied to this target.
         smooth_quant: Apply TorchAO SmoothQuant preparation before quantization.
         smooth_quant_alpha: SmoothQuant activation-to-weight migration factor.
+        exclude_module_patterns: Glob patterns for child module names to leave
+            unquantized.
+        gptq: Apply TorchAO prototype GPTQ using calibration activations.
+        gptq_percdamp: Damping factor applied to the GPTQ Hessian diagonal.
+        gptq_quantize_block_size: Number of weight columns processed by one GPTQ
+            block.
+        adaround: Apply native PyTorch AdaRound using calibration activations.
+        adaround_iterations: Optimization steps per selected linear.
+        adaround_regularization_strength: AdaRound rounding regularizer weight.
+        adaround_beta_start: Initial AdaRound regularizer temperature.
+        adaround_beta_end: Final AdaRound regularizer temperature.
+        adaround_warm_start: Fraction of steps without rounding regularization.
+        adaround_bitwidth: Symmetric weight bitwidth used during AdaRound.
+        adaround_group_size: Input-column group size used during AdaRound.
     """
 
     _target_: str = "versatil.quantization.module_target.EagerQuantizationModuleTarget"
@@ -130,6 +144,19 @@ class EagerQuantizationModuleTargetConfig:
     quantize_config: Any = MISSING
     smooth_quant: bool = False
     smooth_quant_alpha: float = 0.5
+    exclude_module_patterns: list[str] = field(default_factory=list)
+    gptq: bool = False
+    gptq_percdamp: float = 0.01
+    gptq_quantize_block_size: int = 256
+    adaround: bool = False
+    adaround_iterations: int = 10000
+    adaround_regularization_strength: float = 0.01
+    adaround_beta_start: float = 20.0
+    adaround_beta_end: float = 2.0
+    adaround_warm_start: float = 0.2
+    adaround_bitwidth: int = 8
+    adaround_group_size: int | None = None
+    adaround_optimization_batch_size: int = 32
 
 
 @dataclass
@@ -142,6 +169,14 @@ class PT2EQuantizationModuleTargetConfig:
         pt2e_backend: PT2E backend that creates the quantizer for this target.
         smooth_quant: Apply SmoothQuant-style float preparation before export.
         smooth_quant_alpha: Activation-to-weight migration factor.
+        adaround: Apply native PyTorch AdaRound before export.
+        adaround_iterations: Optimization steps per selected linear.
+        adaround_regularization_strength: AdaRound rounding regularizer weight.
+        adaround_beta_start: Initial AdaRound regularizer temperature.
+        adaround_beta_end: Final AdaRound regularizer temperature.
+        adaround_warm_start: Fraction of steps without rounding regularization.
+        adaround_bitwidth: Symmetric weight bitwidth used during AdaRound.
+        adaround_group_size: Input-column group size used during AdaRound.
     """
 
     _target_: str = "versatil.quantization.module_target.PT2EQuantizationModuleTarget"
@@ -151,6 +186,15 @@ class PT2EQuantizationModuleTargetConfig:
     )
     smooth_quant: bool = False
     smooth_quant_alpha: float = 0.5
+    adaround: bool = False
+    adaround_iterations: int = 10000
+    adaround_regularization_strength: float = 0.01
+    adaround_beta_start: float = 20.0
+    adaround_beta_end: float = 2.0
+    adaround_warm_start: float = 0.2
+    adaround_bitwidth: int = 8
+    adaround_group_size: int | None = None
+    adaround_optimization_batch_size: int = 32
 
 
 @dataclass

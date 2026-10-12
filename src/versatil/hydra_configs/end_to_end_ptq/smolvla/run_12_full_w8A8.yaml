@@ -33,6 +33,9 @@ quantization:
         _target_: torchao.quantization.Int8DynamicActivationInt8WeightConfig
   is_qat: false
   auto_filter_incompatible_linears: true
+deployment_backend:
+  _target_: versatil.post_training_compression.deployment_backends.executorch_xnnpack.ExecutorchXNNPACKBackend
+  max_batch_size: 32
 modules:
   - module_path: decoder.vlm_backbone.vlm.base_model.model.model.vision_model
     preparation: ${preparation}

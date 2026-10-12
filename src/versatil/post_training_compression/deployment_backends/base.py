@@ -19,6 +19,7 @@ class DeploymentArtifact:
     artifact_format: ArtifactFormat
     backend_name: str
     model_bytes: bytes | None = None
+    debug_artifacts: dict[str, bytes] | None = None
 
 
 class DeploymentBackend(ABC):

@@ -22,6 +22,11 @@ from versatil.post_training_compression.export import (
 )
 from versatil.post_training_compression.policy_loading import load_float_policy_context
 from versatil.quantization.calibration import CalibrationDataProvider
+from versatil.quantization.adaround import (
+    AdaRoundConfig,
+    apply_adaround,
+    collect_linear_inputs,
+)
 from versatil.quantization.constants import FXNodePattern, QuantizationMode
 from versatil.quantization.module_target import PT2EQuantizationModuleTarget
 from versatil.quantization.pt2e.backends.base import BasePT2EBackend
@@ -247,6 +252,11 @@ class PT2EQuantizationWorkflow(BaseQuantizationWorkflow):
             exportable=exportable,
             calibration=calibration,
         )
+        self._prepare_adaround(
+            context=context,
+            exportable=exportable,
+            calibration=calibration,
+        )
         example_inputs = build_example_inputs(
             exportable=exportable,
             observation_space=context.observation_space,
@@ -384,7 +394,8 @@ class PT2EQuantizationWorkflow(BaseQuantizationWorkflow):
             targets are dynamic.
         """
         needs_calibration = any(
-            target.needs_calibration or target.smooth_quant for target in targets
+            target.needs_calibration or target.smooth_quant or target.adaround
+            for target in targets
         )
         if not needs_calibration:
             return None
@@ -418,6 +429,64 @@ class PT2EQuantizationWorkflow(BaseQuantizationWorkflow):
             observation_keys=exportable.observation_keys,
             num_calibration_steps=calibration_steps,
         )
+
+    def _prepare_adaround(
+        self,
+        context: PolicyContext,
+        exportable: ExportablePolicy,
+        calibration: CalibrationDataProvider | None,
+    ) -> None:
+        """Apply native PyTorch AdaRound before PT2E export."""
+        adaround_targets = [target for target in self._targets if target.adaround]
+        if not adaround_targets:
+            return
+        if calibration is None:
+            raise ValueError("AdaRound requires a calibration data provider.")
+        for target in adaround_targets:
+            selected = [
+                name
+                for name, module in context.policy.named_modules()
+                if target.contains_module(name)
+                and isinstance(module, nn.Linear)
+            ]
+            if not selected:
+                raise ValueError(
+                    f"AdaRound target '{target.label}' selected zero eligible "
+                    "nn.Linear modules."
+                )
+            inputs = collect_linear_inputs(
+                model=context.policy,
+                calibration=lambda: iter(calibration),
+                forward=lambda batch: exportable(*batch),
+                module_names=set(selected),
+                storage_device="cpu",
+            )
+            config = AdaRoundConfig(
+                iterations=target.adaround_iterations,
+                regularization_strength=target.adaround_regularization_strength,
+                beta_start=target.adaround_beta_start,
+                beta_end=target.adaround_beta_end,
+                warm_start=target.adaround_warm_start,
+                bitwidth=target.adaround_bitwidth,
+                group_size=target.adaround_group_size,
+                optimization_batch_size=target.adaround_optimization_batch_size,
+            )
+            for name in selected:
+                if name not in inputs:
+                    raise RuntimeError(
+                        f"AdaRound calibration did not execute selected module '{name}'."
+                    )
+                result = apply_adaround(
+                    module=context.policy.get_submodule(name),
+                    inputs=inputs[name],
+                    config=config,
+                )
+                logger.info(
+                    "AdaRound module %s: loss %.6g -> %.6g",
+                    name,
+                    result.initial_loss,
+                    result.final_loss,
+                )
 
     @staticmethod
     def _convert_exported_model(

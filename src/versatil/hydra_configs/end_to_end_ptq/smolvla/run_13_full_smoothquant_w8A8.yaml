@@ -33,12 +33,15 @@ quantization:
       smooth_quant_alpha: 0.5
       quantize_config:
         _target_: torchao.quantization.Int8DynamicActivationInt8WeightConfig
-    # - _target_: versatil.quantization.module_target.EagerQuantizationModuleTarget
-    #   module_path: decoder.expert_layers
-    #   smooth_quant: true
-    #   smooth_quant_alpha: 0.5
-    #   quantize_config:
-    #     _target_: torchao.quantization.Int8DynamicActivationInt8WeightConfig
+    - _target_: versatil.quantization.module_target.EagerQuantizationModuleTarget
+      module_path: decoder.expert_layers
+      smooth_quant: true
+      smooth_quant_alpha: 0.5
+      exclude_module_patterns:
+        - "decoder.expert_layers.*.cross_attention_block.attention.key_projection"
+        - "decoder.expert_layers.*.cross_attention_block.attention.value_projection"
+      quantize_config:
+        _target_: torchao.quantization.Int8DynamicActivationInt8WeightConfig
   is_qat: false
   auto_filter_incompatible_linears: true
   calibration_batch_size: 8
@@ -52,6 +55,6 @@ modules:
   - module_path: decoder.vlm_backbone.vlm.base_model.model.model.text_model
     preparation: ${preparation}
     pruning: null
-  # - module_path: decoder.expert_layers
-  #   preparation: ${preparation}
-  #   pruning: null
+  - module_path: decoder.expert_layers
+    preparation: ${preparation}
+    pruning: null

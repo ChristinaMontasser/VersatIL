@@ -171,3 +171,4 @@ slurm/
 pymp-*/
 slurm-*
 logs*
+eval_logs/

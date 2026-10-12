@@ -361,6 +361,7 @@ class TestEagerQuantizationWorkflow:
         )
         workflow = EagerQuantizationWorkflow(targets=[target])
         exportable = MagicMock()
+        exportable.side_effect = lambda inputs: model.encoder[0](inputs)
         calibration = MagicMock()
         calibration_batch = (torch.zeros(1, 32),)
         calibration.__iter__.return_value = iter([calibration_batch])
@@ -383,6 +384,87 @@ class TestEagerQuantizationWorkflow:
         assert convert_config.alpha == 0.5
         exportable.assert_called_once()
         assert exportable.call_args.args[0] is calibration_batch[0]
+
+    def test_gptq_observes_calibrates_and_converts_targeted_linears(
+        self,
+        policy_with_linear_modules_factory,
+    ):
+        model = policy_with_linear_modules_factory()
+        config = Int4WeightOnlyConfig(group_size=32)
+        target = EagerQuantizationModuleTarget(
+            module_path="encoder",
+            quantize_config=config,
+            gptq=True,
+            gptq_percdamp=0.02,
+            gptq_quantize_block_size=64,
+        )
+        workflow = EagerQuantizationWorkflow(targets=[target])
+        exportable = MagicMock()
+        calibration = MagicMock()
+        calibration_batch = (torch.zeros(1, 32),)
+        calibration.__iter__.return_value = iter([calibration_batch])
+        gptq_configs = [MagicMock(), MagicMock()]
+
+        with (
+            patch(f"{EAGER_WORKFLOW_MODULE}.quantize_") as quantize_mock,
+            patch(
+                f"{EAGER_WORKFLOW_MODULE}.GPTQConfig",
+                side_effect=gptq_configs,
+            ) as gptq_config_mock,
+        ):
+            workflow._apply_ptq(
+                model=model,
+                calibration=calibration,
+                exportable=exportable,
+            )
+
+        assert quantize_mock.call_count == 2
+        assert gptq_config_mock.call_args_list[0].kwargs == {
+            "step": "observe",
+            "base_config": config,
+            "percdamp": 0.02,
+            "gptq_quantize_block_size": 64,
+        }
+        assert gptq_config_mock.call_args_list[1].kwargs == {
+            "step": "convert",
+            "base_config": config,
+            "percdamp": 0.02,
+            "gptq_quantize_block_size": 64,
+        }
+        assert quantize_mock.call_args_list[0].kwargs["config"] is gptq_configs[0]
+        assert quantize_mock.call_args_list[1].kwargs["config"] is gptq_configs[1]
+        filter_fn = quantize_mock.call_args_list[0].kwargs["filter_fn"]
+        assert filter_fn(model.encoder[0], "encoder.0") is True
+        assert filter_fn(model.decoder[0], "decoder.0") is False
+        exportable.assert_called_once_with(calibration_batch[0])
+
+    def test_gptq_rejects_smooth_quant_and_qat(self):
+        target = EagerQuantizationModuleTarget(
+            module_path="",
+            quantize_config=MagicMock(spec=[]),
+            gptq=True,
+        )
+
+        with pytest.raises(
+            ValueError,
+            match=re.escape("GPTQ is not supported with eager QAT."),
+        ):
+            EagerQuantizationWorkflow(targets=[target], is_qat=True)
+
+        with pytest.raises(
+            ValueError,
+            match=re.escape("GPTQ and SmoothQuant cannot be enabled together."),
+        ):
+            EagerQuantizationWorkflow(
+                targets=[
+                    EagerQuantizationModuleTarget(
+                        module_path="",
+                        quantize_config=MagicMock(spec=[]),
+                        smooth_quant=True,
+                        gptq=True,
+                    )
+                ]
+            )
 
     def test_ptq_filters_group_incompatible_linears(
         self,

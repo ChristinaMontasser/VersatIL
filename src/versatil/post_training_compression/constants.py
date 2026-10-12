@@ -52,6 +52,9 @@ class CompressionFilename(StrEnum):
     COMPRESSION_METADATA = "compression_metadata.json"
     COMPRESSED_MODEL = "compressed_policy.pt2"
     EXECUTORCH_MODEL = "compressed_policy.pte"
+    ETRECORD = "compressed_policy.etrecord"
+    ETDUMP = "compressed_policy.etdp"
+    ETDUMP_DEBUG = "compressed_policy.debug"
     NORMALIZER = "normalizer.pt"
     TOKENIZER_DIR = "tokenizer"
 

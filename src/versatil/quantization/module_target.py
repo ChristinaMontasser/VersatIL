@@ -1,5 +1,7 @@
 """Torch Module-level targets for quantization workflows."""
 
+from fnmatch import fnmatch
+
 from torchao.quantization.quant_api import AOBaseConfig
 
 from versatil.quantization.pt2e.backends.base import BasePT2EBackend
@@ -70,6 +72,19 @@ class EagerQuantizationModuleTarget(QuantizationModuleTarget):
         quantize_config: AOBaseConfig,
         smooth_quant: bool = False,
         smooth_quant_alpha: float = 0.5,
+        exclude_module_patterns: list[str] | None = None,
+        gptq: bool = False,
+        gptq_percdamp: float = 0.01,
+        gptq_quantize_block_size: int = 256,
+        adaround: bool = False,
+        adaround_iterations: int = 10000,
+        adaround_regularization_strength: float = 0.01,
+        adaround_beta_start: float = 20.0,
+        adaround_beta_end: float = 2.0,
+        adaround_warm_start: float = 0.2,
+        adaround_bitwidth: int = 8,
+        adaround_group_size: int | None = None,
+        adaround_optimization_batch_size: int = 32,
     ) -> None:
         """Initialize an eager quantization target.
 
@@ -81,6 +96,20 @@ class EagerQuantizationModuleTarget(QuantizationModuleTarget):
                 quantization.
             smooth_quant_alpha: SmoothQuant activation-to-weight migration
                 factor.
+            exclude_module_patterns: Glob patterns for child module names to
+                leave unquantized.
+            gptq: Apply TorchAO prototype GPTQ using calibration activations.
+            gptq_percdamp: Damping factor applied to the GPTQ Hessian diagonal.
+            gptq_quantize_block_size: Number of weight columns processed by one
+                GPTQ block.
+            adaround: Apply native PyTorch AdaRound using calibration activations.
+            adaround_iterations: Optimization steps per selected linear.
+            adaround_regularization_strength: AdaRound rounding regularizer weight.
+            adaround_beta_start: Initial AdaRound regularizer temperature.
+            adaround_beta_end: Final AdaRound regularizer temperature.
+            adaround_warm_start: Fraction of steps without rounding regularization.
+            adaround_bitwidth: Symmetric weight bitwidth used during AdaRound.
+            adaround_group_size: Input-column group size used during AdaRound.
         """
         super().__init__(module_path=module_path)
         self.quantize_config = quantize_config
@@ -91,6 +120,39 @@ class EagerQuantizationModuleTarget(QuantizationModuleTarget):
             )
         self.smooth_quant = smooth_quant
         self.smooth_quant_alpha = smooth_quant_alpha
+        self.exclude_module_patterns = exclude_module_patterns or []
+        if gptq_percdamp <= 0.0:
+            raise ValueError(
+                f"gptq_percdamp must be positive, got {gptq_percdamp}."
+            )
+        if gptq_quantize_block_size < 1:
+            raise ValueError(
+                "gptq_quantize_block_size must be at least 1, "
+                f"got {gptq_quantize_block_size}."
+            )
+        self.gptq = gptq
+        self.gptq_percdamp = gptq_percdamp
+        self.gptq_quantize_block_size = gptq_quantize_block_size
+        if adaround and gptq:
+            raise ValueError("AdaRound and GPTQ cannot be enabled together.")
+        if adaround and smooth_quant:
+            raise ValueError("AdaRound and SmoothQuant cannot be enabled together.")
+        self.adaround = adaround
+        self.adaround_iterations = adaround_iterations
+        self.adaround_regularization_strength = adaround_regularization_strength
+        self.adaround_beta_start = adaround_beta_start
+        self.adaround_beta_end = adaround_beta_end
+        self.adaround_warm_start = adaround_warm_start
+        self.adaround_bitwidth = adaround_bitwidth
+        self.adaround_group_size = adaround_group_size
+        self.adaround_optimization_batch_size = adaround_optimization_batch_size
+
+    def excludes_module(self, module_name: str) -> bool:
+        """Return whether a module matches an exclusion pattern."""
+        return any(
+            fnmatch(module_name, pattern)
+            for pattern in self.exclude_module_patterns
+        )
 
 
 class PT2EQuantizationModuleTarget(QuantizationModuleTarget):
@@ -102,6 +164,15 @@ class PT2EQuantizationModuleTarget(QuantizationModuleTarget):
         pt2e_backend: BasePT2EBackend,
         smooth_quant: bool = False,
         smooth_quant_alpha: float = 0.5,
+        adaround: bool = False,
+        adaround_iterations: int = 10000,
+        adaround_regularization_strength: float = 0.01,
+        adaround_beta_start: float = 20.0,
+        adaround_beta_end: float = 2.0,
+        adaround_warm_start: float = 0.2,
+        adaround_bitwidth: int = 8,
+        adaround_group_size: int | None = None,
+        adaround_optimization_batch_size: int = 32,
     ) -> None:
         """Initialize a PT2E quantization target.
 
@@ -109,6 +180,7 @@ class PT2EQuantizationModuleTarget(QuantizationModuleTarget):
             module_path: Dotted path to the target module, or ``""`` for root.
             pt2e_backend: PT2E backend that creates the quantizer for this
                 target.
+            adaround: Apply native PyTorch AdaRound before export.
         """
         super().__init__(module_path=module_path)
         self.pt2e_backend = pt2e_backend
@@ -119,6 +191,17 @@ class PT2EQuantizationModuleTarget(QuantizationModuleTarget):
             )
         self.smooth_quant = smooth_quant
         self.smooth_quant_alpha = smooth_quant_alpha
+        if adaround and smooth_quant:
+            raise ValueError("AdaRound and SmoothQuant cannot be enabled together.")
+        self.adaround = adaround
+        self.adaround_iterations = adaround_iterations
+        self.adaround_regularization_strength = adaround_regularization_strength
+        self.adaround_beta_start = adaround_beta_start
+        self.adaround_beta_end = adaround_beta_end
+        self.adaround_warm_start = adaround_warm_start
+        self.adaround_bitwidth = adaround_bitwidth
+        self.adaround_group_size = adaround_group_size
+        self.adaround_optimization_batch_size = adaround_optimization_batch_size
 
     @property
     def needs_calibration(self) -> bool:

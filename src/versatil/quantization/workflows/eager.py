@@ -6,6 +6,7 @@ from dataclasses import dataclass
 import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader
+from torchao.prototype.gptq.api import GPTQConfig
 from torchao.prototype.smoothquant import SmoothQuantConfig
 from torchao.quantization import quantize_
 from torchao.quantization.granularity import PerGroup
@@ -18,12 +19,18 @@ from versatil.post_training_compression.constants import QuantizationWorkflow
 from versatil.post_training_compression.export import (
     build_example_inputs,
     export_policy,
+    register_vision_attention_contiguous_hooks,
 )
 from versatil.post_training_compression.policy_loading import (
     load_float_policy_context,
     load_qat_policy_context,
 )
 from versatil.quantization.constants import QuantizationMode
+from versatil.quantization.adaround import (
+    AdaRoundConfig,
+    apply_adaround,
+    collect_linear_inputs,
+)
 from versatil.quantization.calibration import CalibrationDataProvider
 from versatil.quantization.module_target import EagerQuantizationModuleTarget
 from versatil.quantization.workflows.base import (
@@ -66,13 +73,19 @@ class EagerQuantizationWorkflow(BaseQuantizationWorkflow):
                 and conversion.
             auto_filter_incompatible_linears: Whether to skip linears whose
                 ``in_features`` are incompatible with the config group size.
-            calibration_batch_size: Optional batch size for SmoothQuant
+            calibration_batch_size: Optional batch size for SmoothQuant or GPTQ
                 calibration. Defaults to the training dataloader batch size.
         """
         if not targets:
             raise ValueError("EagerQuantizationWorkflow requires at least one target.")
         if calibration_batch_size is not None and calibration_batch_size < 1:
             raise ValueError("calibration_batch_size must be at least 1.")
+        if is_qat and any(target.gptq for target in targets):
+            raise ValueError("GPTQ is not supported with eager QAT.")
+        if is_qat and any(target.adaround for target in targets):
+            raise ValueError("AdaRound is not supported with eager QAT.")
+        if any(target.gptq and target.smooth_quant for target in targets):
+            raise ValueError("GPTQ and SmoothQuant cannot be enabled together.")
         self._targets = targets
         self._is_qat = is_qat
         self.auto_filter_incompatible_linears = auto_filter_incompatible_linears
@@ -167,6 +180,7 @@ class EagerQuantizationWorkflow(BaseQuantizationWorkflow):
         
         # Quantization may have changed/moved modules, so determine the
         # device again rather than assuming it stayed unchanged.
+        #register_vision_attention_contiguous_hooks(model=exportable)
         device = next(context.policy.parameters()).device
         example_inputs = self._move_to_device(example_inputs, device)
         exported = export_policy(exportable=exportable, example_inputs=example_inputs)
@@ -258,13 +272,16 @@ class EagerQuantizationWorkflow(BaseQuantizationWorkflow):
         calibration_steps: int,
         targets: list[EagerQuantizationModuleTarget] | None = None,
     ) -> CalibrationDataProvider | None:
-        """Build calibration data when an eager target uses SmoothQuant."""
+        """Build calibration data for SmoothQuant or GPTQ targets."""
         calibration_targets = self.targets if targets is None else targets
-        if not any(target.smooth_quant for target in calibration_targets):
+        if not any(
+            target.smooth_quant or target.gptq or target.adaround
+            for target in calibration_targets
+        ):
             return None
         if calibration_steps < 1:
             raise ValueError(
-                "SmoothQuant requires calibration_steps >= 1, "
+                "SmoothQuant, GPTQ, or AdaRound requires calibration_steps >= 1, "
                 f"got {calibration_steps}."
             )
         dataset = EpisodicDataset(
@@ -315,10 +332,24 @@ class EagerQuantizationWorkflow(BaseQuantizationWorkflow):
         """
         self.validate_targets(model=model)
         uses_smooth_quant = any(target.smooth_quant for target in self.targets)
+        uses_gptq = any(target.gptq for target in self.targets)
+        uses_adaround = any(target.adaround for target in self.targets)
         if uses_smooth_quant and calibration is None:
             raise ValueError("SmoothQuant requires a calibration data provider.")
-        if uses_smooth_quant and exportable is None:
-            raise ValueError("SmoothQuant requires an exportable policy.")
+        if uses_gptq and calibration is None:
+            raise ValueError("GPTQ requires a calibration data provider.")
+        if uses_adaround and calibration is None:
+            raise ValueError("AdaRound requires a calibration data provider.")
+        if (uses_smooth_quant or uses_gptq or uses_adaround) and exportable is None:
+            raise ValueError(
+                "SmoothQuant, GPTQ, and AdaRound require an exportable policy."
+            )
+        if uses_adaround:
+            self._apply_adaround(
+                model=model,
+                calibration=calibration,
+                exportable=exportable,
+            )
         for target in self.targets:
             selected, skipped = self._select_linear_modules(
                 model=model,
@@ -328,6 +359,11 @@ class EagerQuantizationWorkflow(BaseQuantizationWorkflow):
                 logger.info(f"Skipping PTQ module {name}: {reason}")
             selected_names = set(selected)
             logger.info(f"quantize_() target: {target.label}")
+            if target.gptq and not selected:
+                raise ValueError(
+                    f"GPTQ target '{target.label}' selected zero eligible "
+                    "nn.Linear modules."
+                )
             if target.smooth_quant:
                 logger.info(
                     "Applying SmoothQuant preparation to %s with alpha=%s",
@@ -344,9 +380,33 @@ class EagerQuantizationWorkflow(BaseQuantizationWorkflow):
                     filter_fn=lambda module, fqn, names=selected_names: fqn
                     in names,
                 )
+                module_calls = dict.fromkeys(selected_names, 0)
+                hooks = []
+                for module_name in selected_names:
+                    selected_module = model.get_submodule(module_name)
+                    hooks.append(
+                        selected_module.register_forward_hook(
+                            lambda module, inputs, output, name=module_name: (
+                                module_calls.__setitem__(
+                                    name, module_calls[name] + 1
+                                )
+                            )
+                        )
+                    )
                 with torch.no_grad():
                     for batch in calibration:
                         exportable(*batch)
+                for hook in hooks:
+                    hook.remove()
+                inactive_modules = [
+                    name for name, call_count in module_calls.items() if call_count == 0
+                ]
+                if inactive_modules:
+                    raise RuntimeError(
+                        "SmoothQuant calibration did not execute selected modules "
+                        f"for target '{target.label}'. Inactive modules: "
+                        f"{inactive_modules[:10]}"
+                    )
             if target.smooth_quant:
                 quantize_(
                     model=model,
@@ -355,6 +415,53 @@ class EagerQuantizationWorkflow(BaseQuantizationWorkflow):
                         step=QuantizationStep.CONVERT,
                         alpha=target.smooth_quant_alpha,
                     ),
+                    filter_fn=lambda module, fqn, names=selected_names: fqn
+                    in names,
+                )
+            elif target.gptq:
+                quantize_(
+                    model=model,
+                    config=GPTQConfig(
+                        step="observe",
+                        base_config=target.quantize_config,
+                        percdamp=target.gptq_percdamp,
+                        gptq_quantize_block_size=target.gptq_quantize_block_size,
+                    ),
+                    filter_fn=lambda module, fqn, names=selected_names: fqn
+                    in names,
+                )
+                with torch.no_grad():
+                    # with torch.amp.autocast(
+                    #     device_type="cuda", dtype=torch.bfloat16
+                    # ):
+                        for batch in calibration:
+                            exportable(*batch)
+                    # Add a minute amount of noise to the calibration batch activations 
+                    # to ensure the Hessian diagonal doesn't contain pure zero variances.
+                    # with torch.amp.autocast(device_type="cuda", dtype=torch.bfloat16):
+                    #     # If batch elements are tensors, inject tiny jitter
+                    #     for batch in calibration:
+                    #         perturbed_batch = [
+                    #             b + torch.randn_like(b) * 1e-5 if isinstance(b, torch.Tensor) and b.is_floating_point() else b 
+                    #             for b in batch
+                    #         ]
+                    #         exportable(*perturbed_batch)
+                quantize_(
+                    model=model,
+                    config=GPTQConfig(
+                        step="convert",
+                        base_config=target.quantize_config,
+                        percdamp=target.gptq_percdamp,
+                        gptq_quantize_block_size=target.gptq_quantize_block_size,
+                    ),
+                    filter_fn=lambda module, fqn, names=selected_names: fqn
+                    in names,
+                )
+            elif target.adaround:
+                quantize_(
+                    model=model,
+                    device=next(model.parameters()).device,
+                    config=target.quantize_config,
                     filter_fn=lambda module, fqn, names=selected_names: fqn
                     in names,
                 )
@@ -370,6 +477,62 @@ class EagerQuantizationWorkflow(BaseQuantizationWorkflow):
                     config=target.quantize_config,
                     filter_fn=lambda module, fqn, names=selected_names: fqn
                     in names,
+                )
+
+    def _apply_adaround(
+        self,
+        model: nn.Module,
+        calibration: CalibrationDataProvider,
+        exportable: ExportablePolicy,
+    ) -> None:
+        """Optimize selected eager linear weights with native AdaRound."""
+        for target in self.targets:
+            if not target.adaround:
+                continue
+            selected, skipped = self._select_linear_modules(
+                model=model,
+                target=target,
+            )
+            for name, reason in skipped:
+                logger.info("Skipping AdaRound module %s: %s", name, reason)
+            if not selected:
+                raise ValueError(
+                    f"AdaRound target '{target.label}' selected zero eligible "
+                    "nn.Linear modules."
+                )
+            inputs = collect_linear_inputs(
+                model=model,
+                calibration=lambda: iter(calibration),
+                forward=lambda batch: exportable(*batch),
+                module_names=set(selected),
+                storage_device="cpu",
+            )
+            config = AdaRoundConfig(
+                iterations=target.adaround_iterations,
+                regularization_strength=target.adaround_regularization_strength,
+                beta_start=target.adaround_beta_start,
+                beta_end=target.adaround_beta_end,
+                warm_start=target.adaround_warm_start,
+                bitwidth=target.adaround_bitwidth,
+                group_size=target.adaround_group_size
+                or self._weight_group_size(target),
+                optimization_batch_size=target.adaround_optimization_batch_size,
+            )
+            for name in selected:
+                if name not in inputs:
+                    raise RuntimeError(
+                        f"AdaRound calibration did not execute selected module '{name}'."
+                    )
+                result = apply_adaround(
+                    module=model.get_submodule(name),
+                    inputs=inputs[name],
+                    config=config,
+                )
+                logger.info(
+                    "AdaRound module %s: loss %.6g -> %.6g",
+                    name,
+                    result.initial_loss,
+                    result.final_loss,
                 )
 
     def _select_linear_modules(
@@ -397,6 +560,8 @@ class EagerQuantizationWorkflow(BaseQuantizationWorkflow):
             if not isinstance(module, nn.Linear):
                 continue
             if not target.contains_module(module_name=name):
+                continue
+            if target.excludes_module(module_name=name):
                 continue
             if (
                 isinstance(module, nn.Linear)

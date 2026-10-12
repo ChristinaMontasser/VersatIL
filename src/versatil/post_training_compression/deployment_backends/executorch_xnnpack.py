@@ -1,6 +1,7 @@
 """ExecuTorch XNNPACK deployment backend for .pte artifacts, to deploy policies on mobile Arm and x86 CPUs, ref. https://docs.pytorch.org/executorch/main/backends/xnnpack/xnnpack-overview.html."""
 
 import importlib
+from io import BytesIO
 from types import ModuleType
 
 import torch
@@ -47,7 +48,15 @@ class ExecutorchXNNPACKBackend(DeploymentBackend):
             example_inputs=example_inputs,
             max_batch_size=self.max_batch_size,
         )
-        model_bytes = self._lower_to_pte_buffer(exported_program=exported_program)
+        executorch_exir = importlib.import_module("executorch.exir")
+        xnnpack_partitioner = importlib.import_module(
+            "executorch.backends.xnnpack.partition.xnnpack_partitioner"
+        )
+        model_bytes, debug_artifacts = _lower_exported_program_with_debug(
+            exported_program=exported_program,
+            executorch_exir=executorch_exir,
+            xnnpack_partitioner=xnnpack_partitioner,
+        )
         return DeploymentArtifact(
             converted_model=None,
             example_inputs=example_inputs,
@@ -55,6 +64,7 @@ class ExecutorchXNNPACKBackend(DeploymentBackend):
             artifact_format=self.artifact_format,
             backend_name=self.name,
             model_bytes=model_bytes,
+            debug_artifacts=debug_artifacts,
         )
 
     @staticmethod
@@ -79,9 +89,37 @@ def _lower_exported_program(
     xnnpack_partitioner: ModuleType,
 ) -> bytes:
     """Lower an exported program using imported ExecuTorch modules."""
+    edge_compile_config = executorch_exir.EdgeCompileConfig(
+        _core_aten_ops_exception_list=[torch.ops.aten.bucketize.Tensor],
+    )
     edge_program = executorch_exir.to_edge_transform_and_lower(
         exported_program,
         partitioner=[xnnpack_partitioner.XnnpackPartitioner()],
+        compile_config=edge_compile_config,
     )
     executorch_program = edge_program.to_executorch()
     return bytes(executorch_program.buffer)
+
+
+def _lower_exported_program_with_debug(
+    exported_program: torch.export.ExportedProgram,
+    executorch_exir: ModuleType,
+    xnnpack_partitioner: ModuleType,
+) -> tuple[bytes, dict[str, bytes]]:
+    """Lower an exported program and serialize its ETRecord."""
+    edge_compile_config = executorch_exir.EdgeCompileConfig(
+        _core_aten_ops_exception_list=[torch.ops.aten.bucketize.Tensor],
+    )
+    edge_program = executorch_exir.to_edge_transform_and_lower(
+        exported_program,
+        partitioner=[xnnpack_partitioner.XnnpackPartitioner()],
+        compile_config=edge_compile_config,
+        generate_etrecord=True,
+    )
+    executorch_program = edge_program.to_executorch()
+    etrecord = executorch_program.get_etrecord()
+    etrecord_buffer = BytesIO()
+    etrecord.save(etrecord_buffer)
+    return bytes(executorch_program.buffer), {
+        CompressionFilename.ETRECORD.value: etrecord_buffer.getvalue(),
+    }

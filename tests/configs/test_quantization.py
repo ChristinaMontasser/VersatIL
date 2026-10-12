@@ -210,3 +210,25 @@ class TestEagerQuantizationWorkflowConfig:
 
         assert isinstance(result, EagerQuantizationWorkflow)
         assert result.is_qat is True
+
+    def test_hydra_instantiates_gptq_target(self):
+        config = OmegaConf.structured(
+            EagerQuantizationWorkflowConfig(
+                targets=[
+                    EagerQuantizationModuleTargetConfig(
+                        quantize_config=Int4WeightOnlyQuantizeConfig(
+                            group_size=128,
+                        ),
+                        gptq=True,
+                        gptq_percdamp=0.02,
+                        gptq_quantize_block_size=64,
+                    ),
+                ],
+            )
+        )
+
+        result = hydra.utils.instantiate(config)
+
+        assert result.targets[0].gptq is True
+        assert result.targets[0].gptq_percdamp == 0.02
+        assert result.targets[0].gptq_quantize_block_size == 64

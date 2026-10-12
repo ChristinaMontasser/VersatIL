@@ -1,0 +1,107 @@
+# @package _global_
+defaults:
+  - /post_training_compression
+  - _self_
+
+checkpoint_path: ???
+checkpoint_name: last.ckpt
+output_directory: null
+calibration_steps: 16
+preparation:
+  replace_frozen_batchnorm: false
+  fuse_conv_batchnorm: false
+
+pruning: null
+quantization:
+  _target_: versatil.quantization.workflows.eager.EagerQuantizationWorkflow
+  targets:
+    - _target_: versatil.quantization.module_target.EagerQuantizationModuleTarget
+      module_path: decoder.vlm_backbone.vlm.base_model.model.model.vision_model
+      quantize_config:
+        _target_: torchao.quantization.IntxWeightOnlyConfig
+        weight_dtype: ${torch_dtype:int8}
+        granularity:
+          _target_: torchao.quantization.PerGroup
+          group_size: 32
+      adaround: true
+      adaround_iterations: 10000
+      adaround_regularization_strength: 0.01
+      adaround_beta_start: 20.0
+      adaround_beta_end: 2.0
+      adaround_warm_start: 0.2
+      adaround_bitwidth: 8
+      adaround_group_size: 32
+      adaround_optimization_batch_size: 8
+    - _target_: versatil.quantization.module_target.EagerQuantizationModuleTarget
+      module_path: decoder.vlm_backbone.vlm.base_model.model.model.connector
+      quantize_config:
+        _target_: torchao.quantization.IntxWeightOnlyConfig
+        weight_dtype: ${torch_dtype:int8}
+        granularity:
+          _target_: torchao.quantization.PerGroup
+          group_size: 32
+      adaround: true
+      adaround_iterations: 10000
+      adaround_regularization_strength: 0.01
+      adaround_beta_start: 20.0
+      adaround_beta_end: 2.0
+      adaround_warm_start: 0.2
+      adaround_bitwidth: 8
+      adaround_group_size: 32
+      adaround_optimization_batch_size: 8
+    - _target_: versatil.quantization.module_target.EagerQuantizationModuleTarget
+      module_path: decoder.vlm_backbone.vlm.base_model.model.model.text_model
+      quantize_config:
+        _target_: torchao.quantization.IntxWeightOnlyConfig
+        weight_dtype: ${torch_dtype:int8}
+        granularity:
+          _target_: torchao.quantization.PerGroup
+          group_size: 32
+      adaround: true
+      adaround_iterations: 10000
+      adaround_regularization_strength: 0.01
+      adaround_beta_start: 20.0
+      adaround_beta_end: 2.0
+      adaround_warm_start: 0.2
+      adaround_bitwidth: 8
+      adaround_group_size: 32
+      adaround_optimization_batch_size: 8
+    - _target_: versatil.quantization.module_target.EagerQuantizationModuleTarget
+      module_path: decoder.expert_layers
+      exclude_module_patterns:
+        - "decoder.expert_layers.*.cross_attention_block.attention.key_projection"
+        - "decoder.expert_layers.*.cross_attention_block.attention.value_projection"
+      quantize_config:
+        _target_: torchao.quantization.IntxWeightOnlyConfig
+        weight_dtype: ${torch_dtype:int8}
+        granularity:
+          _target_: torchao.quantization.PerGroup
+          group_size: 32
+      adaround: true
+      adaround_iterations: 10000
+      adaround_regularization_strength: 0.01
+      adaround_beta_start: 20.0
+      adaround_beta_end: 2.0
+      adaround_warm_start: 0.2
+      adaround_bitwidth: 8
+      adaround_group_size: 32
+      adaround_optimization_batch_size: 8
+  is_qat: false
+  auto_filter_incompatible_linears: true
+  calibration_batch_size: 1
+# deployment_backend:
+#   _target_: versatil.post_training_compression.deployment_backends.executorch_xnnpack.ExecutorchXNNPACKBackend
+#   max_batch_size: 32
+modules:
+  - module_path: decoder.vlm_backbone.vlm.base_model.model.model.vision_model
+    preparation: ${preparation}
+    pruning: null
+  - module_path: decoder.vlm_backbone.vlm.base_model.model.model.connector
+    preparation: ${preparation}
+    pruning: null
+  - module_path: decoder.vlm_backbone.vlm.base_model.model.model.text_model
+    preparation: ${preparation}
+    pruning: null
+  - module_path: decoder.expert_layers
+    preparation: ${preparation}
+    pruning: null

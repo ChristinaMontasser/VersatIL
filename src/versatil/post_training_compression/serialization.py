@@ -37,6 +37,7 @@ def save_compressed_model(
     artifact_format: str = ArtifactFormat.TORCH_EXPORT_PT2.value,
     backend_name: str = DeploymentBackendName.TORCH_INDUCTOR.value,
     model_bytes: bytes | None = None,
+    debug_artifacts: dict[str, bytes] | None = None,
     denoising_thresholds: dict[str, float] | None = None,
     pt2e_backend_config: dict[str, Any] | None = None,
 ) -> Path:
@@ -93,6 +94,9 @@ def save_compressed_model(
                 example_inputs=example_inputs,
             )
         torch.export.save(exported_program, str(model_path))
+    if debug_artifacts is not None:
+        for filename, contents in debug_artifacts.items():
+            (save_path / filename).write_bytes(contents)
     torch.save(normalizer.state_dict(), save_path / normalizer_filename)
     config_omega = OmegaConf.structured(quantization_config)
     OmegaConf.save(

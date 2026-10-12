@@ -1,0 +1,15 @@
+defaults:
+  - /quantization/workflow@_here_: eager
+  - _self_
+
+targets:
+  - _target_: versatil.quantization.module_target.EagerQuantizationModuleTarget
+    module_path: ""
+    quantize_config:
+      _target_: torchao.quantization.Int4WeightOnlyConfig
+      group_size: 128
+    gptq: true
+    gptq_percdamp: 0.01
+    gptq_quantize_block_size: 256
+is_qat: false
+auto_filter_incompatible_linears: true

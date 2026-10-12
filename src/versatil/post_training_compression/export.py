@@ -59,12 +59,45 @@ def _export_with_dynamic_batch(
         dynamic_shapes = {dynamic_shapes_key: per_input_shapes}
     else:
         dynamic_shapes = per_input_shapes
-    return torch.export.export(
-        model,
-        example_inputs,
-        dynamic_shapes=dynamic_shapes,
-        strict=False,
-    )
+    with torch.no_grad():
+        return torch.export.export(
+            model,
+            example_inputs,
+            dynamic_shapes=dynamic_shapes,
+            strict=False,
+        )
+
+# Was trying to solve contingency issue happening with the connector model 
+def register_vision_attention_contiguous_hooks(model: nn.Module) -> None:
+    """Make Idefics3 vision attention projections receive contiguous inputs.
+
+    TorchAO eager quantization can produce a non-contiguous attention tensor.
+    The exported quantized linear then lowers its flattening ``view`` and fails
+    in fake-tensor mode. Idefics3's vision attention ``out_proj`` is the
+    narrow boundary where the tensor must be made contiguous.
+
+    Args:
+        model: Quantized model whose modules should be patched in place.
+    """
+    for module_name, module in model.named_modules():
+        if not (
+            ".vision_model." in module_name
+            and module_name.endswith(".out_proj")
+            and isinstance(module, nn.Module)
+        ):
+            continue
+        module.register_forward_pre_hook(_make_contiguous_input)
+
+
+def _make_contiguous_input(
+    module: nn.Module,
+    inputs: tuple[torch.Tensor, ...],
+) -> tuple[torch.Tensor, ...]:
+    """Make the first input to a projection contiguous."""
+    del module
+    if not inputs:
+        return inputs
+    return (inputs[0].contiguous(), *inputs[1:])
 
 
 def export_policy(

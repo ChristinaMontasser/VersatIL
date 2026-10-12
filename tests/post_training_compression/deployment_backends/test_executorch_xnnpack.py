@@ -94,10 +94,12 @@ class TestExecutorchXNNPACKBackend:
                 f"{XNNPACK_MODULE}._export_with_dynamic_batch",
                 return_value=exported_program,
             ) as mock_export,
-            patch.object(
-                backend,
-                "_lower_to_pte_buffer",
-                return_value=b"pte-bytes",
+            patch(
+                f"{XNNPACK_MODULE}._lower_exported_program_with_debug",
+                return_value=(
+                    b"pte-bytes",
+                    {CompressionFilename.ETRECORD.value: b"etrecord"},
+                ),
             ) as mock_lower,
         ):
             artifact = backend.export(model=model, example_inputs=example_inputs)
@@ -107,10 +109,13 @@ class TestExecutorchXNNPACKBackend:
             example_inputs=example_inputs,
             max_batch_size=8,
         )
-        mock_lower.assert_called_once_with(exported_program=exported_program)
+        mock_lower.assert_called_once()
         assert artifact.converted_model is None
         assert artifact.example_inputs is example_inputs
         assert artifact.model_bytes == b"pte-bytes"
+        assert artifact.debug_artifacts == {
+            CompressionFilename.ETRECORD.value: b"etrecord"
+        }
         assert artifact.model_filename == CompressionFilename.EXECUTORCH_MODEL.value
         assert artifact.artifact_format == ArtifactFormat.EXECUTORCH_PTE
         assert artifact.backend_name == DeploymentBackendName.EXECUTORCH_XNNPACK.value
@@ -182,6 +187,10 @@ class TestLowerExportedProgram:
         executorch_exir.to_edge_transform_and_lower.assert_called_once_with(
             exported_program,
             partitioner=[partitioner],
+            compile_config=executorch_exir.EdgeCompileConfig.return_value,
+        )
+        executorch_exir.EdgeCompileConfig.assert_called_once_with(
+            _core_aten_ops_exception_list=[torch.ops.aten.bucketize.Tensor],
         )
         edge_program.to_executorch.assert_called_once_with()
         assert result == b"pte"
